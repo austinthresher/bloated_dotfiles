@@ -1,0 +1,142 @@
+# tmux config with a different theme depending on SSH_CLIENT.
+# see tmux.conf for the version I'm currently using with
+# different files for remote and local
+
+set -g mouse on 
+
+bind-key -T copy-mode-vi v send-keys -X begin-selection 
+bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel 
+
+# Status bar at the top for local, bottom for remote
+set -gF status-position "#{?SSH_CLIENT,bottom,top}"
+
+# Colorscheme for local tmux
+LOCAL_STATUS_BG=colour16
+LOCAL_STATUS_FG=colour4
+LOCAL_PANE_BORDER_ACTIVE=colour14
+LOCAL_PANE_BORDER_INACTIVE=colour4
+LOCAL_WINDOW_ACTIVE_FG=colour14
+LOCAL_WINDOW_ACTIVE_BG=colour16
+LOCAL_WINDOW_INACTIVE_FG=colour8
+LOCAL_WINDOW_INACTIVE_BG=colour16
+LOCAL_MESSAGE_BG=colour4
+LOCAL_MESSAGE_FG=colour255
+LOCAL_BELL_FG=colour234
+LOCAL_BELL_BG=colour208
+
+# Colorscheme for tmux in ssh (likely nested)
+REMOTE_STATUS_BG=colour22
+REMOTE_STATUS_FG=colour255
+REMOTE_PANE_BORDER_ACTIVE=colour82
+REMOTE_PANE_BORDER_INACTIVE=colour22
+REMOTE_WINDOW_ACTIVE_FG=colour82
+REMOTE_WINDOW_ACTIVE_BG=colour22
+REMOTE_WINDOW_INACTIVE_FG=colour16
+REMOTE_WINDOW_INACTIVE_BG=colour22
+REMOTE_MESSAGE_BG=colour8
+REMOTE_MESSAGE_FG=colour11
+REMOTE_BELL_FG=colour14
+REMOTE_BELL_BG=colour5
+
+# Select theme based on $SSH_CLIENT
+STATUS_BG="#{?SSH_CLIENT,$REMOTE_STATUS_BG,$LOCAL_STATUS_BG}"
+STATUS_FG="#{?SSH_CLIENT,$REMOTE_STATUS_FG,$LOCAL_STATUS_FG}"
+PANE_BORDER_ACTIVE="#{?SSH_CLIENT,$REMOTE_PANE_BORDER_ACTIVE,$LOCAL_PANE_BORDER_ACTIVE}"
+PANE_BORDER_INACTIVE="#{?SSH_CLIENT,$REMOTE_PANE_BORDER_INACTIVE,$LOCAL_PANE_BORDER_INACTIVE}"
+WINDOW_ACTIVE_FG="#{?SSH_CLIENT,$REMOTE_WINDOW_ACTIVE_FG,$LOCAL_WINDOW_ACTIVE_FG}"
+WINDOW_ACTIVE_BG="#{?SSH_CLIENT,$REMOTE_WINDOW_ACTIVE_BG,$LOCAL_WINDOW_ACTIVE_BG}"
+WINDOW_INACTIVE_FG="#{?SSH_CLIENT,$REMOTE_WINDOW_INACTIVE_FG,$LOCAL_WINDOW_INACTIVE_FG}"
+WINDOW_INACTIVE_BG="#{?SSH_CLIENT,$REMOTE_WINDOW_INACTIVE_BG,$LOCAL_WINDOW_INACTIVE_BG}"
+MESSAGE_BG="#{?SSH_CLIENT,$REMOTE_MESSAGE_BG,$LOCAL_MESSAGE_BG}"
+MESSAGE_FG="#{?SSH_CLIENT,$REMOTE_MESSAGE_FG,$LOCAL_MESSAGE_FG}"
+BELL_FG="#{?SSH_CLIENT,$REMOTE_BELL_FG,$LOCAL_BELL_FG}"
+BELL_BG="#{?SSH_CLIENT,$REMOTE_BELL_BG,$LOCAL_BELL_BG}"
+
+# start window numbering at 1
+set -g base-index 1
+set -g pane-base-index 1
+unbind C-b
+set-option -g prefix `
+set-option -g prefix2 'M-\'
+bind-key ` send-prefix
+bind-key 'M-\' send-prefix -2
+
+bind-key s split-window -h
+bind-key v split-window -v
+
+set -g repeat-time 500
+set -g escape-time 0
+set -g terminal-overrides ',tmux-256color:Tc,sitm=\E[3m'
+set -g default-terminal "tmux-256color"
+
+set -g status-interval 1
+
+set-window-option -g automatic-rename
+set-window-option -g aggressive-resize on
+set -g visual-activity off
+
+# vim style select / copy
+set-window-option -g mode-keys vi
+# vim pane navigation
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+
+bind-key -r H resize-pane -L
+bind-key -r J resize-pane -D
+bind-key -r K resize-pane -U
+bind-key -r L resize-pane -R
+
+# quicker search
+bind-key / copy-mode \; send-key /
+
+set -g display-time 1000 
+set -g display-panes-time 2000
+
+bind C command-prompt -p "New window name: " "new-window -n '%%'"
+
+set-option -g status-left-length 64
+set-option -g status-right-length 64 
+set-option -g status-left "\
+#{?client_prefix,#[bg=colour9],}\
+  #{host}#{?#{==:#{session_name},0},,:#{session_name}}\
+  #{?pane_in_mode,  |  #[bold reverse]#{pane_mode}#[nobold noreverse]  ,}|  "
+#set-option -g status-left "#{pane_title} #{?pane_in_mode, #[bold reverse]#{pane_mode}#[nobold noreverse],}"
+set-option -g status-right "\
+#{?client_prefix,#[bg=colour9],}\
+    #{pane_current_command}\
+    #{pane_current_path}\
+  "
+#set-option -g status-right '#{?client_prefix,#[reverse],}"#{=21:pane_title}" %H:%M %d-%b-%y' #{session_name}' on #H #[#{window-status-style}] %b %d, %Y \[%H\:%M\:%S\]"
+
+# default status bar colors
+if-shell "echo $SSH_CLIENT | grep [0-9]"\
+	"set-option -Fg status-style \"fg=$STATUS_FG,bg=$STATUS_BG\""\
+	"set-option -Fg status-style \"fg=$STATUS_FG,bg=$STATUS_BG,underscore\""
+
+#set-option -Fg status-style "#{?$SSH_CLIENT#,,underscore#,}fg=$STATUS_FG,bg=$STATUS_BG"
+#set-option -Fg status-style "underscore,fg=$STATUS_FG,bg=$STATUS_BG"
+# inactive window
+set-window-option -gF window-status-style "fg=$WINDOW_INACTIVE_FG,bg=$WINDOW_INACTIVE_BG"
+
+# active window
+set-window-option -gF window-status-current-style "fg=$WINDOW_ACTIVE_FG,bg=$WINDOW_ACTIVE_BG bold"
+
+# pane borders
+set-option -gF pane-border-style fg=$PANE_BORDER_INACTIVE,bold
+set-option -gF pane-active-border-style fg=$PANE_BORDER_ACTIVE
+
+# command line
+set-option -gF message-style bg=$MESSAGE_BG,fg=$MESSAGE_FG
+
+# clock
+set-window-option -gF clock-mode-colour $WINDOW_INACTIVE_BG 
+
+# bell
+set-window-option -gF window-status-bell-style fg=$BELL_FG,bg=$BELL_BG
+
+# reload config shortcut
+bind r source ~/.tmux.conf\; display "configuration reloaded"
+
+set-window-option -g automatic-rename off

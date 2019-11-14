@@ -1,0 +1,36 @@
+STATUS_DARK_BG=colour237
+STATUS_LITE_BG=colour88
+STATUS_DARK_TX=colour52
+STATUS_LITE_TX=colour231
+ACTIVE_PANE=colour232
+INACTIVE_PANE=colour16
+
+COLOR_LITE="fg=$STATUS_LITE_TX bg=$STATUS_LITE_BG"
+COLOR_DARK="fg=$STATUS_DARK_TX bg=$STATUS_DARK_BG"
+COLOR_FADE="fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
+
+FADE_LEFT="#[$COLOR_FADE]░▒▓"
+FADE_RIGHT="#[$COLOR_FADE]▓▒░"
+
+SYNC="#{?pane_synchronized, ⥱ ,   }"
+ZOOM="#{?window_zoomed_flag, 📌,   }"
+PREFIX="#{?client_prefix, ❖ ,   }"
+ICONBAR="$SYNC$ZOOM$PREFIX"
+
+# Only show remote status bar when there are multiple windows
+set -g status off
+set-hook -g window-linked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
+set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
+
+set -g pane-border-status bottom
+set -g status-style "$COLOR_DARK"
+set -g status-right ""
+set -g window-status-format "  #{window_name}  "
+set -g window-status-current-format "$FADE_LEFT#[$COLOR_LITE]#{window_name}$FADE_RIGHT"
+set -g pane-border-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
+set -g pane-active-border-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
+set -g pane-border-format "< #{pane_current_command} ⋅ #{pane_current_path}#{?pane_in_mode, ⋅ #{pane_mode},}#{?pane_active, ⋅$ICONBAR>, >}"
+set -g window-active-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
+set -g window-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
+set -g message-command-style "fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
+set -g message-style "bg=$STATUS_DARK_TX fg=$STATUS_LITE_TX"
