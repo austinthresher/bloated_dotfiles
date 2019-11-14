@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# This script should be ran from the repo root directory
-
 backup() {
 	if [ -e "$1" ]; then
 		mv "$1" "$1.bak" 
@@ -11,7 +9,7 @@ backup() {
 		else
 			diff "$1" "$1.bak"
 			res=$?
-			if [ "$res" ]; then
+			if [ "$res" -ne 0 ]; then
 				echo "Can't back up $1, backup differs from existing file"
 			else
 				rm "$1.bak"
@@ -21,20 +19,20 @@ backup() {
 	fi
 }
 
-backup $HOME/.bashrc
-backup $HOME/.vimrc
-backup $HOME/.tmux.conf
-backup $HOME/.tmux.local
-backup $HOME/.tmux.remote
+backup "$HOME/.bashrc"
+backup "$HOME/.vimrc"
+backup "$HOME/.tmux.conf"
+backup "$HOME/.tmux.local"
+backup "$HOME/.tmux.remote"
 
-ln bashrc $HOME/.bashrc
-ln vimrc $HOME/.vimrc
-ln tmux.conf $HOME/.tmux.conf
-ln tmux.top $HOME/.tmux.local
-ln tmux.nested $HOME/.tmux.remote
+ln "bashrc"      "$HOME/.bashrc"
+ln "vimrc"       "$HOME/.vimrc"
+ln "tmux.conf"   "$HOME/.tmux.conf"
+ln "tmux.local"  "$HOME/.tmux.local"
+ln "tmux.remote" "$HOME/.tmux.remote"
 
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.config/
 
-[ ! -e "$HOME/.vim/colors/focuspoint.vim" ] && ln colors/focuspoint.vim $HOME/.vim/colors/
-[ ! -e "$HOME/.vim/colors/mono.vim" ] && ln colors/mono.vim $HOME/.vim/colors/
+[ ! -e "$HOME/.vim/colors/focuspoint.vim" ] && ln "colors/focuspoint.vim" "$HOME/.vim/colors/"
+[ ! -e "$HOME/.vim/colors/mono.vim" ]       && ln "colors/mono.vim"       "$HOME/.vim/colors/"
