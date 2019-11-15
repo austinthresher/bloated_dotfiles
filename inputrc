@@ -6,3 +6,12 @@ set completion-map-case on
 set mark-symlinked-directories on
 set show-all-if-ambiguous on
 set show-all-if-unmodified on
+set editing-mode vi
+set show-mode-in-prompt on
+set keyseq-timeout 100
+set print-completions-horizontally on
+set skip-completed-text on
+set completion-query-items -1
+set vi-cmd-mode-string "C"
+set vi-ins-mode-string "I"
+

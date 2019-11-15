@@ -134,12 +134,15 @@ inoremap <c-u> <c-o>d0
 inoremap <c-w> <c-o>dB
 inoremap <c-x> <c-o>dW
 
+set mouse=a
+
+" Considering not using gutentags, commented out as a trial
 " gutentags config if its installed
-if !empty(glob("$HOME/.vim/pack/plugins/vim-gutentags"))
-	set statusline+=%{gutentags#statusline()}
-	let g:gutentags_project_root = ['Makefile', '.root']
-	let g:gutentags_cache_dir = "$HOME/.vim/tags"
-	let g:gutentags_modules = ['ctags', 'gtags_cscope']
-	let g:tagbar_autofocus = 1
-	autocmd VimEnter * nested :TagbarOpen
-endif
+"if !empty(glob("$HOME/.vim/pack/plugins/vim-gutentags"))
+"	set statusline+=%{gutentags#statusline()}
+"	let g:gutentags_project_root = ['Makefile', '.root']
+"	let g:gutentags_cache_dir = "$HOME/.vim/tags"
+"	let g:gutentags_modules = ['ctags', 'gtags_cscope']
+"	let g:tagbar_autofocus = 1
+"	autocmd VimEnter * nested :TagbarOpen
+"endif
