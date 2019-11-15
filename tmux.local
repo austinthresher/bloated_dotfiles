@@ -33,6 +33,7 @@ set -g message-command-style "fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
 set -g message-style "bg=$STATUS_DARK_TX fg=$STATUS_LITE_TX"
 set -g window-active-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
 set -g window-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
+set -g pane-border-format "< #{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},} >"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2

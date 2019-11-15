@@ -1,19 +1,7 @@
 alias ls='ls --color=auto'
 alias grep='grep -n --color=auto'
 alias more='less'
-
-case "$TERM" in
-	linux|xterm*|rxvt*)
-		export PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}\007"'
-		export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\$ '
-		;;
-	screen*|tmux*)
-		export PROMPT_COMMAND='echo -ne "\033k${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}\033\\" '
-		export PS1='\$ '
-		;;
-	*)
-		;;
-esac
+alias vim='vim -c"set notitle"'
 
 LOCALPATH=$HOME/.local/bin
 if [[ $LOCALPATH != *"$PATH"* ]]; then
@@ -33,4 +21,42 @@ export LESS_TERMCAP_se=$'\e[0m'      # stop standout
 export LESS_TERMCAP_us=$'\e[1;4;32m'   # start underline
 export LESS_TERMCAP_ue=$'\e[0m'      # stop underline
 
+set_window_title() {
+	case "$TERM" in
+		screen*|tmux*) printf "\033k$1\033\\" ;;
+		linux|xterm*|rxvt*) printf "\033]0;$1\007" ;;
+		*) ;;
+	esac
+}
 
+set_pane_title() {
+	case "$TERM" in
+		tmux*)
+			printf "\033]2;$1\033\\" 
+			set_window_title "${USER}@${HOSTNAME%%.*}"
+			;;
+		*) ;;
+	esac
+}
+
+export -f set_window_title
+export -f set_pane_title
+
+CURDIR='${PWD/\/home\/$(whoami)/\~}'
+
+if [ -z "$TMUX" ]; then
+	set -o ignoreeof
+	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\$ '
+	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:'$CURDIR'"'
+else
+	export PS1='\$ '
+	export PROMPT_COMMAND='
+		_TMP=${PREV_CMD/set_pane_title*/}
+		set_pane_title "'$CURDIR' ⋅ \x27${_TMP%% -*}\x27 ⋅ ${PREV_RET}"
+	'
+	trap '
+		PREV_CMD=$THIS_CMD PREV_RET=$?;
+		THIS_CMD=$BASH_COMMAND;
+		set_pane_title '$CURDIR'" ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ running"
+	' DEBUG
+fi
