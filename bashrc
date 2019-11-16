@@ -42,30 +42,31 @@ set_pane_title() {
 export -f set_window_title
 export -f set_pane_title
 
-CURDIR=''
-
 trap_post() {
-	trap - DEBUG
-	set_pane_title "${PWD/\/home\/$(whoami)/\~} ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ ${PREV_RET}"
+	RET=$?
+	trap - DEBUG;
+	set_pane_title "$PWD ⋅ ${THIS_CMD%% -*} ⋅ $RET"
 }
 
 trap_pre() {
-	PREV_CMD=$THIS_CMD PREV_RET=$?;
-	trap - DEBUG
+	trap - DEBUG;
 	THIS_CMD=$BASH_COMMAND;
 	PREV_CMD=$THIS_CMD;
-	set_pane_title "${PWD/\/home\/$(whoami)/\~} ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ running"
+	if [ "${THIS_CMD%% *}" != "trap" ]; then
+		set_pane_title "$PWD ⋅ ${THIS_CMD%% -*} ⋅ running"
+	else
+		set_pane_title "$PWD"
+	fi
 	trap trap_post DEBUG
 }
 
+set_pane_title "$PWD"
 if [ -z "$TMUX" ]; then
 	set -o ignoreeof
 	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\$ '
-	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:'$CURDIR'"'
+	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:'${PWD/\/home\/$(whoami)/\~}'"'
 else
 	export PS1='\$ '
-	export PROMPT_COMMAND='
-		trap - DEBUG
-		trap "trap_pre" DEBUG
-	'
+	export PROMPT_COMMAND='trap "trap_pre" DEBUG'
 fi
+
