@@ -2,6 +2,7 @@ alias ls='ls --color=auto'
 alias grep='grep -n --color=auto'
 alias more='less'
 alias vim='vim -c"set notitle"'
+alias gdb='gdb -q'
 
 LOCALPATH=$HOME/.local/bin
 if [[ $LOCALPATH != *"$PATH"* ]]; then

@@ -26,6 +26,7 @@ backup "$HOME/.inputrc"
 backup "$HOME/.tmux.conf"
 backup "$HOME/.tmux.local"
 backup "$HOME/.tmux.remote"
+backup "$HOME/.gdbinit"
 
 ln "bashrc"      "$HOME/.bashrc"
 ln "vimrc"       "$HOME/.vimrc"
@@ -33,6 +34,7 @@ ln "inputrc"     "$HOME/.inputrc"
 ln "tmux.conf"   "$HOME/.tmux.conf"
 ln "tmux.local"  "$HOME/.tmux.local"
 ln "tmux.remote" "$HOME/.tmux.remote"
+ln "gdbinit"     "$HOME/.gdbinit"
 
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.config/
