@@ -13,4 +13,5 @@ set skip-completed-text on
 set completion-query-items -1
 set vi-cmd-mode-string "<C>"
 set vi-ins-mode-string "<I>"
+set emacs-mode-string ""
 #set editing-mode vi

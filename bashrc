@@ -42,7 +42,21 @@ set_pane_title() {
 export -f set_window_title
 export -f set_pane_title
 
-CURDIR='${PWD/\/home\/$(whoami)/\~}'
+CURDIR=''
+
+trap_post() {
+	trap - DEBUG
+	set_pane_title "${PWD/\/home\/$(whoami)/\~} ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ ${PREV_RET}"
+}
+
+trap_pre() {
+	PREV_CMD=$THIS_CMD PREV_RET=$?;
+	trap - DEBUG
+	THIS_CMD=$BASH_COMMAND;
+	PREV_CMD=$THIS_CMD;
+	set_pane_title "${PWD/\/home\/$(whoami)/\~} ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ running"
+	trap trap_post DEBUG
+}
 
 if [ -z "$TMUX" ]; then
 	set -o ignoreeof
@@ -51,12 +65,7 @@ if [ -z "$TMUX" ]; then
 else
 	export PS1='\$ '
 	export PROMPT_COMMAND='
-		_TMP=${PREV_CMD/set_pane_title*/}
-		set_pane_title "'$CURDIR' ⋅ \x27${_TMP%% -*}\x27 ⋅ ${PREV_RET}"
+		trap - DEBUG
+		trap "trap_pre" DEBUG
 	'
-	trap '
-		PREV_CMD=$THIS_CMD PREV_RET=$?;
-		THIS_CMD=$BASH_COMMAND;
-		set_pane_title '$CURDIR'" ⋅ \x27${THIS_CMD%% -*}\x27 ⋅ running"
-	' DEBUG
 fi
