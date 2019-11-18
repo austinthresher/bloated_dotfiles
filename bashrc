@@ -22,6 +22,7 @@ export LESS_TERMCAP_se=$'\e[0m'      # stop standout
 export LESS_TERMCAP_us=$'\e[1;4;32m'   # start underline
 export LESS_TERMCAP_ue=$'\e[0m'      # stop underline
 
+# TODO: Investigate adding other tmux hooks with trap callbacks
 set_window_title() {
 	case "$TERM" in
 		screen*|tmux*) printf "\033k$1\033\\" ;;
@@ -29,6 +30,7 @@ set_window_title() {
 		*) ;;
 	esac
 }
+export -f set_window_title
 
 set_pane_title() {
 	case "$TERM" in
@@ -39,8 +41,6 @@ set_pane_title() {
 		*) ;;
 	esac
 }
-
-export -f set_window_title
 export -f set_pane_title
 
 trap_post() {
@@ -61,13 +61,45 @@ trap_pre() {
 	trap trap_post DEBUG
 }
 
+git_branch() {
+	git branch 2> /dev/null | sed \
+		-e '/^[^*]/d' \
+		-e 's/* \(.*\)/\1/'
+}
+
+git_repo() {
+	git remote -v 2> /dev/null | sed \
+		-e '1s/.*\/\(.*\)\.git.*/\1/' \
+		-e '2d'
+}
+
+git_changes() {
+	git status 2> /dev/null | sed \
+		-e '/^Changes/!d' \
+		-e 's/^Changes not.*$/\-/g' \
+		-e 's/^Changes to.*$/\+/g' \
+		| tr -d "\n" \
+		| sed -e 's/+-/±/'
+}
+
+git_prompt() {
+	_R=$(git_repo)
+	_B=$(git_branch)
+	_C=$(git_changes)
+	_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
+	if [ "${#_R}" != "0" ]; then
+		printf "❰%s/%s%s❱" "$_R" "$_B" "$_C"
+	fi
+}
+
 set_pane_title "$PWD"
 if [ -z "$TMUX" ]; then
 	set -o ignoreeof
-	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\$ '
-	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:'${PWD/\/home\/$(whoami)/\~}'"'
+	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w➤ '
+	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}"; trap "trap_pre" DEBUG'
 else
-	export PS1='\$ '
+	export PS1='➤ '
 	export PROMPT_COMMAND='trap "trap_pre" DEBUG'
 fi
 
+export PS1='$(git_prompt)'"$PS1"
