@@ -4,10 +4,8 @@ alias more='less'
 alias vim='vim -c"set notitle"'
 alias gdb='gdb -q'
 
-LOCALPATH=$HOME/.local/bin
-if [[ $LOCALPATH != *"$PATH"* ]]; then
-	export PATH=$LOCALPATH:$PATH
-fi
+export PATH=$HOME/.dotfiles/scripts:$PATH
+export LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARAY_PATH
 
 export EDITOR=vim
 export VISUAL=vim

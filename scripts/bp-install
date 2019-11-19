@@ -1,0 +1,6 @@
+#!/bin/bash
+source $HOME/.dotfiles/scripts/funcdefs.sh
+cd $(get_script_dir)
+bp_init $@
+bp_command install
+bp_process packages
