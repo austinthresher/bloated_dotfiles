@@ -1,23 +1,12 @@
-#!/bin/bash
+# DIY simple package installer, backpack 
+# ======================================
 
 # include guard
-[ -n "$FUNCDEFS" ] && return || readonly FUNCDEFS=1
+[ -n "$BACKPACK_INCLUDED" ] && return || readonly BACKPACK_INCLUDED=1
 
-# private / non-exported functions
 ghetto_cut() {
 	for i in $1; do echo $i; break; done
 }
-
-#public / exported functions
-
-# https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself
-get_script_dir() {
-	printf "%s" "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-}
-export -f get_script_dir
-
-# DIY simple package installer, backpack 
-# ======================================
 
 bp_init() {
 	export LOCAL_PREFIX="$HOME/.local"
@@ -35,7 +24,7 @@ bp_init() {
 
 bp_command() {
 	case $1 in
-		"install"|"uninstall"|"reinstall")
+		"install"|"uninstall"|"rm")
 			export BP_CMD=$1
 			;;
 		*)
@@ -60,11 +49,9 @@ bp_package() {
 		export SRC_DEST=$LOCAL_SRC/$PKG_NAME
 		export BIN_DEST=$LOCAL_BIN/$PKG_NAME
 		case $BP_CMD in
-			"reinstall")
-				printf "reinstalling package '$PKG_NAME'"
+			"rm")
+				printf "removing directoy '$PKG_NAME'\n"
 				bp_remove_existing
-				bp_fetch_tar $PKG_URL
-				bp_configure_make_install "${@:3}"
 				;;
 			"install")
 				printf "installing package '$PKG_NAME'"
@@ -122,7 +109,6 @@ bp_make_uninstall() {
 		&& export SUCCESS=1
 	}	>  $LOCAL_TMP/$PKG_NAME.make.out \
 		2> $LOCAL_TMP/$PKG_NAME.make.err
-	bp_remove_existing
 	if [ "$SUCCESS" -eq 0 ]; then
 		printf " failed. Logs written to $LOCAL_TMP\n"
 	else

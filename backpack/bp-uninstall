@@ -1,0 +1,4 @@
+source $BACKPACK
+cd $BACKPACK_PATH
+bp_init $@
+bp_command uninstall
