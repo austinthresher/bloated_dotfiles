@@ -12,7 +12,7 @@ let g:colors_name="mono"
 " --------------------------------
 " Editor settings
 " --------------------------------
-hi Normal		ctermfg=253	ctermbg=233	cterm=none
+hi Normal		ctermfg=NONE	ctermbg=NONE	cterm=none
 hi Cursor		ctermfg=none	ctermbg=none	cterm=none
 hi CursorLine		ctermfg=none	ctermbg=none	cterm=none
 hi LineNr		ctermfg=236	ctermbg=16	cterm=none
@@ -72,49 +72,49 @@ hi SpecialKey		ctermfg=66	ctermbg=none	cterm=none
 " --------------------------------
 " Variable types
 " --------------------------------
-hi Constant		ctermfg=231	ctermbg=none	cterm=none
-hi String		ctermfg=231	ctermbg=none	cterm=none
-hi StringDelimiter	ctermfg=231	ctermbg=none	cterm=none
-hi Character		ctermfg=231	ctermbg=none	cterm=none
-hi Number		ctermfg=231	ctermbg=none	cterm=none
-hi Boolean		ctermfg=231	ctermbg=none	cterm=none
-hi Float		ctermfg=231	ctermbg=none	cterm=none
+hi Constant		ctermfg=NONE	ctermbg=none	cterm=none
+hi String		ctermfg=NONE	ctermbg=234	cterm=italic
+hi StringDelimiter	ctermfg=NONE	ctermbg=none	cterm=none
+hi Character		ctermfg=NONE	ctermbg=none	cterm=none
+hi Number		ctermfg=NONE	ctermbg=none	cterm=none
+hi Boolean		ctermfg=NONE	ctermbg=none	cterm=none
+hi Float		ctermfg=NONE	ctermbg=none	cterm=none
 
-hi Identifier		ctermfg=231	ctermbg=none	cterm=none
-hi Function		ctermfg=231	ctermbg=none	cterm=none
+hi Identifier		ctermfg=NONE	ctermbg=none	cterm=none
+hi Function		ctermfg=NONE	ctermbg=none	cterm=none
 
 " --------------------------------
 " Language constructs
 " --------------------------------
-hi Statement		ctermfg=255	ctermbg=none	cterm=bold
-hi Conditional		ctermfg=255	ctermbg=none	cterm=bold
-hi Repeat		ctermfg=255	ctermbg=none	cterm=bold
-hi Label		ctermfg=245	ctermbg=none	cterm=none
-hi Operator		ctermfg=231	ctermbg=none	cterm=none
-hi Keyword		ctermfg=255	ctermbg=none	cterm=bold
-hi Exception		ctermfg=255	ctermbg=none	cterm=bold
+hi Statement		ctermfg=NONE	ctermbg=none	cterm=bold
+hi Conditional		ctermfg=NONE	ctermbg=none	cterm=bold
+hi Repeat		ctermfg=NONE	ctermbg=none	cterm=bold
+hi Label		ctermfg=NONE	ctermbg=none	cterm=none
+hi Operator		ctermfg=NONE	ctermbg=none	cterm=none
+hi Keyword		ctermfg=NONE	ctermbg=none	cterm=bold
+hi Exception		ctermfg=NONE	ctermbg=none	cterm=bold
 hi Comment		ctermfg=66	ctermbg=none	cterm=italic
 
-hi Special		ctermfg=231	ctermbg=none	cterm=none
-hi SpecialChar		ctermfg=231	ctermbg=none	cterm=none
-hi Tag			ctermfg=231	ctermbg=none	cterm=none
-hi Delimiter		ctermfg=231	ctermbg=none	cterm=none
-hi SpecialComment	ctermfg=231	ctermbg=none	cterm=none
-hi Debug		ctermfg=231	ctermbg=none	cterm=none
+hi Special		ctermfg=NONE	ctermbg=none	cterm=none
+hi SpecialChar		ctermfg=NONE	ctermbg=none	cterm=none
+hi Tag			ctermfg=NONE	ctermbg=none	cterm=none
+hi Delimiter		ctermfg=NONE	ctermbg=none	cterm=none
+hi SpecialComment	ctermfg=NONE	ctermbg=none	cterm=none
+hi Debug		ctermfg=NONE	ctermbg=none	cterm=none
 
 " ----------
 " - C like -
 " ----------
-hi PreProc		ctermfg=245	ctermbg=none	cterm=none
-hi Include		ctermfg=245	ctermbg=none	cterm=none
-hi Define		ctermfg=245	ctermbg=none	cterm=none
-hi Macro		ctermfg=245	ctermbg=none	cterm=none
-hi PreCondit		ctermfg=245	ctermbg=none	cterm=none
+hi PreProc		ctermfg=NONE	ctermbg=none	cterm=italic
+hi Include		ctermfg=NONE	ctermbg=none	cterm=italic
+hi Define		ctermfg=NONE	ctermbg=none	cterm=italic
+hi Macro		ctermfg=NONE	ctermbg=none	cterm=italic
+hi PreCondit		ctermfg=NONE	ctermbg=none	cterm=italic
 
-hi Type			ctermfg=231	ctermbg=none	cterm=none
-hi StorageClass		ctermfg=231	ctermbg=none	cterm=none
-hi Structure		ctermfg=231	ctermbg=none	cterm=none
-hi Typedef		ctermfg=231	ctermbg=none	cterm=none
+hi Type			ctermfg=NONE	ctermbg=none	cterm=none
+hi StorageClass		ctermfg=NONE	ctermbg=none	cterm=none
+hi Structure		ctermfg=NONE	ctermbg=none	cterm=none
+hi Typedef		ctermfg=NONE	ctermbg=none	cterm=none
 
 " --------------------------------
 " Diff

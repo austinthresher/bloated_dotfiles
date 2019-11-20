@@ -2,6 +2,10 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 
+set noicon
+set notitle
+set titleold=
+
 function! KernelTabs()
    set shiftwidth=8
    set tabstop=8
@@ -60,6 +64,8 @@ au BufNewFile,BufRead *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
 " Automatically update the date on my todo list when saved
 au BufWritePre TODO.md call TODODate()
 
+colorscheme mono
+
 syntax on
 
 set showcmd
@@ -100,7 +106,6 @@ set fillchars=stl:\
 set fillchars+=stlnc:\ 
 set fillchars+=vert:\|
 
-colorscheme focuspoint
 
 " === maps ===
 
