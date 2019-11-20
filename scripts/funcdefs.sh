@@ -24,9 +24,11 @@ bp_init() {
 	export LOCAL_BIN=$LOCAL_PREFIX/bin
 	export LOCAL_SRC=$LOCAL_PREFIX/src
 	export LOCAL_TMP=$LOCAL_PREFIX/tmp
+	export LOCAL_INC=$LOCAL_PREFIX/include
 	mkdir -p $LOCAL_BIN
 	mkdir -p $LOCAL_SRC
 	mkdir -p $LOCAL_TMP
+	mkdir -p $LOCAL_INC
 	export SELECTED_PKGS=$@
 	export BP_CMD=none
 }
@@ -133,13 +135,13 @@ bp_configure_make_install() {
 	{
 		cd "$SRC_DEST" 
 		if [ -e "configure" ]; then
-			./configure --prefix=$LOCAL_PREFIX $@\
+			./configure --prefix=$LOCAL_PREFIX CFLAGS="-I$LOCAL_INC" CXXFLAGS="-I$LOCAL_INC" $@\
 			&& make -j \
 			&& make install \
 			&& export SUCCESS=1
 		elif [ -e "autogen.sh" ]; then
 			./autogen.sh \
-			&& ./configure --prefix=$LOCAL_PREFIX $@\
+			&& ./configure --prefix=$LOCAL_PREFIX CFLAGS="-I$LOCAL_INC" CXXFLAGS="-I$LOCAL_INC" $@\
 			&& make -j \
 			&& make install \
 			&& export SUCCESS=1

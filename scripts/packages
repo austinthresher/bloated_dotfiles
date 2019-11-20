@@ -1,47 +1,44 @@
-bp_package\
-	'help2man' 'http://ftp.gnu.org/gnu/help2man/help2man-1.43.3.tar.gz'
-bp_package\
-	'm4' 'http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz' 'CFLAGS=-Wno-error'
-bp_package\
-	'libevent' 'https://github.com/libevent/libevent/releases/download/release-2.1.11-stable/libevent-2.1.11-stable.tar.gz'
-bp_package\
-	'inotify-tools'	'http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz'
-bp_package\
-	'ncurses' 'ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz'
-bp_package\
-	'vim' 'https://github.com/vim/vim/archive/v8.1.0000.tar.gz'
-bp_package\
-	'tmux' 'https://github.com/tmux/tmux/releases/download/2.9a/tmux-2.9a.tar.gz'
-bp_package\
-	'bash' 'http://ftp.gnu.org/gnu/bash/bash-5.0.tar.gz'
-bp_package\
-	'automake' 'http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz'
-bp_package\
-	'autoconf' 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz'
-bp_package\
-	'pkg-config' 'http://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz' '--with-internal-glib'
-bp_package\
-	'flex' 'https://github.com/westes/flex/files/981163/flex-2.6.4.tar.gz'
-bp_package\
-	'bison' 'http://ftp.gnu.org/gnu/bison/bison-3.4.2.tar.xz'
-bp_package\
-	'ed' 'http://mirrors.ocf.berkeley.edu/gnu/ed/ed-1.4.tar.gz'
-bp_package\
-	'binutils' 'http://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.gz'
-bp_package\
-	'gforth' 'https://ftp.gnu.org/gnu/gforth/gforth-0.7.3.tar.gz'
-bp_package\
-	'gawk' 'http://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.gz'
-bp_package\
-	'indent' 'ftp://ftp.gnu.org/gnu/indent/indent-2.2.11.tar.gz'
-bp_package\
-	'make' 'ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz'
-bp_package\
-	'clisp' 'ftp://ftp.gnu.org/gnu/clisp/release/2.49/clisp-2.49.tar.gz'
-bp_package\
-	'bc' 'http://ftp.gnu.org/gnu/bc/bc-1.07.1.tar.gz'
-bp_package\
-	'pcre' 'ftp://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz'
-bp_package\
-	'ag' 'https://geoff.greer.fm/ag/releases/the_silver_searcher-1.0.3.tar.gz' '--disable-lzma'
+bp_package 'texinfo' 'http://ftp.gnu.org/gnu/texinfo/texinfo-6.6.tar.gz'
+bp_package 'help2man' 'http://ftp.gnu.org/gnu/help2man/help2man-1.43.3.tar.gz'
+bp_package 'm4' 'http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz' 'CFLAGS=-Wno-error'
+bp_package 'libevent' 'https://github.com/libevent/libevent/releases/download/release-2.1.11-stable/libevent-2.1.11-stable.tar.gz'
+bp_package 'libtool' 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz'
+bp_package 'inotify-tools' 'http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz'
+bp_package 'ncurses' 'ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz' '--enable-shared'
+# X11 packages are required to build vim with clientserver
+bp_package 'x11-util-macros' 'https://www.x.org/archive/individual/util/util-macros-1.19.2.tar.gz' '--disable-static'
+bp_package 'x11-xtrans' 'https://www.x.org/archive/individual/lib/xtrans-1.4.0.tar.gz' '--disable-static'
+bp_package 'x11-proto' 'https://www.x.org/archive/individual/proto/xorgproto-2019.2.tar.gz' '--disable-static'
+bp_package 'x11-xcb-proto' 'https://www.x.org/archive/individual/xcb/xcb-proto-1.13.tar.gz' '--disable-static'
+bp_package 'x11-pthread-stubs' 'https://www.x.org/archive/individual/xcb/libpthread-stubs-0.4.tar.gz' '--disable-static'
+bp_package 'x11-xau' 'https://www.x.org/pub/individual/lib/libXau-1.0.9.tar.bz2' '--disable-static'
+bp_package 'x11-xcb' 'https://www.x.org/archive/individual/xcb/libxcb-1.13.1.tar.gz' '--disable-static'
+bp_package 'x11-xext' 'https://www.x.org/archive/individual/lib/libXext-1.3.4.tar.gz' '--disable-static'
+bp_package 'x11-xfixes' 'https://www.x.org/archive/individual/lib/libXfixes-5.0.3.tar.gz' '--disable-static'
+bp_package 'x11-ice' 'https://www.x.org/archive/individual/lib/libICE-1.0.10.tar.gz' '--disable-static'
+bp_package 'x11-sm' 'https://www.x.org/archive/individual/lib/libSM-1.2.3.tar.gz' '--disable-static'
+bp_package 'x11-xi' 'https://www.x.org/archive/individual/lib/libXi-1.7.10.tar.gz' '--disable-static'
+bp_package 'x11-xt' 'https://www.x.org/archive/individual/lib/libXt-1.2.0.tar.gz' '--disable-static'
+bp_package 'x11-lib' 'https://www.x.org/archive/individual/lib/libX11-1.6.9.tar.gz' '--disable-static'
+bp_package 'x11-xtst' 'https://www.x.org/archive/individual/lib/libXtst-1.2.3.tar.gz' '--disable-static'
+bp_package 'vim' 'https://github.com/vim/vim/archive/v8.1.0000.tar.gz' '--with-features=huge --with-x'
+bp_package 'tmux' 'https://github.com/tmux/tmux/releases/download/2.9a/tmux-2.9a.tar.gz'
+bp_package 'bash' 'http://ftp.gnu.org/gnu/bash/bash-5.0.tar.gz'
+bp_package 'automake' 'http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz'
+bp_package 'autoconf' 'http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz'
+bp_package 'groff' 'http://ftp.gnu.org/gnu/groff/groff-1.22.4.tar.gz'
+bp_package 'pkg-config' 'http://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz' '--with-internal-glib'
+#bp_package 'emacs' 'http://ftp.gnu.org/gnu/emacs/emacs-26.3.tar.gz' '--without-x --with-gnutls=no'
+bp_package 'bison' 'http://ftp.gnu.org/gnu/bison/bison-3.4.2.tar.xz'
+bp_package 'ed' 'http://mirrors.ocf.berkeley.edu/gnu/ed/ed-1.4.tar.gz'
+bp_package 'binutils' 'http://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.gz'
+bp_package 'gawk' 'http://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.gz'
+bp_package 'bc' 'http://ftp.gnu.org/gnu/bc/bc-1.07.1.tar.gz'
+bp_package 'pcre' 'ftp://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz'
+bp_package 'ag' 'https://geoff.greer.fm/ag/releases/the_silver_searcher-1.0.3.tar.gz' '--disable-lzma'
+bp_package 'gettext' 'https://ftp.gnu.org/pub/gnu/gettext/gettext-0.20.1.tar.gz' '--disable-static'
+bp_package 'make' 'ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz'
+bp_package 'flex' 'https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz'
+bp_package 'gforth' 'https://ftp.gnu.org/gnu/gforth/gforth-0.7.3.tar.gz'
+bp_package 'clisp' 'ftp://ftp.gnu.org/gnu/clisp/release/2.49/clisp-2.49.tar.gz'
 
