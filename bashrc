@@ -93,10 +93,10 @@ git_prompt() {
 set_pane_title "$PWD"
 if [ -z "$TMUX" ]; then
 	set -o ignoreeof
-	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w➤ '
+	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\033[1;34m➤ \033[0m '
 	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}"; trap "trap_pre" DEBUG'
 else
-	export PS1='➤ '
+	export PS1='\033[1;34m➤ \033[0m'
 	export PROMPT_COMMAND='trap "trap_pre" DEBUG'
 fi
 
