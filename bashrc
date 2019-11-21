@@ -11,11 +11,13 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
+source colorutils
+
 # TODO: Investigate adding other tmux hooks with trap callbacks
 set_window_title() {
 	case "$TERM" in
-		screen*|tmux*) printf "\033k$1\033\\" ;;
-		linux|xterm*|rxvt*) printf "\033]0;$1\007" ;;
+		screen*|tmux*) printf "\ek'$1'\e\\" ;;
+		linux|xterm*|rxvt*) printf "\e]0;$1\007" ;;
 		*) ;;
 	esac
 }
@@ -24,7 +26,7 @@ export -f set_window_title
 set_pane_title() {
 	case "$TERM" in
 		tmux*)
-			printf "\033]2;$1\033\\" 
+			printf "\e]2;'$1'\e\\"
 			set_window_title "${USER}@${HOSTNAME%%.*}"
 			;;
 		*) ;;
@@ -85,10 +87,10 @@ git_prompt() {
 set_pane_title "$PWD"
 if [ -z "$TMUX" ]; then
 	set -o ignoreeof
-	export PS1='\033[1;32m\u\033[36m@\033[34m\h\033[0;37m:\w\033[1;34m➤ \033[0m '
+	export PS1="\[$(color $FG_GREEN)\]\u\[$(color $FG_CYAN)\]@\[$(color $FG_BLUE)\]\h\[$(color $FG_WHITE)\]:\w\[$(bold)$(color $FG_BLUE)\] ➤ \[$(norm)"
 	export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}"; trap "trap_pre" DEBUG'
 else
-	export PS1='\033[1;34m➤ \033[0m'
+	export PS1="\[$(bold)$(color $FG_BLUE)\]➤ \[$(norm)\]"
 	export PROMPT_COMMAND='trap "trap_pre" DEBUG'
 fi
 
