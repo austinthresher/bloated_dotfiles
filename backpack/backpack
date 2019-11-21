@@ -50,7 +50,7 @@ bp_package() {
 		export BIN_DEST=$LOCAL_BIN/$PKG_NAME
 		case $BP_CMD in
 			"rm")
-				printf "removing directoy '$PKG_NAME'\n"
+				printf "removing directory '$PKG_NAME'\n"
 				bp_remove_existing
 				;;
 			"install")
@@ -121,14 +121,28 @@ bp_configure_make_install() {
 	{
 		cd "$SRC_DEST" 
 		if [ -e "configure" ]; then
-			./configure --prefix=$LOCAL_PREFIX CFLAGS="-I$LOCAL_INC" CXXFLAGS="-I$LOCAL_INC" $@\
+			printf "." \
+			&& ./configure --prefix=$LOCAL_PREFIX \
+				CPPFLAGS="-I$LOCAL_INC" \
+				CFLAGS="-I$LOCAL_INC" \
+				CXXFLAGS="-I$LOCAL_INC" \
+				$@ \
+			&& printf "." \
 			&& make -j \
+			&& printf "." \
 			&& make install \
 			&& export SUCCESS=1
 		elif [ -e "autogen.sh" ]; then
 			./autogen.sh \
-			&& ./configure --prefix=$LOCAL_PREFIX CFLAGS="-I$LOCAL_INC" CXXFLAGS="-I$LOCAL_INC" $@\
+			&& printf "." \
+			&& ./configure --prefix=$LOCAL_PREFIX \
+				CPPFLAGS="-I$LOCAL_INC" \
+				CFLAGS="-I$LOCAL_INC" \
+				CXXFLAGS="-I$LOCAL_INC" \
+				$@ \
+			&& printf "." \
 			&& make -j \
+			&& printf "." \
 			&& make install \
 			&& export SUCCESS=1
 		fi

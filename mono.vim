@@ -74,7 +74,7 @@ hi SpecialKey		ctermfg=66	ctermbg=none	cterm=none
 " --------------------------------
 hi Constant		ctermfg=NONE	ctermbg=none	cterm=none
 hi String		ctermfg=NONE	ctermbg=234	cterm=italic
-hi StringDelimiter	ctermfg=NONE	ctermbg=none	cterm=none
+hi StringDelimiter	ctermfg=NONE	ctermbg=234	cterm=italic
 hi Character		ctermfg=NONE	ctermbg=none	cterm=none
 hi Number		ctermfg=NONE	ctermbg=none	cterm=none
 hi Boolean		ctermfg=NONE	ctermbg=none	cterm=none
@@ -96,7 +96,7 @@ hi Exception		ctermfg=NONE	ctermbg=none	cterm=bold
 hi Comment		ctermfg=66	ctermbg=none	cterm=italic
 
 hi Special		ctermfg=NONE	ctermbg=none	cterm=none
-hi SpecialChar		ctermfg=NONE	ctermbg=none	cterm=none
+hi SpecialChar		ctermfg=NONE	ctermbg=234	cterm=italic
 hi Tag			ctermfg=NONE	ctermbg=none	cterm=none
 hi Delimiter		ctermfg=NONE	ctermbg=none	cterm=none
 hi SpecialComment	ctermfg=NONE	ctermbg=none	cterm=none

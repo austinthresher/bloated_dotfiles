@@ -39,5 +39,4 @@ ln "gdbinit"     "$HOME/.gdbinit"
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.config/
 
-[ ! -e "$HOME/.vim/colors/focuspoint.vim" ] && ln "colors/focuspoint.vim" "$HOME/.vim/colors/"
-[ ! -e "$HOME/.vim/colors/mono.vim" ]       && ln "colors/mono.vim"       "$HOME/.vim/colors/"
+[ ! -e "$HOME/.vim/colors/mono.vim" ] && ln "mono.vim" "$HOME/.vim/colors/"
