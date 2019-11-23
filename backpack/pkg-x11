@@ -5,7 +5,7 @@ bp_package 'xcb-proto' 'https://www.x.org/archive/individual/xcb/xcb-proto-1.13.
 bp_package 'libpthread-stubs' 'https://www.x.org/archive/individual/xcb/libpthread-stubs-0.4.tar.gz'
 bp_package 'xproto' 'https://www.x.org/archive/individual/proto/xproto-7.0.4.tar.gz'
 bp_package 'libxau' 'https://www.x.org/pub/individual/lib/libXau-1.0.9.tar.bz2'
-bp_package 'libx11' 'https://www.x.org/archive/individual/lib/libx11-1.6.9.tar.gz'
+bp_package 'libx11' 'https://github.com/mirror/libX11/archive/libX11-1.6.9.tar.gz'
 bp_package 'libxext' 'https://www.x.org/archive/individual/lib/libXext-1.3.4.tar.gz'
 bp_package 'libxfixes' 'https://www.x.org/archive/individual/lib/libXfixes-5.0.3.tar.gz'
 bp_package 'libice' 'https://www.x.org/archive/individual/lib/libICE-1.0.10.tar.gz'

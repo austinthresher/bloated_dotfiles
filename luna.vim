@@ -26,11 +26,11 @@ else
 	highlight Comment          ctermfg=2     ctermbg=none  cterm=italic
 	highlight Todo             ctermfg=10    ctermbg=none  cterm=bold
 	highlight VertSplit        ctermfg=15    ctermbg=15    cterm=none
-	highlight TabLineFill      ctermfg=none  ctermbg=none  cterm=none
-	highlight TabLineSel       ctermfg=8     ctermbg=none  cterm=bold
-	highlight TabLine          ctermfg=15    ctermbg=none  cterm=none
+	highlight TabLineFill      ctermfg=none  ctermbg=none  cterm=underline
+	highlight TabLineSel       ctermfg=0     ctermbg=none  cterm=none
+	highlight TabLine          ctermfg=8    ctermbg=none  cterm=none
 	highlight StatusLine       ctermfg=15    ctermbg=8     cterm=none
-	highlight StatusLineTerm   ctermfg=15    ctermbg=8    cterm=underline
+	highlight StatusLineTerm   ctermfg=15    ctermbg=8     cterm=underline
 	highlight StatusLineNC     ctermfg=8     ctermbg=7     cterm=italic
 	highlight StatusLineTermNC ctermfg=8     ctermbg=7     cterm=italic
 	highlight MatchParen       ctermfg=12    ctermbg=none  cterm=underline

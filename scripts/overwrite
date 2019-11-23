@@ -39,4 +39,4 @@ ln "gdbinit"     "$HOME/.gdbinit"
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.config/
 
-cp "luna.vim" "$HOME/.vim/colors/"
+ln "luna.vim" "$HOME/.vim/colors/"
