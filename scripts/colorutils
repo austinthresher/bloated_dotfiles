@@ -48,8 +48,36 @@ color()  { printf "\e[$1m"; }
 # This escape code was difficult to search for. Found it here:
 # https://metacpan.org/release/Term-ExtendedColor-Xresources/source/lib/Term/ExtendedColor/Xresources.pm
 # Remaps an xterm 256 color index to a new RGB value
-# redefcol <index> <r> <g> <b>
+# redefcol <index> <rgb>
 # where r, g, and b are 2 digit hex values
 redefcol() {
-	echo -ne "\e]4;$1;rgb:$2/$3/$4\e\\"
+	case $TERM in
+		*tmux*|*screen*)
+			echo -ne "\eP\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\a\e\\"
+			;;
+		*)
+			echo -ne "\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\e\\"
+			;;
+	esac
+}
+redefbg() {
+	case $TERM in
+		*tmux*|*screen*)
+			echo -ne "\eP\e]11;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
+			;;
+		*)
+			echo -ne "\e]11;rgb:${1:0:2}/${1:2:2}/${1:4:2}\e\\"
+			;;
+	esac
+
+}
+redeffg() {
+	case $TERM in
+		*tmux*|*screen*)
+			echo -ne "\eP\e]10;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
+			;;
+		*)
+			echo -ne "\e]10;rgb:${1:0:2}/${1:2:2}/${1:4:2}\e\\"
+			;;
+	esac
 }

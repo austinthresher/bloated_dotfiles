@@ -1,16 +1,8 @@
-STATUS_DARK_BG=colour237
-STATUS_LITE_BG=colour88
-STATUS_DARK_TX=colour52
-STATUS_LITE_TX=colour231
-ACTIVE_PANE=colour232
-INACTIVE_PANE=colour16
-
-COLOR_LITE="fg=$STATUS_LITE_TX bg=$STATUS_LITE_BG"
-COLOR_DARK="fg=$STATUS_DARK_TX bg=$STATUS_DARK_BG"
-COLOR_FADE="fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
-
-FADE_LEFT="#[$COLOR_FADE]░▒▓"
-FADE_RIGHT="#[$COLOR_FADE]▓▒░"
+STATUS_STYLE="bg=colour14 fg=colour15"
+SELECTED_BG=colour6
+SELECTED_FG=colour0
+ACTIVE_FMT="bg=colour9 fg=colour15"
+BORDER_STYLE="bg=colour15 fg=colour7"
 
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
@@ -21,15 +13,15 @@ ICONBAR="$SYNC$ZOOM$PREFIX"
 set -g status off
 set-hook -g window-linked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
 set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
-bind C command-prompt -p "New window name: " "new-window -n '%%'"
-set -g status-style "$COLOR_DARK"
+#bind C command-prompt -p "New window name: " "new-window -n '%%'"
+set -g status-style "$STATUS_STYLE"
 set -g status-right ""
-set -g window-status-format "  #{window_name}  "
-set -g window-status-current-format "$FADE_LEFT#[$COLOR_LITE]#{window_name}$FADE_RIGHT"
-set -g pane-border-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
-set -g pane-active-border-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
-set -g pane-border-format "< #{pane_current_command} ⋅ #{pane_current_path}#{?pane_in_mode, ⋅ #{pane_mode},}#{?pane_active, ⋅$ICONBAR>, >}"
-set -g window-active-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
-set -g window-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
-set -g message-command-style "fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
-set -g message-style "bg=$STATUS_DARK_TX fg=$STATUS_LITE_TX"
+set -g window-status-style "$STATUS_STYLE"
+set -g window-status-current-style "fg=$SELECTED_FG bg=$SELECTED_BG"
+set -g window-status-format " #{window_name} "
+set -g window-status-current-format " #{window_name} "
+set -g pane-border-style "$BORDER_STYLE underscore"
+set -g pane-active-border-style "$BORDER_STYLE underscore"
+set -g pane-border-format "#[nounderscore]┤#{?pane_active,#[$ACTIVE_FMT],} #{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},} #[$BORDER_STYLE]├"
+set -g message-command-style "bg=$SELECTED_BG fg=$SELECTED_FG"
+set -g message-style "bg=$SELECTED_BG fg=$SELECTED_FG"

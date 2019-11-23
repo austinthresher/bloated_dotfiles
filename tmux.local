@@ -1,39 +1,29 @@
-STATUS_DARK_BG=colour237
-STATUS_LITE_BG=colour31
-STATUS_DARK_TX=colour24
-STATUS_LITE_TX=colour253 #195 
-ACTIVE_PANE=colour232
-INACTIVE_PANE=colour16
-
-COLOR_LITE="fg=$STATUS_LITE_TX bg=$STATUS_LITE_BG"
-COLOR_DARK="fg=$STATUS_DARK_TX bg=$STATUS_DARK_BG"
-COLOR_FADE="fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
-
-FADE_LEFT="#[$COLOR_FADE]░▒▓"
-FADE_RIGHT="#[$COLOR_FADE]▓▒░"
-
+STATUS_STYLE="bg=colour10 fg=colour15"
+SELECTED_BG=colour2
+SELECTED_FG=colour0
+ACTIVE_FMT="bg=colour12 fg=colour15"
+BORDER_STYLE="bg=colour15 fg=colour8"
+TRANSITION="#[fg=colour2  bg=colour10]░▒▓#[fg=colour0 bg=colour2]"
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
 PREFIX="#{?client_prefix, ❖ ,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX"
 CLOCK="⋅ %A, %B %d %l:%M %p "
-TRANSITION="$FADE_LEFT#[$COLOR_LITE]"
 
 set -g set-titles on
 set -g set-titles-string "#{client_name}"
 set -g status-right "$TRANSITION$ICONBAR   $CLOCK"
-set -gF status-right-length 64
-set -g pane-border-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
-set -g pane-active-border-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
-set -gF status-style "$COLOR_DARK"
-set -g window-status-style "fg=$STATUS_DARK_TX bg=$STATUS_DARK_BG"
-set -g window-status-format "  #{window_name}  "
-set -g window-status-current-format "$FADE_LEFT#[$COLOR_LITE]#{window_name}$FADE_RIGHT"
-set -g message-command-style "fg=$STATUS_LITE_BG bg=$STATUS_DARK_BG"
-set -g message-style "bg=$STATUS_DARK_TX fg=$STATUS_LITE_TX"
-set -g window-active-style "fg=$STATUS_LITE_TX bg=$ACTIVE_PANE"
-set -g window-style "fg=$STATUS_DARK_TX bg=$INACTIVE_PANE"
-set -g pane-border-format "< #{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},} >"
+set -gF status-right-length 72 
+set -g pane-border-style "$BORDER_STYLE underscore"
+set -g pane-active-border-style "$BORDER_STYLE underscore"
+set -gF status-style "$STATUS_STYLE"
+set -g window-status-style "$STATUS_STYLE"
+set -g window-status-current-style "fg=$SELECTED_FG bg=$SELECTED_BG"
+set -g window-status-format " #{window_name} "
+set -g window-status-current-format " #{window_name} "
+set -g message-command-style "$SELECTED_STYLE"
+set -g message-style "bg=$SELECTED_BG fg=$SELECTED_FG"
+set -g pane-border-format "#[nounderscore]┤#{?pane_active,#[$ACTIVE_FMT],} #{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},} #[$BORDER_STYLE]├"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2
