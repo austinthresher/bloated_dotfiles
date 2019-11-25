@@ -9,14 +9,16 @@ ghetto_cut() {
 }
 
 bp_init() {
-	export LOCAL_PREFIX="$HOME/.local"
+	export LOCAL_PREFIX="$HOME/.bp"
 	export LOCAL_BIN=$LOCAL_PREFIX/bin
+	export LOCAL_PKG=$LOCAL_PREFIX/pkg
+	export LOCAL_LIB=$LOCAL_PREFIX/lib
 	export LOCAL_SRC=$LOCAL_PREFIX/src
-	export LOCAL_TMP=$LOCAL_PREFIX/tmp
+	export LOCAL_LOG=$LOCAL_PREFIX/log
 	export LOCAL_INC=$LOCAL_PREFIX/include
 	mkdir -p $LOCAL_BIN
 	mkdir -p $LOCAL_SRC
-	mkdir -p $LOCAL_TMP
+	mkdir -p $LOCAL_LOG
 	mkdir -p $LOCAL_INC
 	export SELECTED_PKGS=$@
 	export BP_CMD=none
@@ -79,25 +81,25 @@ bp_fetch_git() {
 	{
 		[ ! -e "$SRC_DEST" ] \
 			&& git clone "https://github.com/$1" "$SRC_DEST"
-	}	>  $LOCAL_TMP/$PKG_NAME.fetch.out \
-		2> $LOCAL_TMP/$PKG_NAME.fetch.err
+	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
+		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
 
 bp_fetch_tar() {
 	{
 		FNAME=${1##*\/}
 		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
-		[ ! -e "$LOCAL_TMP/$FNAME" ] && wget -P "$LOCAL_TMP" "$1"
-		tar --extract --overwrite --file="$LOCAL_TMP/$FNAME" --directory="$SRC_DEST"
+		[ ! -e "$LOCAL_LOG/$FNAME" ] && wget -P "$LOCAL_PKG" "$1"
+		tar --extract --overwrite --file="$LOCAL_PKG/$FNAME" --directory="$SRC_DEST"
 		# Assume a single directory was extracted, try to get its name
 		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar* "$SRC_DEST"))
 		# Move all of its contents one directory up
-		cd "$SRC_DEST/$NEW_DIR" \
-			&& mv * ../ \
-			&& cd .. \
-			&& rmdir "$SRC_DEST/$NEW_DIR"
-	}	>  $LOCAL_TMP/$PKG_NAME.fetch.out \
-		2> $LOCAL_TMP/$PKG_NAME.fetch.err
+		cd "$SRC_DEST/$NEW_DIR"
+		mv -f * ../
+		cd ..
+		rm -rf "$SRC_DEST/$NEW_DIR"
+	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
+		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
 
 bp_make_uninstall() {
@@ -107,10 +109,10 @@ bp_make_uninstall() {
 		&& ./configure --prefix=$LOCAL_PREFIX $@\
 		&& make -j uninstall \
 		&& export SUCCESS=1
-	}	>  $LOCAL_TMP/$PKG_NAME.make.out \
-		2> $LOCAL_TMP/$PKG_NAME.make.err
+	}	>  $LOCAL_LOG/$PKG_NAME.make.out \
+		2> $LOCAL_LOG/$PKG_NAME.make.err
 	if [ "$SUCCESS" -eq 0 ]; then
-		printf " failed. Logs written to $LOCAL_TMP\n"
+		printf " failed. Logs written to $LOCAL_LOG\n"
 	else
 		printf " completed\n"
 	fi
@@ -123,6 +125,7 @@ bp_configure_make_install() {
 		if [ -e "configure" ]; then
 			printf "." \
 			&& ./configure --prefix=$LOCAL_PREFIX \
+				LDFLAGS="-L$LOCAL_LIB" \
 				CPPFLAGS="-I$LOCAL_INC" \
 				CFLAGS="-I$LOCAL_INC" \
 				CXXFLAGS="-I$LOCAL_INC" \
@@ -136,6 +139,7 @@ bp_configure_make_install() {
 			./autogen.sh \
 			&& printf "." \
 			&& ./configure --prefix=$LOCAL_PREFIX \
+				LDFLAGS="-L$LOCAL_LIB" \
 				CPPFLAGS="-I$LOCAL_INC" \
 				CFLAGS="-I$LOCAL_INC" \
 				CXXFLAGS="-I$LOCAL_INC" \
@@ -145,12 +149,24 @@ bp_configure_make_install() {
 			&& printf "." \
 			&& make install \
 			&& export SUCCESS=1
+		elif [ -e "Makefile" ]; then
+			mv Makefile Makefile.def
+			sed \
+				-e "/PREFIX.*=.*/c\PREFIX=$LOCAL_PREFIX" \
+				-e "/INSTALL.*=.*/c\INSTALL=$(which install)" \
+				-e "/PRESERVEDIR.*=.*/c\PRESERVEDIR=/tmp/preserve" \
+				Makefile.def > Makefile
+			make -j \
+			&& make install \
+			&& export SUCCESS=1
 		fi
-	}	>  $LOCAL_TMP/$PKG_NAME.make.out \
-		2> $LOCAL_TMP/$PKG_NAME.make.err
+	}	>  $LOCAL_LOG/$PKG_NAME.make.out \
+		2> $LOCAL_LOG/$PKG_NAME.make.err
 	if [ "$SUCCESS" -eq 0 ]; then
-		printf " failed. Logs written to $LOCAL_TMP\n"
+		printf " failed. Logs written to $LOCAL_LOG\n"
 	else
 		printf " completed\n" 
 	fi
+	# Remove empty logs
+	find $LOCAL_LOG -size 0 -print0 | xargs -0 rm --
 }

@@ -1,4 +1,5 @@
-bp_package 'bison' 'http://ftp.gnu.org/gnu/bison/bison-3.4.2.tar.xz'
+bp_package 'texinfo' 'http://ftp.gnu.org/gnu/texinfo/texinfo-6.6.tar.gz'
+bp_package 'inotify-tools' 'http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz'bp_package 'bison' 'http://ftp.gnu.org/gnu/bison/bison-3.4.2.tar.xz'
 bp_package 'ed' 'http://mirrors.ocf.berkeley.edu/gnu/ed/ed-1.4.tar.gz'
 bp_package 'binutils' 'http://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.gz'
 bp_package 'gawk' 'http://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.gz'

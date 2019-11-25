@@ -7,7 +7,7 @@ if [[ ! -e "backpack" || -d "backpack" ]]; then
 fi
 
 BP_COMMANDS=( install rm uninstall )
-BP_PACKAGES=( core extra x11 )
+BP_PACKAGES=( basic extra ide )
 
 CONF=$HOME/.backpack.conf
 

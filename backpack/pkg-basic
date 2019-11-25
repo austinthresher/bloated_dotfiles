@@ -1,0 +1,11 @@
+bp_package "pkg-config" "http://pkgconfig.freedesktop.org/releases/pkg-config-0.29.2.tar.gz" "--with-internal-glib"
+bp_package "ncurses" "ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz" "--with-pkg-config-libdir=$LOCAL_LIB/pkgconfig --enable-shared --enable-pc-files"
+bp_package "help2man" "http://ftp.gnu.org/gnu/help2man/help2man-1.43.3.tar.gz"
+bp_package "m4" "http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz" "CFLAGS=-Wno-error"
+bp_package "autoconf" "http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz"
+bp_package "automake" "http://ftp.gnu.org/gnu/automake/automake-1.16.1.tar.gz"
+bp_package "libtool" "ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz"
+bp_package 'vi' 'http://prdownloads.sourceforge.net/ex-vi/ex-050325.tar.bz2'
+bp_package 'bash' 'http://ftp.gnu.org/gnu/bash/bash-5.0.tar.gz'
+bp_package 'libevent' 'https://github.com/libevent/libevent/releases/download/release-2.1.11-stable/libevent-2.1.11-stable.tar.gz'
+bp_package 'tmux' 'https://github.com/tmux/tmux/releases/download/2.9a/tmux-2.9a.tar.gz'

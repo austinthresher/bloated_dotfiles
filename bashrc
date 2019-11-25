@@ -5,7 +5,8 @@ alias vim='vim -c"set notitle"'
 alias gdb='gdb -q'
 
 export PATH=$HOME/.dotfiles/scripts:$PATH
-export LD_LIBRARY_PATH=$HOME/.local/lib:$LD_LIBRARAY_PATH
+export PATH=$HOME/.bp/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/.bp/lib:$LD_LIBRARAY_PATH
 
 export EDITOR=vim
 export VISUAL=vim
