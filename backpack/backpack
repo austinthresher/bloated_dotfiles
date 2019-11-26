@@ -24,6 +24,10 @@ bp_init() {
 	export SELECTED_PKGS=$@
 	export BP_CMD=none
 	export PKG_CONFIG_PATH=$LOCAL_PREFIX/share/pkgconfig:$LOCAL_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH
+	if [ ! -d "$LOCAL_INC/gnulib" ]; then
+		git clone https://git.savannah.gnu.org/git/gnulib.git $LOCAL_INC/gnulib
+	fi
+	export GNULIB_SRCDIR=$LOCAL_INC/gnulib
 }
 
 bp_command() {
@@ -117,7 +121,7 @@ bp_fetch_tar() {
 				gunzip -c $LOCAL_PKG/$FNAME | $TARCMD
 				;;
 			*.tar.xz)
-				xz -c $LOCAL_PKG/$FNAME | $TARCMD
+				xz -c $LOCAL_PKG/$FNAME | $TARCMD -J
 				;;
 			*.tar.bz2)
 				bunzip2 -c $LOCAL_PKG/$FNAME | $TARCMD
