@@ -102,7 +102,9 @@ bp_fetch_tar() {
 		FNAME=${1##*\/}
 		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
 		[ ! -e "$LOCAL_LOG/$FNAME" ] && bp_download $1 $LOCAL_PKG
-		TARCMD="tar xopft -C $SRC_DEST"
+		mkdir -p /tmp/bp
+		cd /tmp/bp
+		TARCMD="tar xopft"
 		case $FNAME in
 			*.tar)
 				cat $LOCAL_PKG/$FNAME | $TARCMD
@@ -119,12 +121,9 @@ bp_fetch_tar() {
 				;;
 		esac
 		# Assume a single directory was extracted, try to get its name
-		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar* "$SRC_DEST"))
-		# Move all of its contents one directory up
-		cd "$SRC_DEST/$NEW_DIR" && \
-			mv -f * ../ && \
-			cd .. && \
-			rm -rf "$SRC_DEST/$NEW_DIR"
+		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar*))
+		[ -f "$NEW_DIR" ] && mv $NEW_DIR/* $SRC_DEST/
+		cd $SRC_DEST
 	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
 		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
