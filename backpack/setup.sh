@@ -6,30 +6,46 @@ if [[ ! -e "backpack" || -d "backpack" ]]; then
 	exit 1
 fi
 
-BP_COMMANDS=( install rm uninstall )
-BP_PACKAGES=( basic extra ide )
+bp_commands=( install rm uninstall )
+bp_packages=( basic extra ide )
 
-CONF=$HOME/.bp/config
+backpack_root=$HOME/.bp
+backpack_scripts=$backpack_root/scripts
+backpack_bin=$backpack_root/bin
+backpack_lib=$backpack_root/lib
+backpack_config=$backpack_root/config
 
-export PATH=$HOME/.bp/bin:$PATH
-export LD_LIBRARY_PATH=$HOME/.bp/lib:$LD_LIBRARY_PATH
+mkdir -p $backpack_root
+mkdir -p $backpack_scripts
+mkdir -p $backpack_bin
+mkdir -p $backpack_lib
 
+rm -f $backpack_scripts/*
+cp ./backpack $backpack_scripts/
+for c in "${bp_commands[@]}"; do cp bp-$c $backpack_scripts/; done
+for p in "${bp_packages[@]}"; do cp pkg-$p $backpack_scripts/; done
 
-echo "export backpack_path=$PWD" > $CONF
-echo "export backpack=$PWD/backpack" >> $CONF
+echo "export backpack_root=$backpack_root" > $backpack_config
 
+cat >> $backpack_config << 'EOF'
+export backpack_bin=$backpack_root/bin
+export backpack_lib=$backpack_root/lib
+export backpack_scripts=$backpack_root/scripts
+export backpack=$backpack_scripts/backpack
+export PATH=$backpack_bin:$backpack_scripts:$PATH
+export LD_LIBRARY_PATH=$backpack_lib:%s
+EOF
 
-for c in "${BP_COMMANDS[@]}"; do
-	echo "export backpack_$c=$PWD/bp-$c" >> $CONF
-	for p in "${BP_PACKAGES[@]}"; do
-		FNAME="bp-$c-$p"
+for c in "${bp_commands[@]}"; do
+	printf "export backpack_$c=%s/bp-$c\n" '$backpack_scripts' >> $backpack_config
+	for p in "${bp_packages[@]}"; do
+		FNAME="$backpack_scripts/bp-$c-$p"
 		touch $FNAME
 		chmod +x $FNAME
-		echo "#!/bin/bash" > $FNAME
-		echo 'source $backpack_'"$c" >> $FNAME
-		echo "source pkg-$p" >> $FNAME
+		echo "#!/bin/bash" >> $FNAME
+		echo -n 'source $backpack_' >> $FNAME
+		echo "$c" >> $FNAME
+		echo -n 'source $backpack_scripts/pkg-' >> $FNAME
+		echo "$p" >> $FNAME
 	done
 done
-
-echo 'source $HOME/.backpack.conf' >> $HOME/.bashrc
-echo 'export PATH=$PATH:$backpack_path' >> $HOME/.bashrc

@@ -1,4 +1,4 @@
-source $BACKPACK
-cd $BACKPACK_PATH
+source $backpack
+cd $backpack_path
 bp_init $@
 bp_command install
