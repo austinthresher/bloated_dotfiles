@@ -141,7 +141,7 @@ bp_make_uninstall() {
 	export SUCCESS=0
 	{
 		cd "$SRC_DEST" \
-		&& ./configure --prefix=$LOCAL_PREFIX $@\
+		&& bp_configure $@\
 		&& make -j uninstall \
 		&& export SUCCESS=1
 	}	>  $LOCAL_LOG/$PKG_NAME.make.out \
