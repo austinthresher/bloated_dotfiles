@@ -204,5 +204,5 @@ bp_configure_make_install() {
 		printf " completed\n"
 	fi
 	# Remove empty logs
-	find $LOCAL_LOG -size 0 -print0 | xargs -0 rm --
+	rm -f $(find $LOCAL_LOG -size 0)
 }
