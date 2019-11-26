@@ -85,11 +85,22 @@ bp_fetch_git() {
 		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
 
+bp_download() {
+	[ ! -x "$(which curl)" ] && [ ! -x "$(which wget)" ] \
+		&& echo "Please install wget or curl." && exit 1
+	if [ -x "$(which curl)" ]; then
+		# Extract the filename from url and append it to output path
+		curl $1 --output $2/${1##*\/}
+	else
+		wget --no-check-certificate -P $2 $1
+	fi
+}
+
 bp_fetch_tar() {
 	{
 		FNAME=${1##*\/}
 		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
-		[ ! -e "$LOCAL_LOG/$FNAME" ] && wget --no-check-certificate -P "$LOCAL_PKG" "$1"
+		[ ! -e "$LOCAL_LOG/$FNAME" ] && bp_download $1 $LOCAL_PKG
 		tar --extract --overwrite --file="$LOCAL_PKG/$FNAME" --directory="$SRC_DEST"
 		# Assume a single directory was extracted, try to get its name
 		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar* "$SRC_DEST"))
