@@ -37,6 +37,7 @@ ln "tmux.remote" "$HOME/.tmux.remote"
 ln "gdbinit"     "$HOME/.gdbinit"
 
 mkdir -p $HOME/.vim/colors
-mkdir -p $HOME/.config/
-
 ln "luna.vim" "$HOME/.vim/colors/"
+
+mkdir -p $HOME/.vim/pack
+ln -s $PWD/vim-plugs $HOME/.vim/pack/plugins
