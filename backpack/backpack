@@ -23,6 +23,7 @@ bp_init() {
 	mkdir -p $LOCAL_PKG
 	export SELECTED_PKGS=$@
 	export BP_CMD=none
+	export PKG_CONFIG_PATH=$LOCAL_PREFIX/share/pkgconfig
 }
 
 bp_command() {
