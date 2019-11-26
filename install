@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# prompt_to_replace <file-in-current-dir> <abs-path-to-replace>
+function prompt_to_replace() {
+	if [ -L "$2" ]; then
+		rm $2;
+	elif [ -f "$2" ]; then
+		read -p "Replace regular file '$2' with symlink to '$1? " yn
+		case $yn in
+			y) rm $2 ;;
+			*) return 1 ;;
+		esac
+	elif [ -d "$2" ]; then
+		read -p "Replace directory '$2' with symlink to '$1? " yn
+		case $yn in
+			y) rm -rf $2 ;;
+			*) return 1 ;;
+		esac
+	fi
+	ln -s $1 $2
+}
+
+mkdir -p $HOME/.vim
+mkdir -p $HOME/.vim/colors
+mkdir -p $HOME/.vim/pack
+
+prompt_to_replace bashrc      $HOME/.bashrc
+prompt_to_replace inputrc     $HOME/.inputrc
+prompt_to_replace tmux.conf   $HOME/.tmux.conf
+prompt_to_replace tmux.local  $HOME/.tmux.local
+prompt_to_replace tmux.remote $HOME/.tmux.remote
+prompt_to_replace vimrc       $HOME/.vimrc
+prompt_to_replace vim-plugs   $HOME/.vim/pack/plugins
+prompt_to_replace luna.vim    $HOME/.vim/colors/luna.vim
+prompt_to_replace gdbinit     $HOME/.gdbinit
