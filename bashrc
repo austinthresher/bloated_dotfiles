@@ -3,6 +3,7 @@
 [ "$BASH_VERSION" != "$(bash -c 'echo $BASH_VERSION')" ] && exec bash --login
 
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
+[ -e "$HOME/.bp/config" ] && source "$HOME/.bp/config"
 
 alias ls='ls -F'
 alias grep='grep -n'
@@ -11,8 +12,6 @@ alias vim='vim -c"set notitle"'
 alias gdb='gdb -q'
 
 export PATH=$HOME/.dotfiles/scripts:$PATH
-export PATH=$HOME/.bp/bin:$PATH
-export LD_LIBRARY_PATH=$HOME/.bp/lib:$LD_LIBRARAY_PATH
 
 export EDITOR=vim
 export VISUAL=vim

@@ -17,7 +17,7 @@ function prompt_to_replace() {
 			*) return 1 ;;
 		esac
 	fi
-	ln -s $1 $2
+	ln -s $PWD/$1 $2
 }
 
 mkdir -p $HOME/.vim

@@ -9,22 +9,27 @@ fi
 BP_COMMANDS=( install rm uninstall )
 BP_PACKAGES=( basic extra ide )
 
-CONF=$HOME/.backpack.conf
+CONF=$HOME/.bp/config
 
-echo "export BACKPACK_PATH=$PWD" > $CONF
-echo "export BACKPACK=$PWD/backpack" >> $CONF
+export PATH=$HOME/.bp/bin:$PATH
+export LD_LIBRARY_PATH=$HOME/.bp/lib:$LD_LIBRARY_PATH
+
+
+echo "export backpack_path=$PWD" > $CONF
+echo "export backpack=$PWD/backpack" >> $CONF
+
 
 for c in "${BP_COMMANDS[@]}"; do
-	echo "export BACKPACK_${c^^}=$PWD/bp-$c" >> $CONF
+	echo "export backpack_$c=$PWD/bp-$c" >> $CONF
 	for p in "${BP_PACKAGES[@]}"; do
 		FNAME="bp-$c-$p"
 		touch $FNAME
 		chmod +x $FNAME
 		echo "#!/bin/bash" > $FNAME
-		echo 'source $BACKPACK_'"${c^^}" >> $FNAME
+		echo 'source $backpack_'"$c" >> $FNAME
 		echo "source pkg-$p" >> $FNAME
 	done
 done
 
 echo 'source $HOME/.backpack.conf' >> $HOME/.bashrc
-echo 'export PATH=$PATH:$BACKPACK_PATH' >> $HOME/.bashrc
+echo 'export PATH=$PATH:$backpack_path' >> $HOME/.bashrc
