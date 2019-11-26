@@ -20,6 +20,7 @@ bp_init() {
 	mkdir -p $LOCAL_SRC
 	mkdir -p $LOCAL_LOG
 	mkdir -p $LOCAL_INC
+	mkdir -p $LOCAL_PKG
 	export SELECTED_PKGS=$@
 	export BP_CMD=none
 }
@@ -101,7 +102,22 @@ bp_fetch_tar() {
 		FNAME=${1##*\/}
 		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
 		[ ! -e "$LOCAL_LOG/$FNAME" ] && bp_download $1 $LOCAL_PKG
-		tar --extract --overwrite --file="$LOCAL_PKG/$FNAME" --directory="$SRC_DEST"
+		TARCMD="tar xopft -C $SRC_DEST"
+		case $FNAME in
+			*.tar)
+				cat $LOCAL_PKG/$FNAME | $TARCMD
+				;;
+			*.tar.gz)
+				gunzip -c $LOCAL_PKG/$FNAME | $TARCMD
+				;;
+			*.tar.xz)
+				xz -c $LOCAL_PKG/$FNAME | $TARCMD
+				;;
+			*.tar.bz2)
+				bunzip2 -c $LOCAL_PKG/$FNAME | $TARCMD
+			*)
+				;;
+		esac
 		# Assume a single directory was extracted, try to get its name
 		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar* "$SRC_DEST"))
 		# Move all of its contents one directory up
@@ -131,9 +147,11 @@ bp_make_uninstall() {
 
 bp_configure() {
 	_ARGS="LDFLAGS=-L$LOCAL_LIB CPPFLAGS=-I$LOCAL_INC CFLAGS=-I$LOCAL_INC CXXFLAGS=-I$LOCAL_INC $@"
+	_C=
 	[ -x "./configure" ] && _C=./configure
 	[ -x "./config" ] && _C=./config
 	_FAILURE=1
+	[ -z $_C ] && return 1
 	$_C --prefix=$LOCAL_PREFIX $_ARGS && _FAILURE=0
 	if [ "$_FAILURE" -eq 1 ]; then
 		$_C --prefix=$LOCAL_PREFIX && _FAILURE=0
