@@ -91,23 +91,26 @@ bp_download() {
 		&& echo "Please install wget or curl." && exit 1
 	if [ -x "$(which curl)" ]; then
 		# Extract the filename from url and append it to output path
-		curl $1 --output $2/${1##*\/}
+		F=$2/${1##*\/}
+		curl -L $1 --output $F
 	else
 		wget --no-check-certificate -P $2 $1
 	fi
+	#TODO: check if we accidentally received a text file
 }
 
 bp_fetch_tar() {
 	{
 		FNAME=${1##*\/}
-		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
-		[ ! -e "$LOCAL_LOG/$FNAME" ] && bp_download $1 $LOCAL_PKG
+		mkdir -p $SRC_DEST
+		#[ ! -e "$LOCAL_PKG/$FNAME" ] &&
+		bp_download $1 $LOCAL_PKG
 		mkdir -p /tmp/bp
 		cd /tmp/bp
-		TARCMD="tar xopft"
+		TARCMD="tar x "
 		case $FNAME in
 			*.tar)
-				cat $LOCAL_PKG/$FNAME | $TARCMD
+				$TARCMD -f $LOCAL_PKG/$FNAME
 				;;
 			*.tar.gz)
 				gunzip -c $LOCAL_PKG/$FNAME | $TARCMD
@@ -119,11 +122,14 @@ bp_fetch_tar() {
 				bunzip2 -c $LOCAL_PKG/$FNAME | $TARCMD
 				;;
 			*)
+				echo "Unknown extension: $FNAME"
+				return 1
 				;;
 		esac
 		# Assume a single directory was extracted, try to get its name
-		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar*))
-		[ -f "$NEW_DIR" ] && mv $NEW_DIR/* $SRC_DEST/
+		NEW_DIR=$(ghetto_cut $(ls -t | grep -v "*.tar*"))
+		echo "created $NEW_DIR, currently in $PWD"
+		[ -d "$PWD/$NEW_DIR" ] && mv $PWD/$NEW_DIR/* $SRC_DEST/
 		cd $SRC_DEST
 	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
 		2> $LOCAL_LOG/$PKG_NAME.fetch.err
