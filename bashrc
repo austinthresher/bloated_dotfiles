@@ -1,6 +1,8 @@
-
 # If the bash in our path is a different version than the one launched, switch to it
+# TODO: can we check if the current shell is a login shell and launch accordingly?
 [ "$BASH_VERSION" != "$(bash -c 'echo $BASH_VERSION')" ] && exec bash --login
+
+[ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 
 alias ls='ls -F'
 alias grep='grep -n'
@@ -30,7 +32,7 @@ then
 		esac
 	}
 	export -f set_window_title
-	
+
 	set_pane_title() {
 		case "$TERM" in
 			tmux*)
@@ -41,13 +43,13 @@ then
 		esac
 	}
 	export -f set_pane_title
-	
+
 	trap_post() {
 		RET=$?
 		trap - DEBUG;
 		set_pane_title "$PWD ⋅ ${THIS_CMD%% -*} ⋅ $RET"
 	}
-	
+
 	trap_pre() {
 		trap - DEBUG;
 		THIS_CMD=$BASH_COMMAND;
@@ -59,20 +61,20 @@ then
 		fi
 		trap trap_post DEBUG
 	}
-	
+
 	git_branch() {
 		git branch 2> /dev/null | sed \
 			-e '/^[^*]/d' \
 			-e 's/* \(.*\)/\1/'
 	}
-	
+
 	git_repo() {
 		git remote -v 2> /dev/null | sed \
 			-e '1s/.*\/\(.*\)\.git.*/\1/' \
 			-e '1s/.*\/\(.*\) .*$/\1/' \
 			-e '2d'
 	}
-	
+
 	git_changes() {
 		git status 2> /dev/null | sed \
 			-e '/^Changes/!d' \
@@ -81,7 +83,7 @@ then
 			| tr -d "\n" \
 			| sed -e 's/+-/±/'
 	}
-	
+
 	git_prompt() {
 		_R=$(git_repo)
 		_B=$(git_branch)
@@ -94,7 +96,7 @@ then
 
 	COL=$FG_RED
 	[ -z "$SSH_CLIENT" ] && COL=$FG_BLUE
-	
+
 	set_pane_title "$PWD"
 	if [ -z "$TMUX" ]; then
 		set -o ignoreeof
@@ -104,7 +106,7 @@ then
 		export PS1="\[$(bold)$(color $COL)\]➤ \[$(norm)\]"
 		export PROMPT_COMMAND='trap "trap_pre" DEBUG'
 	fi
-	
+
 	export PS1='$(git_prompt)'"$PS1"
 
 	clear
