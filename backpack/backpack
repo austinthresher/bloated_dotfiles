@@ -117,6 +117,7 @@ bp_fetch_tar() {
 				;;
 			*.tar.bz2)
 				bunzip2 -c $LOCAL_PKG/$FNAME | $TARCMD
+				;;
 			*)
 				;;
 		esac
