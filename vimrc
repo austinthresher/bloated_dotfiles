@@ -56,9 +56,9 @@ au BufNewFile,BufRead *.s set syntax=a65
 au BufNewFile,BufRead *.s,*.asm,*.z80,*.inc call KernelTabs()
 
 au BufNewFile,BufRead *.tpp set filetype=cpp
-au BufNewFile,BufRead */OpenPV/*,$HOME/OpenPV call PVTabs() 
+au BufNewFile,BufRead */OpenPV/*,$HOME/OpenPV call PVTabs()
 
-au BufNewFile,BufRead *.cpp,*.tpp,*.hpp,*.c,*.h set cindent 
+au BufNewFile,BufRead *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
 
 " Automatically update the date on my todo list when saved
 au BufWritePre TODO.md call TODODate()
@@ -76,7 +76,7 @@ set confirm
 set modeline
 
 set listchars=eol:$
-set showbreak=↪\ 
+set showbreak=↪\
 set listchars+=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
 set shiftround
 set autoindent
@@ -102,11 +102,7 @@ set undolevels=16000
 set backspace=indent,eol,start
 set nostartofline
 
-set fillchars=stl:\ 
-set fillchars+=stlnc:\ 
-set fillchars+=fold:\ 
-set fillchars+=vert:'
-
+set fillchars=stl:\ ,stlnc:\ ,fold:\ ,vert:'
 
 " === maps ===
 
@@ -118,7 +114,7 @@ nnoremap <F5> "=strftime("%b %d, %Y")<CR>P
 inoremap <F5> <C-R>=strftime("%b %d, %Y")<CR>
 
 " Quick buffer list and selection
-nnoremap <leader>b :ls<CR>:b 
+nnoremap <leader>b :ls<CR>:b
 
 " Cycle through buffer
 nnoremap <leader>[ :bp<CR>
@@ -142,13 +138,32 @@ inoremap <c-x> <c-o>dW
 
 set mouse=a
 
-" Considering not using gutentags, commented out as a trial
-" gutentags config if its installed
-"if !empty(glob("$HOME/.vim/pack/plugins/vim-gutentags"))
-"	set statusline+=%{gutentags#statusline()}
-"	let g:gutentags_project_root = ['Makefile', '.root']
-"	let g:gutentags_cache_dir = "$HOME/.vim/tags"
-"	let g:gutentags_modules = ['ctags', 'gtags_cscope']
-"	let g:tagbar_autofocus = 1
-"	autocmd VimEnter * nested :TagbarOpen
-"endif
+"set statusline+=%{gutentags#statusline()}
+"let g:gutentags_project_root = ['Makefile', '.root']
+"let g:gutentags_cache_dir = "$HOME/.vim/tags"
+"let g:gutentags_modules = ['ctags', 'gtags_cscope']
+
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+nmap w <Plug>(easymotion-overwin-f)
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap m <Plug>(easymotion-overwin-f2)
+
+" JK motions: Line motions
+map J <Plug>(easymotion-j)
+map K <Plug>(easymotion-k)
+
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+let g:show_spaces_that_precede_tabs=1
+let g:strip_whitelines_at_eof=1
+
+"nnoremap <Leader>q :Bdelete<CR>
+
+let g:highlightedyank_highlight_duration = 100
+
+autocmd FileType vim let b:vcm_tab_complete = 'vim'
+
+let g:lt_location_list_toggle_map = '<leader>l'
+let g:lt_quickfix_list_toggle_map = '<leader>f'

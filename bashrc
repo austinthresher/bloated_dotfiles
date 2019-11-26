@@ -1,3 +1,7 @@
+
+# If the bash in our path is a different version than the one launched, switch to it
+[ "$BASH_VERSION" != "$(bash -c 'echo $BASH_VERSION')" ] && exec bash --login
+
 alias ls='ls -F'
 alias grep='grep -n'
 alias more='less'

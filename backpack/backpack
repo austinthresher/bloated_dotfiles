@@ -1,4 +1,4 @@
-# DIY simple package installer, backpack 
+# DIY simple package installer, backpack
 # ======================================
 
 # include guard
@@ -57,7 +57,7 @@ bp_package() {
 				;;
 			"install")
 				printf "installing package '$PKG_NAME'"
-				bp_fetch_tar $PKG_URL			
+				bp_fetch_tar $PKG_URL
 				bp_configure_make_install "${@:3}"
 				;;
 			"uninstall")
@@ -89,15 +89,15 @@ bp_fetch_tar() {
 	{
 		FNAME=${1##*\/}
 		[ ! -e "$SRC_DEST" ] && mkdir -p "$SRC_DEST"
-		[ ! -e "$LOCAL_LOG/$FNAME" ] && wget -P "$LOCAL_PKG" "$1"
+		[ ! -e "$LOCAL_LOG/$FNAME" ] && wget --no-check-certificate -P "$LOCAL_PKG" "$1"
 		tar --extract --overwrite --file="$LOCAL_PKG/$FNAME" --directory="$SRC_DEST"
 		# Assume a single directory was extracted, try to get its name
 		NEW_DIR=$(ghetto_cut $(ls -t -w 0 --hide=*.tar* "$SRC_DEST"))
 		# Move all of its contents one directory up
-		cd "$SRC_DEST/$NEW_DIR"
-		mv -f * ../
-		cd ..
-		rm -rf "$SRC_DEST/$NEW_DIR"
+		cd "$SRC_DEST/$NEW_DIR" && \
+			mv -f * ../ && \
+			cd .. && \
+			rm -rf "$SRC_DEST/$NEW_DIR"
 	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
 		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
@@ -118,38 +118,32 @@ bp_make_uninstall() {
 	fi
 }
 
+bp_configure() {
+	_ARGS="LDFLAGS=-L$LOCAL_LIB CPPFLAGS=-I$LOCAL_INC CFLAGS=-I$LOCAL_INC CXXFLAGS=-I$LOCAL_INC $@"
+	[ -x "./configure" ] && _C=./configure
+	[ -x "./config" ] && _C=./config
+	_FAILURE=1
+	$_C --prefix=$LOCAL_PREFIX $_ARGS && _FAILURE=0
+	if [ "$_FAILURE" -eq 1 ]; then
+		$_C --prefix=$LOCAL_PREFIX && _FAILURE=0
+	fi
+	return $_FAILURE
+}
+
 bp_configure_make_install() {
 	export SUCCESS=0
 	{
-		cd "$SRC_DEST" 
-		if [ -e "configure" ]; then
-			printf "." \
-			&& ./configure --prefix=$LOCAL_PREFIX \
-				LDFLAGS="-L$LOCAL_LIB" \
-				CPPFLAGS="-I$LOCAL_INC" \
-				CFLAGS="-I$LOCAL_INC" \
-				CXXFLAGS="-I$LOCAL_INC" \
-				$@ \
-			&& printf "." \
-			&& make -j \
-			&& printf "." \
-			&& make install \
-			&& export SUCCESS=1
-		elif [ -e "autogen.sh" ]; then
+		cd "$SRC_DEST"
+		if [ -e "autogen.sh" ]; then
 			./autogen.sh \
 			&& printf "." \
-			&& ./configure --prefix=$LOCAL_PREFIX \
-				LDFLAGS="-L$LOCAL_LIB" \
-				CPPFLAGS="-I$LOCAL_INC" \
-				CFLAGS="-I$LOCAL_INC" \
-				CXXFLAGS="-I$LOCAL_INC" \
-				$@ \
+			&& bp_configure $@ \
 			&& printf "." \
 			&& make -j \
 			&& printf "." \
 			&& make install \
 			&& export SUCCESS=1
-		elif [ -e "Makefile" ]; then
+		elif [ ! -x "./configure" -a ! -x "./config" -a -e "Makefile" ]; then
 			mv Makefile Makefile.def
 			sed \
 				-e "/PREFIX.*=.*/c\PREFIX=$LOCAL_PREFIX" \
@@ -159,13 +153,18 @@ bp_configure_make_install() {
 			make -j \
 			&& make install \
 			&& export SUCCESS=1
+		else
+			bp_configure $@ \
+			&& make -j \
+			&& make install \
+			&& export SUCCESS=1
 		fi
 	}	>  $LOCAL_LOG/$PKG_NAME.make.out \
 		2> $LOCAL_LOG/$PKG_NAME.make.err
 	if [ "$SUCCESS" -eq 0 ]; then
 		printf " failed. Logs written to $LOCAL_LOG\n"
 	else
-		printf " completed\n" 
+		printf " completed\n"
 	fi
 	# Remove empty logs
 	find $LOCAL_LOG -size 0 -print0 | xargs -0 rm --

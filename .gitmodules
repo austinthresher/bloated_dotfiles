@@ -1,0 +1,54 @@
+[submodule "vim/pack/plugins/codi.vim"]
+	path = vim/pack/plugins/opt/codi.vim
+	url = https://github.com/metakirby5/codi.vim
+[submodule "vim/pack/plugins/vim-autoformat"]
+	path = vim/pack/plugins/start/vim-autoformat
+	url = https://github.com/chiel92/vim-autoformat
+[submodule "vim/pack/plugins/vim-gutentags"]
+	path = vim/pack/plugins/opt/vim-gutentags
+	url = https://github.com/ludovicchabant/vim-gutentags
+[submodule "vim/pack/plugins/vim-minimap"]
+	path = vim/pack/plugins/opt/vim-minimap
+	url = https://github.com/severin-lemaignan/vim-minimap
+[submodule "vim/pack/plugins/ctrlp.vim"]
+	path = vim/pack/plugins/start/ctrlp.vim
+	url = https://github.com/ctrlpvim/ctrlp.vim
+[submodule "vim/pack/plugins/listtoggle"]
+	path = vim/pack/plugins/start/listtoggle
+	url = https://github.com/valloric/listtoggle
+[submodule "vim/pack/plugins/SearchComplete"]
+	path = vim/pack/plugins/start/SearchComplete
+	url = https://github.com/vim-scripts/SearchComplete
+[submodule "vim/pack/plugins/terminus"]
+	path = vim/pack/plugins/start/terminus
+	url = https://github.com/wincent/terminus
+[submodule "vim/pack/plugins/vim-autoclose"]
+	path = vim/pack/plugins/start/vim-autoclose
+	url = https://github.com/townk/vim-autoclose
+[submodule "vim/pack/plugins/vim-bbye"]
+	path = vim/pack/plugins/start/vim-bbye
+	url = https://github.com/moll/vim-bbye
+[submodule "vim/pack/plugins/vim-better-whitespace"]
+	path = vim/pack/plugins/start/vim-better-whitespace
+	url = https://github.com/ntpeters/vim-better-whitespace
+[submodule "vim/pack/plugins/vimcompletesme"]
+	path = vim/pack/plugins/start/vimcompletesme
+	url = https://github.com/ajh17/vimcompletesme
+[submodule "vim/pack/plugins/vim-easymotion"]
+	path = vim/pack/plugins/start/vim-easymotion
+	url = https://github.com/easymotion/vim-easymotion
+[submodule "vim/pack/plugins/vim-endwise"]
+	path = vim/pack/plugins/start/vim-endwise
+	url = https://github.com/tpope/vim-endwise
+[submodule "vim/pack/plugins/vim-eunuch"]
+	path = vim/pack/plugins/start/vim-eunuch
+	url = https://github.com/tpope/vim-eunuch
+[submodule "vim/pack/plugins/vim-highlightedyank"]
+	path = vim/pack/plugins/start/vim-highlightedyank
+	url = https://github.com/machakann/vim-highlightedyank
+[submodule "vim/pack/plugins/vim-searchindex"]
+	path = vim/pack/plugins/start/vim-searchindex
+	url = https://github.com/google/vim-searchindex
+[submodule "vim/pack/plugins/vim-sleuth"]
+	path = vim/pack/plugins/start/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth
