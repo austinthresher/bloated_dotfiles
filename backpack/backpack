@@ -131,6 +131,7 @@ bp_fetch_tar() {
 		echo "created $NEW_DIR, currently in $PWD"
 		[ -d "$PWD/$NEW_DIR" ] && mv $PWD/$NEW_DIR/* $SRC_DEST/
 		cd $SRC_DEST
+		rm -rf /tmp/bp
 	}	>  $LOCAL_LOG/$PKG_NAME.fetch.out \
 		2> $LOCAL_LOG/$PKG_NAME.fetch.err
 }
