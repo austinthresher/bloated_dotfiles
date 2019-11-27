@@ -1,4 +1,0 @@
-source $backpack
-cd $backpack_path
-bp_init $@
-bp_command rm
