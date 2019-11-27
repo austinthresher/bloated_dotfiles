@@ -180,9 +180,9 @@ bp_configure_make_install() {
 			&& printf "." \
 			&& bp_configure $@ \
 			&& printf "." \
-			&& make -j \
-			&& printf "." \
-			&& make install \
+#			&& make -j \
+#			&& printf "." \
+			&& make -j install \
 			&& export SUCCESS=1
 		elif [ ! -x "./configure" -a ! -x "./config" -a -e "Makefile" ]; then
 			mv Makefile Makefile.def
@@ -191,13 +191,13 @@ bp_configure_make_install() {
 				-e "/INSTALL.*=.*/c\INSTALL=$(which install)" \
 				-e "/PRESERVEDIR.*=.*/c\PRESERVEDIR=/tmp/preserve" \
 				Makefile.def > Makefile
-			make -j \
-			&& make install \
+#			make -j \
+			&& make -j install \
 			&& export SUCCESS=1
 		else
 			bp_configure $@ \
-			&& make -j \
-			&& make install \
+#			&& make -j \
+			&& make -j install \
 			&& export SUCCESS=1
 		fi
 	}	>  $LOCAL_LOG/$PKG_NAME.make.out \
