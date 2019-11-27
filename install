@@ -24,6 +24,8 @@ mkdir -p $HOME/.vim
 mkdir -p $HOME/.vim/colors
 mkdir -p $HOME/.vim/pack
 
+git submodule update --init --recursive
+
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
 prompt_to_replace tmux.conf   $HOME/.tmux.conf
