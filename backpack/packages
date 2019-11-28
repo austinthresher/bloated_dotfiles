@@ -204,7 +204,7 @@ define uninstall : make uninstall
 
 package vim
 download https://github.com/vim/vim/archive/v8.1.0000.tar.gz
-define install   : "./configure" --with-features=huge --with-x --enable-pythoninterp --enable-cscope , make -j , make -j install
+define install   : configure --with-features=huge --with-x --enable-pythoninterp --enable-cscope , make -j , make -j install
 define uninstall : make uninstall
 
 package make
