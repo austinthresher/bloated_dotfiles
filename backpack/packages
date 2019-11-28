@@ -82,7 +82,7 @@ define uninstall : make uninstall
 
 package vis
 download http://github.com/martanne/vis/releases/download/v0.5/vis-v0.5.tar.gz
-define install   : configure , make -j , make -j install
+define install   : configure , make -j , make -j install , ln -s $LOCAL_BIN/vis $LOCAL_BIN/vi
 define uninstall : make uninstall
 
 category ide
