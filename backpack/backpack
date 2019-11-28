@@ -64,7 +64,7 @@ download() {
 	printf "downloading %s from %s\n" $PKG_NAME $PKG_URL
 	getfile $PKG_URL $LOCAL_PKG &> $LOCAL_LOG/$PKG_NAME.download
 	printf "extracting %s\n" ${PKG_URL##*\/}
-	bp_extract $PKG_URL &> $LOCAL_LOG/$PKG_NAME.extract
+	bp_extract $PKG_URL #&> $LOCAL_LOG/$PKG_NAME.extract
 }
 
 # getfile <src-url> <dst-dir>
@@ -91,6 +91,13 @@ bp_extract() {
 		for i in $1; do echo $i; break; done
 	}
 	FNAME=${1##*\/}
+	if [ -d $SRC_DEST ]; then
+		read -p "Delete existing $SRC_DEST before extracting? " yn
+		case $yn in
+			y) rm -rf $SRC_DEST ;;
+			*) ;;
+		esac
+	fi
 	mkdir -p $SRC_DEST
 	mkdir -p /tmp/bp
 	cd /tmp/bp
@@ -127,10 +134,11 @@ define() {
 	[ "$1" == ":" ] && shift
 	DELIM=,
 	echo "$BP_COMMAND $PKG_NAME..."
-	mkdir bp-build && cd bp-build
+	#[ -d bp-build ] && rm -rf bp-build
+	#mkdir bp-build && cd bp-build
 	while [ $# -gt 0 ]
 	do
-		printf "\t+$1 "
+		printf "\t+$1"
 		local args
 		local cmd
 		local cmdname
@@ -143,14 +151,15 @@ define() {
 				shift
 				args+=(--prefix=$LOCAL_PREFIX)
 				;;
-			make)
+			autogen)
+				cmd="sh $LOCAL_SRC/$PKG_NAME/autogen.sh"
 				cmdname=$1
-				cmd=$1
 				shift
 				;;
 			*)
-				echo "Unrecognized build command '$1'"
-				return 1
+				cmdname=$1
+				cmd=$1
+				shift
 				;;
 		esac
 		while [ $# -gt 0 -a "$1" != "$DELIM" ]

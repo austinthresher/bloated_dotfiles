@@ -27,7 +27,7 @@ define uninstall : make uninstall
 
 package ncurses
 download ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz
-define install   : configure --with-pkg-config-libdir=$LOCAL_LIB/pkgconfig --enable-shared --enable-pc-files , make -j , make -j install
+define install   : configure --with-pkg-config-libdir=$LOCAL_LIB/pkgconfig --enable-shared --enable-pc-files CFLAGS=-fPIC , make -j , make -j install
 define uninstall : make uninstall
 
 package libtool
@@ -72,6 +72,16 @@ define uninstall : make uninstall
 
 package gawk
 download http://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.gz
+define install   : configure , make -j , make -j install
+define uninstall : make uninstall
+
+package libtermkey
+download http://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz
+define install   : sed -i "60aPREFIX=$LOCAL_PREFIX" $LOCAL_SRC/$PKG_NAME/Makefile , make , make install
+define uninstall : make uninstall
+
+package vis
+download http://github.com/martanne/vis/releases/download/v0.5/vis-v0.5.tar.gz
 define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
@@ -134,7 +144,7 @@ define uninstall : make uninstall
 
 package libxau
 download https://github.com/freedesktop/xorg-libXau/archive/libXau-1.0.8.tar.gz
-define install   : configure , make -j , make -j install
+define install   : autogen , configure , make -j , make -j install
 define uninstall : make uninstall
 
 package inputproto
@@ -154,7 +164,7 @@ define uninstall : make uninstall
 
 package libx11
 download https://github.com/mirror/libX11/archive/libX11-1.6.9.tar.gz
-define install   : configure , make -j , make -j install
+define install   : autogen , configure , make -j , make -j install
 define uninstall : make uninstall
 
 package libxext
@@ -194,7 +204,7 @@ define uninstall : make uninstall
 
 package vim
 download https://github.com/vim/vim/archive/v8.1.0000.tar.gz
-define install   : configure --with-features=huge --with-x --enable-pythoninterp --enable-cscope , make -j , make -j install
+define install   : "./configure" --with-features=huge --with-x --enable-pythoninterp --enable-cscope , make -j , make -j install
 define uninstall : make uninstall
 
 package make
