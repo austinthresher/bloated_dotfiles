@@ -17,6 +17,8 @@ mkdir -p $LOCAL_SRC
 mkdir -p $LOCAL_LOG
 mkdir -p $LOCAL_INC
 mkdir -p $LOCAL_PKG
+INSTALLED=$LOCAL_PREFIX/installed
+BROKEN=$LOCAL_PREFIX/broken
 SELECTED_PKGS=$@
 export PKG_CONFIG_PATH=$LOCAL_PREFIX/share/pkgconfig:$LOCAL_PREFIX/lib/pkgconfig:$PKG_CONFIG_PATH
 #GNULIB_SRCDIR=$LOCAL_INC/gnulib
@@ -27,6 +29,9 @@ export CXXFLAGS=-I$LOCAL_INC $CXXFLAGS
 
 SKIP_CATEGORY=0
 SKIP_PACKAGE=0
+
+touch $INSTALLED
+touch $BROKEN
 
 begin_skip() {
 	SKIP_CATEGORY=1
@@ -41,7 +46,7 @@ not_selected() {
 }
 
 category() {
-	[ -z "$BP_CATEGORY" ] && [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] && echo "CATEGORY: $1" && BP_CATEGORY=$1
+	[ ! -z "$SELECTED_PKGS" ] && [ -z "$BP_CATEGORY" ] && [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] && BP_CATEGORY=$1
 	[ "$BP_CATEGORY" == "$1" ] && end_skip && return 0
 	begin_skip
 }
@@ -49,7 +54,7 @@ category() {
 package() {
 	SKIP_PACKAGE=0
 	not_selected && return 0
-	if [[ " $SELECTED_PKGS " =~ .*\ $1\ .* || -z "$SELECTED_PKGS" ]]; then
+	if [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] || [ -z "$SELECTED_PKGS" -a ! -z "$BP_CATEGORY" ]; then
 		SKIP_PACKAGE=0
 		PKG_NAME=$1
 		SRC_DEST=$LOCAL_SRC/$PKG_NAME
@@ -135,8 +140,7 @@ define() {
 	[ "$1" == ":" ] && shift
 	DELIM=,
 	echo "$BP_COMMAND $PKG_NAME..."
-	#[ -d bp-build ] && rm -rf bp-build
-	#mkdir bp-build && cd bp-build
+	echo $PKG_NAME >> $BROKEN # Mark pkg as broken until success
 	while [ $# -gt 0 ]
 	do
 		printf "\t+$1"
@@ -181,6 +185,21 @@ define() {
 			return $ex
 		fi
 	done
+	case $BP_COMMAND in
+		uninstall)
+			echo "UNINSTALL"
+			sed  -e "s/$PKG_NAME//g" -i $BROKEN
+			sed  -e "s/$PKG_NAME//g" -i $INSTALLED
+			sort -u $INSTALLED -o $INSTALLED
+			;;
+		install)
+			echo "INSTALL $PKG_NAME"
+			sed  -e "s/$PKG_NAME//g" -i $BROKEN
+			echo $PKG_NAME >> $INSTALLED
+			sort -u $INSTALLED -o $INSTALLED
+			;;
+		*) echo "NO CMD" ;;
+	esac
 	printf "\tcompleted\n"
 }
 
