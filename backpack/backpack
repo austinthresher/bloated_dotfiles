@@ -54,8 +54,7 @@ category() {
 package() {
 	SKIP_PACKAGE=0
 	not_selected && return 0
-	if [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] || [ -z "$SELECTED_PKGS" -a ! -z "$BP_CATEGORY" ]; then
-		SKIP_PACKAGE=0
+	if [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] || [ "$SELECTED_PKGS" == "$BP_CATEGORY" ]; then
 		PKG_NAME=$1
 		SRC_DEST=$LOCAL_SRC/$PKG_NAME
 		BIN_DEST=$LOCAL_BIN/$PKG_NAME
