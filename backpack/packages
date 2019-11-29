@@ -212,6 +212,11 @@ download ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
 define install   : configure , sed -i "211s/&&/&!/" $LOCAL_SRC/$PKG_NAME/glob/glob.c , make -j , make -j install
 define uninstall : make uninstall
 
+package flex
+download https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz
+define install   : configure , make -j , make -j install
+define uninstall : make uninstall
+
 category extra
 
 category broken
@@ -245,12 +250,6 @@ package inotify-tools
 download http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz
 define install   : configure , make -j , make -j install
 define uninstall : make uninstall
-
-package flex
-download https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz
-define install   : configure , make -j , make -j install
-define uninstall : make uninstall
-
 
 package clisp
 download ftp://ftp.gnu.org/gnu/clisp/release/2.49/clisp-2.49.tar.gz
