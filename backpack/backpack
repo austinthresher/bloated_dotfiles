@@ -2,8 +2,8 @@
 # ======================================
 
 BP_COMMAND=$1
-BP_CATEGORY=$2
-shift 2
+BP_CATEGORY=
+shift 1
 
 LOCAL_PREFIX="$HOME/.bp"
 LOCAL_BIN=$LOCAL_PREFIX/bin
@@ -37,10 +37,11 @@ end_skip() {
 }
 
 not_selected() {
-	[ "$SKIP_CATEGORY" -ne 0 ] || [ "$SKIP_PACKAGE" -ne 0 ]
+	[ ! -z "$BP_CATEGORY" -a "$SKIP_CATEGORY" -ne 0 ] || [ "$SKIP_PACKAGE" -ne 0 ]
 }
 
 category() {
+	[ -z "$BP_CATEGORY" ] && [[ " $SELECTED_PKGS " =~ .*\ $1\ .* ]] && echo "CATEGORY: $1" && BP_CATEGORY=$1
 	[ "$BP_CATEGORY" == "$1" ] && end_skip && return 0
 	begin_skip
 }
@@ -144,7 +145,6 @@ define() {
 		local cmdname
 		args=()
 		case $1 in
-			#TODO: instead of hard coding, check for leading "./" to append dir to
 			config|configure)
 				cmdname=$1
 				cmd=$LOCAL_SRC/$PKG_NAME/$1
