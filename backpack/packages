@@ -209,7 +209,7 @@ define uninstall : make uninstall
 
 package make
 download ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
-define install   : configure , make -j , make -j install
+define install   : configure , sed -i "211s/&&/&!/" $LOCAL_SRC/$PKG_NAME/glob/glob.c , make -j , make -j install
 define uninstall : make uninstall
 
 category extra
