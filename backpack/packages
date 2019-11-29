@@ -104,7 +104,7 @@ define uninstall : make uninstall
 
 package openssl
 download https://www.openssl.org/source/openssl-1.1.1d.tar.gz
-define install   : configure , make -j , make -j install
+define install   : config , make -j , make -j install
 define uninstall : make uninstall
 
 package ctags
