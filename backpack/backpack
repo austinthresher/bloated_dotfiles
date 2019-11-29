@@ -34,10 +34,16 @@ touch $INSTALLED
 touch $BROKEN
 
 if [ "$BP_COMMAND" == "status" ]; then
-	echo ">>> Installed:"
-	cat $INSTALLED
-	echo ">>> Broken:"
-	cat $BROKEN
+	echo "Installed"
+	echo "========="
+	for p in $(cat $INSTALLED); do
+		echo -e "\t$p"
+	done
+	echo "Broken"
+	echo "======"
+	for p in $(cat $BROKEN); do
+		echo -e "\t$p"
+	done
 	exit 0
 fi
 
