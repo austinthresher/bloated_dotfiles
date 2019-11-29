@@ -33,6 +33,14 @@ SKIP_PACKAGE=0
 touch $INSTALLED
 touch $BROKEN
 
+if [ "$BP_COMMAND" == "status" ]; then
+	echo ">>> Installed:"
+	cat $INSTALLED
+	echo ">>> Broken:"
+	cat $BROKEN
+	exit 0
+fi
+
 begin_skip() {
 	SKIP_CATEGORY=1
 }
@@ -186,19 +194,16 @@ define() {
 	done
 	case $BP_COMMAND in
 		uninstall)
-			echo "UNINSTALL"
-			sed  -e "s/$PKG_NAME//g" -i $BROKEN
-			sed  -e "s/$PKG_NAME//g" -i $INSTALLED
+			sed  -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" -i $INSTALLED
 			sort -u $INSTALLED -o $INSTALLED
 			;;
 		install)
-			echo "INSTALL $PKG_NAME"
-			sed  -e "s/$PKG_NAME//g" -i $BROKEN
 			echo $PKG_NAME >> $INSTALLED
 			sort -u $INSTALLED -o $INSTALLED
 			;;
-		*) echo "NO CMD" ;;
+		*) ;;
 	esac
+	sed  -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" -i $BROKEN
 	printf "\tcompleted\n"
 }
 
