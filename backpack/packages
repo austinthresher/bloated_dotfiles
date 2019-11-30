@@ -82,8 +82,8 @@ define uninstall : make uninstall
 
 package libtermkey
 download http://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz
-#define install   : sed -f $backpack_scripts/prefix.sed -f $backpack_scripts/include-ncurses.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX 
-define install   : sed -f $backpack_scripts/prefix.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX 
+#define install   : sed -f $backpack_scripts/prefix.sed -f $backpack_scripts/include-ncurses.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX
+define install   : sed -f $backpack_scripts/prefix.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX
 define uninstall : make uninstall
 
 package vis
@@ -220,7 +220,7 @@ define uninstall : make uninstall
 
 package flex
 download https://github.com/westes/flex/releases/download/v2.6.3/flex-2.6.3.tar.gz
-define install   : configure , make -j , make -j install
+define install   : configure , make -j , make -j install , ln -s $LOCAL_BIN/flex $LOCAL_BIN/lex
 define uninstall : make uninstall
 
 category extra
@@ -276,5 +276,3 @@ package glibc
 download https://ftp.gnu.org/gnu/libc/glibc-2.30.tar.gz
 define install   : configure CFLAGS=-O1 , make install
 define uninstall : make uninstall
-
-
