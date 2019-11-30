@@ -30,6 +30,11 @@ download ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz
 define install   : configure --with-pkg-config-libdir=$LOCAL_LIB/pkgconfig --enable-shared --enable-pc-files CFLAGS=-fPIC , make -j , make -j install
 define uninstall : make uninstall
 
+package ncursesw
+download ftp://ftp.invisible-island.net/ncurses/ncurses-6.1.tar.gz
+define install   : configure --enable-widec --enable-shared --enable-pc-files CFLAGS=-fPIC , make -j , make -j install
+define uninstall : make uninstall
+
 package libtool
 download ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz
 define install   : configure , make -j , make -j install
@@ -77,7 +82,8 @@ define uninstall : make uninstall
 
 package libtermkey
 download http://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz
-define install   : sed -i "60aPREFIX=$LOCAL_PREFIX" $LOCAL_SRC/$PKG_NAME/Makefile , make , make install
+#define install   : sed -f $backpack_scripts/prefix.sed -f $backpack_scripts/include-ncurses.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX 
+define install   : sed -f $backpack_scripts/prefix.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX 
 define uninstall : make uninstall
 
 package vis

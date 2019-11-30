@@ -20,6 +20,7 @@ mkdir -p $backpack_lib
 rm -f $backpack_scripts/*
 cp ./packages $backpack_scripts/
 cp ./backpack $backpack_scripts/
+cp ./*.sed    $backpack_scripts/
 chmod +x $backpack_scripts/backpack
 
 echo "export backpack_root=$backpack_root" > $backpack_config
