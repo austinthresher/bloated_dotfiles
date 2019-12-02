@@ -12,11 +12,11 @@ define uninstall : make uninstall
 
 package m4
 download http://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz
-define install   : configure CFLAGS=-Wno-error , make -j , make -j install
+define install   : configure CFLAGS=-Wno-error , make -j , make -j install #TODO: remove docs from generated makefile to build on OSX
 define uninstall : make uninstall
 
 package autoconf
-download http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+download http://ftp.gnu.org/gnu/autoconf/autoconf-2.68.tar.gz
 define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
