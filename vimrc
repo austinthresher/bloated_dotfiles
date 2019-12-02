@@ -151,8 +151,8 @@ nmap w <Plug>(easymotion-overwin-f)
 nmap m <Plug>(easymotion-overwin-f2)
 
 " JK motions: Line motions
-map J <Plug>(easymotion-j)
-map K <Plug>(easymotion-k)
+map C-j <Plug>(easymotion-j)
+map C-k <Plug>(easymotion-k)
 
 let g:better_whitespace_enabled=1
 let g:strip_whitespace_on_save=1
