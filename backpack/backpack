@@ -117,9 +117,9 @@ bp_extract() {
 			*) ;;
 		esac
 	fi
+	extractdir=`mktemp -d 2> /dev/null || mktemp -d -t 'tmpextract'`
 	mkdir -p $SRC_DEST
-	mkdir -p /tmp/bp
-	cd /tmp/bp
+	cd $extractdir
 	TARCMD="tar x "
 	case $FNAME in
 		*.tar)
@@ -136,6 +136,7 @@ bp_extract() {
 			;;
 		*)
 			echo "Unknown extension: $FNAME"
+			rm -rf $extractdir
 			return 1
 			;;
 	esac
@@ -143,7 +144,7 @@ bp_extract() {
 	NEW_DIR=$(ghetto_cut $(ls -t | grep -v "*.tar*"))
 	[ -d "$PWD/$NEW_DIR" ] && mv $PWD/$NEW_DIR/* $SRC_DEST/
 	cd $SRC_DEST
-	rm -rf /tmp/bp
+	rm -rf $extractdir
 }
 
 define() {
@@ -200,7 +201,7 @@ define() {
 	done
 	case $BP_COMMAND in
 		uninstall)
-			sed  -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" -i $INSTALLED
+			sed -i '.bak' -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" $INSTALLED
 			sort -u $INSTALLED -o $INSTALLED
 			;;
 		install)
@@ -209,7 +210,7 @@ define() {
 			;;
 		*) ;;
 	esac
-	sed  -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" -i $BROKEN
+	sed  -i '.bak' -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" $BROKEN
 	printf "\tcompleted\n"
 }
 
