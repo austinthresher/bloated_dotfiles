@@ -225,6 +225,10 @@ define uninstall : make uninstall
 
 category extra
 
+package inxi
+Download https://github.com/smxi/inxi/archive/3.0.37-1.tar.gz
+define install  : cp inxi $LOCAL_BIN/
+
 category broken
 
 package gettext
@@ -238,7 +242,7 @@ define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
 package xz
-download https://tukaani.org/xz/xz-5.2.4.tar.gz
+Download https://tukaani.org/xz/xz-5.2.4.tar.gz
 define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
