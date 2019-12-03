@@ -35,3 +35,4 @@ prompt_to_replace vimrc       $HOME/.vimrc
 prompt_to_replace vim-plugs   $HOME/.vim/pack/plugins
 prompt_to_replace luna.vim    $HOME/.vim/colors/luna.vim
 prompt_to_replace gdbinit     $HOME/.gdbinit
+prompt_to_replace conkyrc     $HOME/.conkyrc
