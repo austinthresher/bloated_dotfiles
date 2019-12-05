@@ -103,10 +103,10 @@ then
 	if [ -z "$TMUX" ]; then
 		set -o ignoreeof
 		export PS1="\[$(color $FG_GREEN)\]\u\[$(color $FG_CYAN)\]@\[$(color $FG_BLUE)\]\h\[$(norm)\]:\w\[$(bold)$(color $COL)\] ➤ \[$(norm)"
-		export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}"; trap "trap_pre" DEBUG; echo -e \a'
+		export PROMPT_COMMAND='set_window_title "${USER}@${HOSTNAME%%.*}:${PWD/\/home\/$(whoami)/\~}"; trap "trap_pre" DEBUG; echo -en "\a"'
 	else
 		export PS1="\[$(bold)$(color $COL)\]➤ \[$(norm)\]"
- 		export PROMPT_COMMAND='trap "trap_pre" DEBUG; echo -e \a'
+ 		export PROMPT_COMMAND='trap "trap_pre" DEBUG; echo -en "\a"'
 	fi
 
 	export PS1='$(git_prompt)'"$PS1"
