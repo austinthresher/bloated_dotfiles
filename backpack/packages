@@ -82,14 +82,31 @@ define uninstall : make uninstall
 
 package libtermkey
 download http://www.leonerd.org.uk/code/libtermkey/libtermkey-0.22.tar.gz
-#define install   : sed -f $backpack_scripts/prefix.sed -f $backpack_scripts/include-ncurses.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX
 define install   : sed -f $backpack_scripts/prefix.sed -i $LOCAL_SRC/$PKG_NAME/Makefile , make LOCAL_PREFIX=$LOCAL_PREFIX , make install LOCAL_PREFIX=$LOCAL_PREFIX
 define uninstall : make uninstall
+
+package lua
+download https://www.lua.org/ftp/lua-5.2.4.tar.gz
+define install   : make posix , make install INSTALL_TOP=$LOCAL_PREFIX
+
+package luarocks
+download http://luarocks.org/releases/luarocks-3.2.1.tar.gz
+define install   : configure , make -j , make -j install
+
+package tre
+download http://laurikari.net/tre/tre-0.8.0.tar.gz
+define install   : configure , make -j , make -j install
+
+package lpeg
+define install   : luarocks install lpeg
 
 package vis
 download http://github.com/martanne/vis/releases/download/v0.5/vis-v0.5.tar.gz
 define install   : configure , make -j , make -j install , ln -s $LOCAL_BIN/vis $LOCAL_BIN/vi
-define uninstall : make uninstall
+define uninstall : make uninstall , rm $LOCAL_BIN/vi
+
+package kakoune
+define install : git clone https://github.com/mawww/kakoune.git $LOCAL_SRC/$PKG_NAME , cd $LOCAL_SRC/$PKG_NAME , make -j , export PREFIX=$LOCAL_PREFIX , make install
 
 category ide
 
