@@ -2,7 +2,7 @@ STATUS_STYLE="bg=colour14 fg=colour15"
 SELECTED_BG=colour6
 SELECTED_FG=colour0
 ACTIVE_FMT="bg=colour9 fg=colour15"
-BORDER_STYLE="bg=colour15 fg=colour7"
+BORDER_STYLE="fg=colour7"
 
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
