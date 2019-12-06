@@ -33,27 +33,40 @@ SKIP_PACKAGE=0
 touch $INSTALLED
 touch $BROKEN
 
+set_value()       { echo $1 >> $2; sort -u $2 -o $2; }
+unset_value()     { f=$(mktemp); cat $2 | grep -Fxv -e $1 > $f; cp $f $2; }
+get_value()       { grep -Fxq "$1" $2; }
+set_installed()   { set_value $1 $INSTALLED; }
+unset_installed() { unset_value $1 $INSTALLED; }
+get_installed()   { get_value $1 $INSTALLED; }
+set_broken()      { set_value $1 $BROKEN; }
+unset_broken()    { unset_value $1 $BROKEN; }
+get_broken()      { get_value $1 $BROKEN; }
+
 if [ "$BP_COMMAND" == "status" ]; then
-	echo "Installed"
-	echo "========="
-	for p in $(cat $INSTALLED); do
-		echo -e "\t$p"
-	done
-	echo "Broken"
-	echo "======"
-	for p in $(cat $BROKEN); do
-		echo -e "\t$p"
-	done
+	if [ -z "$SELECTED_PKGS" ]; then
+		echo "Installed"
+		echo "========="
+		for p in $(cat $INSTALLED); do
+			echo -e "\t$p"
+		done
+		echo "Broken"
+		echo "======"
+		for p in $(cat $BROKEN); do
+			echo -e "\t$p"
+		done
+	else
+		for a in $SELECTED_PKGS; do
+			is_in_file $a $INSTALLED && echo "$a - installed"
+			is_in_file $a $BROKEN && echo "$a - broken"
+			is_in_file $a $INSTALLED || is_in_file $a $BROKEN || echo "$a - not found"
+		done
+	fi
 	exit 0
 fi
 
-begin_skip() {
-	SKIP_CATEGORY=1
-}
-
-end_skip() {
-	SKIP_CATEGORY=0
-}
+begin_skip() { SKIP_CATEGORY=1; }
+end_skip()   { SKIP_CATEGORY=0; }
 
 not_selected() {
 	[ ! -z "$BP_CATEGORY" -a "$SKIP_CATEGORY" -ne 0 ] || [ "$SKIP_PACKAGE" -ne 0 ]
@@ -79,16 +92,28 @@ package() {
 
 download() {
 	not_selected && return 0
+	get_installed $PKG_NAME && return 0
 	PKG_URL=$1
 	printf "downloading %s from %s\n" $PKG_NAME $PKG_URL
 	getfile $PKG_URL $LOCAL_PKG &> $LOCAL_LOG/$PKG_NAME.download
 	printf "extracting %s\n" ${PKG_URL##*\/}
-	bp_extract $PKG_URL #&> $LOCAL_LOG/$PKG_NAME.extract
+	bp_extract $PKG_URL &> $LOCAL_LOG/$PKG_NAME.extract
+}
+
+checkout() {
+	not_selected && return 0
+	get_installed $PKG_NAME && return 0
+	rm -f $LOCAL_LOG/$PKG_NAME.git
+	printf "pulling %s from %s\n" $PKG_NAME $PKG_URL
+	[ ! -d $SRC_DEST ] && git clone $1 $SRC_DEST &>> $LOCAL_LOG/$PKG_NAME.git
+	cd $SRC_DEST
+	git pull &>> $LOCAL_LOG/$PKG_NAME.git
+	git submodule update --init --recursive &>> $LOCAL_LOG/$PKG_NAME.git
 }
 
 # getfile <src-url> <dst-dir>
 getfile() {
-	SRC_URL=$1
+	SRC_URL=
 	DST_DIR=$2
 	[ ! -x "$(which curl)" ] && [ ! -x "$(which wget)" ] \
 		&& echo "Please install wget or curl." && exit 1
@@ -100,9 +125,6 @@ getfile() {
 	else
 		wget --no-check-certificate -P $DST_DIR $SRC_URL
 	fi
-#	[ "$(file $DST_PATH)" == *"compressed data"* ] && return 0
-#	echo "$DST_PATH is not compressed data"
-#	return 1
 }
 
 bp_extract() {
@@ -110,6 +132,7 @@ bp_extract() {
 		for i in $1; do echo $i; break; done
 	}
 	FNAME=${1##*\/}
+	get_broken $PKG_NAME && rm -rf $SRC_DEST && unset_broken $PKG_NAME
 	if [ -d $SRC_DEST ]; then
 		read -p "Delete existing $SRC_DEST before extracting? " yn
 		case $yn in
@@ -117,7 +140,7 @@ bp_extract() {
 			*) ;;
 		esac
 	fi
-	extractdir=`mktemp -d 2> /dev/null || mktemp -d -t 'tmpextract'`
+	extractdir=$(mktemp -d 2> /dev/null || mktemp -d -t 'tmpextract')
 	mkdir -p $SRC_DEST
 	cd $extractdir
 	TARCMD="tar x "
@@ -154,7 +177,8 @@ define() {
 	[ "$1" == ":" ] && shift
 	DELIM=,
 	echo "$BP_COMMAND $PKG_NAME..."
-	echo $PKG_NAME >> $BROKEN # Mark pkg as broken until success
+	[ "$BP_COMMAND" == "install" ] && get_installed $PKG_NAME && return 0
+	set_broken $PKG_NAME
 	while [ $# -gt 0 ]
 	do
 		printf "\t+$1"
@@ -201,16 +225,14 @@ define() {
 	done
 	case $BP_COMMAND in
 		uninstall)
-			sed -i '.bak' -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" $INSTALLED
-			sort -u $INSTALLED -o $INSTALLED
+			unset_installed $PKG_NAME
 			;;
 		install)
-			echo $PKG_NAME >> $INSTALLED
-			sort -u $INSTALLED -o $INSTALLED
+			set_installed $PKG_NAME
 			;;
 		*) ;;
 	esac
-	sed  -i '.bak' -e "/$PKG_NAME/d" -e "/^[[:space:]]*$/d" $BROKEN
+	unset_broken $PKG_NAME
 	printf "\tcompleted\n"
 }
 

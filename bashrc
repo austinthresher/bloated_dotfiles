@@ -8,8 +8,8 @@
 alias ls='ls -F'
 alias grep='grep -n'
 alias more='less'
-#alias vim='vim -c"set notitle"'
-alias vim='kak'
+alias vim='vim -c"set notitle"'
+#alias vim='kak'
 alias kk='kak'
 alias gdb='gdb -q'
 
