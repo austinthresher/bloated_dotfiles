@@ -96,7 +96,6 @@ download() {
 	PKG_URL=$1
 	printf "downloading %s from %s\n" $PKG_NAME $PKG_URL
 	getfile $PKG_URL $LOCAL_PKG &> $LOCAL_LOG/$PKG_NAME.download
-	ls $LOCAL_PKG
 	printf "extracting %s\n" ${PKG_URL##*\/}
 	bp_extract $PKG_URL &> $LOCAL_LOG/$PKG_NAME.extract
 }
