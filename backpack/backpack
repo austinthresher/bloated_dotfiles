@@ -96,6 +96,7 @@ download() {
 	PKG_URL=$1
 	printf "downloading %s from %s\n" $PKG_NAME $PKG_URL
 	getfile $PKG_URL $LOCAL_PKG &> $LOCAL_LOG/$PKG_NAME.download
+	ls $LOCAL_PKG
 	printf "extracting %s\n" ${PKG_URL##*\/}
 	bp_extract $PKG_URL &> $LOCAL_LOG/$PKG_NAME.extract
 }
@@ -113,13 +114,13 @@ checkout() {
 
 # getfile <src-url> <dst-dir>
 getfile() {
-	SRC_URL=
+	SRC_URL=$1
 	DST_DIR=$2
 	[ ! -x "$(which curl)" ] && [ ! -x "$(which wget)" ] \
 		&& echo "Please install wget or curl." && exit 1
 	# Extract the filename from url and append it to output path
 	DST_PATH=$DST_DIR/${SRC_URL##*\/}
-	[ -s $DST_PATH ] && return 0
+#	[ -s $DST_PATH ] && return 0
 	if [ -x "$(which curl)" ]; then
 		curl -L $SRC_URL --output $DST_PATH
 	else
@@ -132,7 +133,7 @@ bp_extract() {
 		for i in $1; do echo $i; break; done
 	}
 	FNAME=${1##*\/}
-	get_broken $PKG_NAME && rm -rf $SRC_DEST && unset_broken $PKG_NAME
+	get_broken $PKG_NAME && rm -rf $SRC_DEST && unset_broken $PKG_NAME && echo "removed broken source directory"
 	if [ -d $SRC_DEST ]; then
 		read -p "Delete existing $SRC_DEST before extracting? " yn
 		case $yn in
