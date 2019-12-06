@@ -24,6 +24,8 @@ set -g window-status-current-format " #{window_name} "
 set -g message-command-style "$SELECTED_STYLE"
 set -g message-style "bg=$SELECTED_BG fg=$SELECTED_FG"
 set -g pane-border-format " #{?pane_active,#[$ACTIVE_FMT],}#{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},}#[$BORDER_STYLE]"
+set -g window-active-style "fg=colour15,bg=default"
+set -g window-style "fg=default,bg=default"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2

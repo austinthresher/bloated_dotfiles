@@ -13,6 +13,9 @@ alias vim='vim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
 
+# Uncomment to show git branch and status in prompt
+#export PS1_GIT=on
+
 
 export PATH=$HOME/.dotfiles/scripts:$PATH
 
@@ -87,12 +90,14 @@ then
 	}
 
 	git_prompt() {
-		_R=$(git_repo)
-		_B=$(git_branch)
-		_C=$(git_changes)
-		_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
-		if [ "${#_R}" != "0" ]; then
-			printf "❰%s/%s%s❱" "$_R" "$_B" "$_C"
+		if [ ! -z "$PS1_GIT" ]; then
+			_R=$(git_repo)
+			_B=$(git_branch)
+			_C=$(git_changes)
+			_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
+			if [ "${#_R}" != "0" ]; then
+				printf "❰%s/%s%s❱" "$_R" "$_B" "$_C"
+			fi
 		fi
 	}
 
@@ -111,5 +116,5 @@ then
 
 	export PS1='$(git_prompt)'"$PS1"
 
-	clear
+#	clear
 fi

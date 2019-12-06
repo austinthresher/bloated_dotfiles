@@ -17,7 +17,7 @@ face global block default
 face global link blue
 face global bullet default
 face global list default
-face global Default white,default
+face global Default default,default
 face global PrimarySelection bright-white,bright-blue
 face global SecondarySelection black,bright-yellow
 face global PrimaryCursor default+r
