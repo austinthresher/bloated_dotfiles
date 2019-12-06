@@ -1,7 +1,7 @@
 #!/bin/bash
 source colorutils
 
-redefbg 1C1C1C
+redefbg 161616
 redeffg d1cfd0
 
 # redefcol 0  2F2E2C 
