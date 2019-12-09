@@ -2,19 +2,20 @@
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/plug.kak" noload
 plug "andreyorst/powerline.kak" defer powerline %{
-	powerline-theme solarized-dark
-	powerline-separator none
+        powerline-theme solarized-dark
+        powerline-separator none
 } config %{
-	powerline-start
+        powerline-start
 }
 plug "andreyorst/smarttab.kak" defer smarttab %{
-	set global softtabstop 4
+    set global softtabstop 4
 } config %{
-	hook global WinSetOption filetype=(python|markdown|kak|rust) expandtab
-	hook global WinSetOption filetype=(c|cpp|sh) smarttab
+    hook global WinSetOption filetype=(python|markdown|kak|rust) expandtab
+    hook global WinSetOption filetype=(c|cpp|sh) smarttab
 }
-plug "andreyorst/fzf.kak"
-set global fzf_file_command 'ag'
+plug "andreyorst/fzf.kak" defer fzf %{
+    set global fzf_file_command 'ag'
+}
 
 # UI
 colorscheme solarized-dark

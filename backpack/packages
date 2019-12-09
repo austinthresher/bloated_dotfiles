@@ -63,7 +63,7 @@ define uninstall : make uninstall
 package pcre
 download ftp://ftp.pcre.org/pub/pcre/pcre-8.43.tar.gz
 define install   : configure , make -j , make -j install
-define uninstall : make uninstall
+define uninstall : make uninstallj
 
 package ag
 download https://geoff.greer.fm/ag/releases/the_silver_searcher-1.0.3.tar.gz
@@ -83,6 +83,10 @@ define uninstall : make uninstall
 package kakoune
 checkout https://github.com/mawww/kakoune.git
 define install : make -j , export PREFIX=$LOCAL_PREFIX , make install
+
+package fzf
+checkout https://github.com/junegunn/fzf.git
+define install : bash -c './install --all'
 
 category ide
 
