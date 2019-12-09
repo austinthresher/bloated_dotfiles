@@ -1,3 +1,7 @@
+# Plugins
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+plug "andreyorst/plug.kak" noload
+
 # UI
 colorscheme mono
 set -add global autoinfo normal
