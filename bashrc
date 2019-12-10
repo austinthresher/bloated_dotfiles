@@ -1,7 +1,3 @@
-# If the bash in our path is a different version than the one launched, switch to it
-# TODO: can we check if the current shell is a login shell and launch accordingly?
-[ "$BASH_VERSION" != "$(bash -c 'echo $BASH_VERSION')" ] && exec bash --login
-
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 [ -e "$HOME/.bp/config" ] && source "$HOME/.bp/config"
 
@@ -16,15 +12,14 @@ alias gdb='gdb -q'
 # Uncomment to show git branch and status in prompt
 #export PS1_GIT=on
 
-
 export PATH=$HOME/.dotfiles/scripts:$PATH
 
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
-source colorutils
-source set_dark_theme
+#source colorutils
+#source set_dark_theme
 
 if [[ $- == *i* ]]
 then
