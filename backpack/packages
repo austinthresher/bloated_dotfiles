@@ -106,8 +106,9 @@ define install   : configure , make -j install
 define uninstall : make uninstall
 
 package ctags
-download http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz
-define install   : configure , make -j , make -j install
+#download http://prdownloads.sourceforge.net/ctags/ctags-5.8.tar.gz
+checkout https://github.com/universal-ctags/ctags
+define install   : bash -c './autogen.sh' , configure , make -j , make -j install
 define uninstall : make uninstall
 
 package make
