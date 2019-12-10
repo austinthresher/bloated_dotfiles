@@ -18,7 +18,8 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
-#source colorutils
+source colorutils
+
 #source set_dark_theme
 
 if [[ $- == *i* ]]
