@@ -44,7 +44,7 @@ plug "andreyorst/kaktree" defer kaktree %{
 }
 
 # UI
-set -add global autoinfo normal
+set global autoinfo command
 set -add global ui_options ncurses_assistant=none
 set -add global ui_options ncurses_enable_mouse=true
 set -add global ui_options ncurses_change_colors=false
