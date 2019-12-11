@@ -1,0 +1,66 @@
+#!/bin/bash
+
+wintitle() {
+	case "$TERM" in
+		screen*|tmux*) printf "\ek$1\e\\" ;;
+		linux|xterm*|rxvt*) printf "\e]0;$1\007" ;;
+		*) ;;
+	esac
+}
+
+panetitle_esc() {
+	case "$TERM" in
+		tmux*)
+			printf "\e]2;$1\e\\"
+			wintitle "${USER}@${HOSTNAME%%.*}"
+			;;
+		*) ;;
+	esac
+}
+
+panetitle_tmux() {
+	tmux select-pane -T "$1"
+}
+
+trap_post() {
+	RET=$?
+	trap - DEBUG;
+	panetitle_esc "$PWD ⋅ ${THIS_CMD%% -*} ⋅ $RET"
+}
+trap_pre() {
+	trap - DEBUG;
+	THIS_CMD=$BASH_COMMAND;
+	PREV_CMD=$THIS_CMD;
+	if [ "${THIS_CMD%% *}" != "trap" ]; then
+		panetitle_esc "$PWD ⋅ ${THIS_CMD%% -*} ⋅ running"
+	else
+		panetitle_esc "$PWD"
+	fi
+	trap trap_post DEBUG
+}
+git_branch() {
+	git branch 2> /dev/null | sed '/^[^*]/d;s/* \(.*\)/\1/'
+}
+git_repo() {
+	git remote -v 2> /dev/null | sed \
+		-e '1s/.*\/\(.*\)\.git.*/\1/;1s/.*\/\(.*\) .*$/\1/;2d'
+}
+git_changes() {
+	git status 2> /dev/null | sed \
+		-e '/^Changes/!d' \
+		-e 's/^Changes not.*$/\-/g' \
+		-e 's/^Changes to.*$/\+/g' \
+		| tr -d "\n" \
+		| sed -e 's/+-/±/'
+}
+git_prompt() {
+	if [ ! -z "$PS1_GIT" ]; then
+		_R=$(git_repo)
+		_B=$(git_branch)
+		_C=$(git_changes)
+		_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
+		if [ "${#_R}" != "0" ]; then
+			printf "❰%s/%s%s❱" "$_R" "$_B" "$_C"
+		fi
+	fi
+}

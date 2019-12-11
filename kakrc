@@ -3,7 +3,7 @@ source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/plug.kak" noload
 plug "andreyorst/powerline.kak" defer powerline %{
         powerline-theme base16-gruvbox
-        powerline-separator none
+        powerline-separator arrow
 } config %{
         powerline-start
 }
@@ -57,5 +57,11 @@ map global normal '\' , -docstring 'leader'
 map global user 'p' ': fzf-mode<ret>' -docstring 'fzf'
 map global user 't' ': kaktree-enable<ret>: kaktree-toggle<ret>' -docstring 'filetree'
 map global normal  '[w]w: ctags-search<ret>'
+
 # Misc
 set global indentwidth 0
+
+# Filetype hooks
+hook global WinCreate .*bashrc %{ set buffer filetype sh }
+hook global WinCreate .*\.?tmux\..* %{ set buffer filetype sh }
+hook global WinCreate .*\.awk %{ set buffer filetype sh }

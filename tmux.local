@@ -1,31 +1,47 @@
-STATUS_STYLE="bg=colour10 fg=colour15"
-SELECTED_BG=colour2
-SELECTED_FG=colour0
-ACTIVE_FMT="bg=colour12 fg=colour15"
-BORDER_STYLE="fg=colour8"
-TRANSITION="#[fg=colour2  bg=colour10]░▒▓#[fg=colour0 bg=colour2]"
+#STATUS_STYLE="bg=colour2 fg=colour0"
+#SELECTED_BG=colour2
+#SELECTED_FG=colour0
+#ACTIVE_FMT="bg=colour12 fg=colour15"
+#BORDER_STYLE="fg=colour8"
+#TRANSITION="#[fg=colour10  bg=colour2]░▒▓#[fg=colour0 bg=colour2]"
+
+PL_ARROW_R1="\ue0b0"
+PL_ARROW_R2="\ue0b1"
+PL_ARROW_L1="\ue0b2"
+PL_ARROW_L2="\ue0b3"
+PL_TRIUP_R1="\ue0b8"
+PL_TRIUP_R2="\ue0b9"
+PL_TRIUP_L1="\ue0ba"
+PL_TRIUP_L2="\ue0bb"
+PL_TRIDN_R1="\ue0bc"
+PL_TRIDN_R2="\ue0bd"
+PL_TRIDN_L1="\ue0be"
+PL_TRIDN_L2="\ue0bf"
+
+BG1=colour0
+FG1=colour10
+
+BG2=colour8
+FG2=colour15
+
+BG3=colour2
+FG3=colour0
+
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
-PREFIX="#{?client_prefix, ❖ ,   }"
+PREFIX="#{?client_prefix, \u2387 ,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX"
-CLOCK="⋅ %A, %B %d %l:%M %p "
-
-set -g set-titles on
-set -g set-titles-string "#{client_name}"
-set -g status-right "$TRANSITION$ICONBAR   $CLOCK"
-set -gF status-right-length 72
-set -g pane-border-style "$BORDER_STYLE"
-set -g pane-active-border-style "$BORDER_STYLE"
-set -gF status-style "$STATUS_STYLE"
-set -g window-status-style "$STATUS_STYLE"
-set -g window-status-current-style "fg=$SELECTED_FG bg=$SELECTED_BG"
-set -g window-status-format " #{window_name} "
-set -g window-status-current-format " #{window_name} "
-set -g message-command-style "$SELECTED_STYLE"
-set -g message-style "bg=$SELECTED_BG fg=$SELECTED_FG"
-set -g pane-border-format " #{?pane_active,#[$ACTIVE_FMT],}#{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},}#[$BORDER_STYLE]"
-set -g window-active-style "fg=colour15,bg=default"
-set -g window-style "fg=default,bg=default"
+CLOCK="#[fg=$FG3]$PL_ARROW_L1#[bg=$BG1 fg=$FG1] \u23fe %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
+set -g status-justify centre
+set -g status-position top
+set -g status-style "bg=2 fg=0"
+set -g window-status-current-style "bg=0 fg=2"
+set -g window-status-current-format "$PL_TRIDN_R1 #{window_name} $PL_TRIUP_L1"
+set -g window-status-format "$PL_TRIDN_R2 #{window_name} $PL_TRIUP_L2"
+set -g status-right "#[bg=$BG3 fg=$BG2]$PL_ARROW_L1#[bg=$BG2 fg=$FG2]$ICONBAR $CLOCK"
+set -g status-right-length 72
+set -g status-left-length 64
+set -g status-left "#[bg=$BG1 fg=$FG1 reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title} #[bg=$BG3 fg=$FG3]$PL_ARROW_R1"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2

@@ -43,8 +43,6 @@ norm()   { printf "\e[0m";  }
 # Accepts one of the above values as arg 1
 color()  { printf "\e[$1m"; }
 
-# TODO: make tmux fade panes by redefining colors 0-15
-
 # This escape code was difficult to search for. Found it here:
 # https://metacpan.org/release/Term-ExtendedColor-Xresources/source/lib/Term/ExtendedColor/Xresources.pm
 # Remaps an xterm 256 color index to a new RGB value
