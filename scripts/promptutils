@@ -1,6 +1,35 @@
 #!/bin/bash
 
-wintitle() {
+
+# Counts the number of printable characters in $1, moves the cursor
+# to the (columns - numchars) column, prints string, returns cursor
+# to beginning of line with \r
+function rprint() {
+	local str=$1
+	local stripped=$(echo $str | sed "s/\x1B\[[0-9;]*[a-zA-Z]//g")
+	local cols=${COLUMNS:-$(tput cols)}
+	local len=${#stripped}
+	local offset=$(expr $cols - $len)
+	printf "%${offset}s%s"'\r' "" "$str"
+}
+
+function prompt_clear() {
+	export PROMPT_COMMAND=
+}
+
+function prompt_add() {
+	if [ -z "$PROMPT_COMMAND" ]; then
+		export PROMPT_COMMAND="$@"
+	else
+		export PROMPT_COMMAND="$PROMPT_COMMAND && $@"
+	fi
+}
+
+function prompt_tmux() {
+	prompt_add 'trap hook_pre debug'
+}
+
+function win_title() {
 	case "$TERM" in
 		screen*|tmux*) printf "\ek$1\e\\" ;;
 		linux|xterm*|rxvt*) printf "\e]0;$1\007" ;;
@@ -8,44 +37,61 @@ wintitle() {
 	esac
 }
 
-panetitle_esc() {
-	case "$TERM" in
-		tmux*)
-			printf "\e]2;$1\e\\"
-			wintitle "${USER}@${HOSTNAME%%.*}"
-			;;
-		*) ;;
-	esac
+function pane_title() {
+	printf "\e]2;$1\e\\"
 }
 
-panetitle_tmux() {
-	tmux select-pane -T "$1"
+function pane_path() {
+	printf "\e]7;$1\e\\"
 }
 
-trap_post() {
-	RET=$?
-	trap - DEBUG;
-	panetitle_esc "$PWD ⋅ ${THIS_CMD%% -*} ⋅ $RET"
+function tmux_powerline_sep() {
+	# TODO: Instead of syncing these by hand, set them where
+	# both bashrc and tmux can read them
+	local BG1=colour0
+	local FG1=colour10
+	local BG2=colour8
+	local FG2=colour15
+	local BG3=colour2
+	local FG3=colour0
+
+	printf "#[bg=$BG2 fg=$BG1]\ue0b0#[bg=$BG2 fg=$FG2]"
+	printf " $1 "
+	printf "#[bg=$BG3 fg=$BG2]\ue0b0"
 }
-trap_pre() {
-	trap - DEBUG;
-	THIS_CMD=$BASH_COMMAND;
-	PREV_CMD=$THIS_CMD;
-	if [ "${THIS_CMD%% *}" != "trap" ]; then
-		panetitle_esc "$PWD ⋅ ${THIS_CMD%% -*} ⋅ running"
-	else
-		panetitle_esc "$PWD"
+
+function hook_post() {
+	ret=$?
+	trap - debug
+	if [ -z "$PANETITLE" ]; then
+		ret=
 	fi
-	trap trap_post DEBUG
+	pane_title "$PANETITLE $(tmux_powerline_sep $ret)"
 }
-git_branch() {
+
+function hook_pre() {
+	trap - debug
+	c=$BASH_COMMAND
+	if [[ "$PROMPT_COMMAND" != *"$c"* ]]; then
+		PANETITLE="$c"
+	else
+		PANETITLE=""
+	fi
+	pane_title "$PANETITLE $(tmux_powerline_sep running)"
+	pane_path "$(pwd)"
+	trap hook_post debug
+}
+
+function git_branch() {
 	git branch 2> /dev/null | sed '/^[^*]/d;s/* \(.*\)/\1/'
 }
-git_repo() {
+
+function git_repo() {
 	git remote -v 2> /dev/null | sed \
 		-e '1s/.*\/\(.*\)\.git.*/\1/;1s/.*\/\(.*\) .*$/\1/;2d'
 }
-git_changes() {
+
+function git_changes() {
 	git status 2> /dev/null | sed \
 		-e '/^Changes/!d' \
 		-e 's/^Changes not.*$/\-/g' \
@@ -53,7 +99,8 @@ git_changes() {
 		| tr -d "\n" \
 		| sed -e 's/+-/±/'
 }
-git_prompt() {
+
+function git_prompt() {
 	if [ ! -z "$PS1_GIT" ]; then
 		_R=$(git_repo)
 		_B=$(git_branch)

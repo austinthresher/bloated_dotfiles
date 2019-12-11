@@ -51,8 +51,9 @@ define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
 package tmux
-download https://github.com/tmux/tmux/releases/download/2.9a/tmux-2.9a.tar.gz
-define install   : configure , make -j , make -j install
+#download https://github.com/tmux/tmux/releases/download/2.9a/tmux-2.9a.tar.gz
+checkout https://github.com/tmux/tmux
+define install   : bash -c './autogen.sh' , configure , make -j , make -j install
 define uninstall : make uninstall
 
 package pcre
@@ -79,9 +80,17 @@ package kakoune
 checkout https://github.com/mawww/kakoune.git
 define install : make -j , export PREFIX=$LOCAL_PREFIX , make install
 
-package fzf
-checkout https://github.com/junegunn/fzf.git
-define install : bash -c './install --all'
+#package zsh
+#download http://www.zsh.org/pub/zsh-5.7.1.tar.xz
+#define install : configure , make -j , make install
+
+#package fish
+#download https://github.com/fish-shell/fish-shell/releases/download/3.0.1/fish-3.0.1.tar.gz
+#define install configure , make -j , make install
+
+#package fzf
+#checkout https://github.com/junegunn/fzf.git
+#define install : bash -c './install --all'
 
 category ide
 

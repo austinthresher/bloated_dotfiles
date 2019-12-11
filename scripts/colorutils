@@ -34,8 +34,8 @@ BG_LITE_MAGENTA=105
 BG_LITE_CYAN=106
 BG_WHITE=107
 
-bold()   { printf "\e[1;m"; }
-italic() { printf "\e[3;m"; }
+bold()   { printf "\e[1m"; }
+italic() { printf "\e[3m"; }
 under()  { printf "\e[4m";  }
 strike() { printf "\e[9m";  }
 norm()   { printf "\e[0m";  }

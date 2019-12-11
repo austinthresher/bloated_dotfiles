@@ -1,10 +1,3 @@
-#STATUS_STYLE="bg=colour2 fg=colour0"
-#SELECTED_BG=colour2
-#SELECTED_FG=colour0
-#ACTIVE_FMT="bg=colour12 fg=colour15"
-#BORDER_STYLE="fg=colour8"
-#TRANSITION="#[fg=colour10  bg=colour2]░▒▓#[fg=colour0 bg=colour2]"
-
 PL_ARROW_R1="\ue0b0"
 PL_ARROW_R2="\ue0b1"
 PL_ARROW_L1="\ue0b2"
@@ -30,7 +23,8 @@ FG3=colour0
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
 PREFIX="#{?client_prefix, \u2387 ,   }"
-ICONBAR="$SYNC$ZOOM$PREFIX"
+LOCK="#{?#{==:#{client_key_table},off}, 🔒,   }"
+ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
 CLOCK="#[fg=$FG3]$PL_ARROW_L1#[bg=$BG1 fg=$FG1] \u23fe %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
 set -g status-justify centre
 set -g status-position top
@@ -41,7 +35,7 @@ set -g window-status-format "$PL_TRIDN_R2 #{window_name} $PL_TRIUP_L2"
 set -g status-right "#[bg=$BG3 fg=$BG2]$PL_ARROW_L1#[bg=$BG2 fg=$FG2]$ICONBAR $CLOCK"
 set -g status-right-length 72
 set -g status-left-length 64
-set -g status-left "#[bg=$BG1 fg=$FG1 reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title} #[bg=$BG3 fg=$FG3]$PL_ARROW_R1"
+set -g status-left "#[bg=$BG1 fg=$FG1 reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2
@@ -56,14 +50,12 @@ bind-key -n F8 select-window -t 8
 bind-key -n F12 \
 	set prefix None \; \
 	set key-table off \; \
-	set -g status-right "$TRANSITION$ICONBAR🔒 $CLOCK" \; \
 	if -F '#{pane_in_mode}' 'send-keys -X cancel' \; \
 	refresh-client -S \;
 
 bind -T off F12 \
 	set -u prefix \; \
 	set -u key-table \; \
-	set -g status-right "$TRANSITION$ICONBAR   $CLOCK" \; \
 	refresh-client -S
 
 bind -T off F1 select-window -t 1
