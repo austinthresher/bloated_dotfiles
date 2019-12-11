@@ -42,6 +42,8 @@ norm()   { printf "\e[0m";  }
 
 # Accepts one of the above values as arg 1
 color()  { printf "\e[$1m"; }
+# Accepts 3 RGB values, each 0-255
+color_rgb() { printf "\e[38;2;$1;$2;$3m"; }
 
 # This escape code was difficult to search for. Found it here:
 # https://metacpan.org/release/Term-ExtendedColor-Xresources/source/lib/Term/ExtendedColor/Xresources.pm

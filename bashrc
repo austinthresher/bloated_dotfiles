@@ -18,9 +18,11 @@ export PAGER=less
 source colorutils
 source promptutils
 
-[ -z "$SSH_CLIENT" ] && COL=$FG_BLUE || COL=$FG_RED
-export PS1="\[$(bold)$(color $COL)\]➤ \[$(norm)\]"
+[ -z "$SSH_CLIENT" ] && COL="102 236 150" || COL="204 102 102"
+export PS1="\[$(bold)$(color_rgb $COL)\]➤ \[$(norm)\]"
 prompt_clear
 prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
 prompt_add 'win_title $(whoami)@$(hostname)'
 [ ! -z "$TMUX" ] && prompt_tmux
+
+win_title $(whoami)@$(hostname)

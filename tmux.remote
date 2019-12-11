@@ -43,6 +43,8 @@ ICONBAR="$SYNC$ZOOM$PREFIX"
 #set-hook -g window-linked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
 #set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
 
+set -g pane-active-border-style fg=$OUTER_FG
+set -g pane-border-style fg=colour238
 set -g status-justify right
 set -g status-position bottom
 set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
