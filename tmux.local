@@ -11,16 +11,36 @@ PL_TRIDN_R2="\ue0bd"
 PL_TRIDN_L1="\ue0be"
 PL_TRIDN_L2="\ue0bf"
 
+# Lavender
+#PRIMARY_COLOR=colour60
+#ACCENT_COLOR=colour189
+
+# DVA
+#PRIMARY_COLOR=colour60
+#ACCENT_COLOR=colour175
+
+# Brick
+#PRIMARY_COLOR=#732020
+#ACCENT_COLOR=#CC6666
+
+# Blue
+#PRIMARY_COLOR=#405073
+#ACCENT_COLOR=#6696EC
+
+# Cool sea green
+PRIMARY_COLOR=#407350
+ACCENT_COLOR=#66EC96
+
 OUTER_BG=colour0
-OUTER_FG=colour10
+OUTER_FG=$ACCENT_COLOR #33
 
 INFO_BG=colour8
 INFO_FG=colour15
 
-STATUS_BG=colour2
+STATUS_BG=$PRIMARY_COLOR #25
 STATUS_FG=colour0
 
-SELECT_BG=colour10
+SELECT_BG=$ACCENT_COLOR
 SELECT_FG=colour0
 
 BELL_FG=colour15
@@ -35,6 +55,9 @@ PREFIX="#{?client_prefix, \u2387 ,   }"
 LOCK="#{?#{==:#{client_key_table},off}, 🔒,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
 CLOCK="#[fg=$STATUS_FG]$PL_ARROW_L1#[bg=$OUTER_BG fg=$OUTER_FG] \u23fe %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
+
+set -g pane-active-border-style fg=$OUTER_FG
+set -g pane-border-style fg=colour238
 set -g status-justify right
 set -g status-position bottom
 set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
