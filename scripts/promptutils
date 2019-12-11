@@ -27,7 +27,11 @@ function prompt_add() {
 
 function prompt_tmux() {
 	prompt_add 'trap hook_pre debug'
+	PANETITLE=
+	pane_path "$(pwd)"
+ 	pane_title " $(tmux_powerline_sep '')"
 }
+
 
 function win_title() {
 	case "$TERM" in

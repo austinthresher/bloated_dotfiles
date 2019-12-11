@@ -1,6 +1,8 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 [ -e "$HOME/.bp/config" ] && source "$HOME/.bp/config"
 
+unset -f command_not_found_handle
+
 alias ls='ls -F'
 alias grep='grep -n'
 alias more='less'
@@ -19,7 +21,5 @@ source promptutils
 [ -z "$SSH_CLIENT" ] && COL=$FG_BLUE || COL=$FG_RED
 export PS1="\[$(bold)$(color $COL)\]➤ \[$(norm)\]"
 prompt_clear
-prompt_add 'printf $(under)$(color $FG_DARK_GRAY)'
-prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)'
-prompt_add 'echo $(whoami)@$(hostname):$(italic)$PWD$(norm)'
+prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
 [ ! -z "$TMUX" ] && prompt_tmux
