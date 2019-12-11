@@ -53,15 +53,11 @@ function tmux_powerline_sep() {
 	# TODO: Instead of syncing these by hand, set them where
 	# both bashrc and tmux can read them
 	local BG1=colour0
-	local FG1=colour10
 	local BG2=colour8
 	local FG2=colour15
-	local BG3=colour2
-	local FG3=colour0
 
 	printf "#[bg=$BG2 fg=$BG1]\ue0b0#[bg=$BG2 fg=$FG2]"
 	printf " $1 "
-	printf "#[bg=$BG3 fg=$BG2]\ue0b0"
 }
 
 function hook_post() {

@@ -1,27 +1,51 @@
-STATUS_STYLE="bg=colour14 fg=colour15"
-SELECTED_BG=colour6
-SELECTED_FG=colour0
-ACTIVE_FMT="bg=colour9 fg=colour15"
-BORDER_STYLE="fg=colour7"
+PL_ARROW_R1="\ue0b0"
+PL_ARROW_R2="\ue0b1"
+PL_ARROW_L1="\ue0b2"
+PL_ARROW_L2="\ue0b3"
+PL_TRIUP_R1="\ue0b8"
+PL_TRIUP_R2="\ue0b9"
+PL_TRIUP_L1="\ue0ba"
+PL_TRIUP_L2="\ue0bb"
+PL_TRIDN_R1="\ue0bc"
+PL_TRIDN_R2="\ue0bd"
+PL_TRIDN_L1="\ue0be"
+PL_TRIDN_L2="\ue0bf"
+
+OUTER_BG=colour0
+OUTER_FG=colour9
+
+INFO_BG=colour8
+INFO_FG=colour15
+
+STATUS_BG=colour1
+STATUS_FG=colour0
+
+SELECT_BG=colour9
+SELECT_FG=colour0
+
+BELL_FG=colour15
+BELL_BG=colour0
+
+WINDOW_INDEX="$PL_ARROW_L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$PL_ARROW_L1"
+WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$PL_ARROW_L1#[bg=$SELECT_BG fg=$SELECT_FG]"
 
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
-PREFIX="#{?client_prefix, ❖ ,   }"
+PREFIX="#{?client_prefix, \u2387 ,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX"
 
 # Only show remote status bar when there are multiple windows
-set -g status off
-set-hook -g window-linked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
-set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
-#bind C command-prompt -p "New window name: " "new-window -n '%%'"
-set -g status-style "$STATUS_STYLE"
-set -g status-right ""
-set -g window-status-style "$STATUS_STYLE"
-set -g window-status-current-style "fg=$SELECTED_FG bg=$SELECTED_BG"
-set -g window-status-format " #{window_name} "
-set -g window-status-current-format " #{window_name} "
-set -g pane-border-style "$BORDER_STYLE"
-set -g pane-active-border-style "$BORDER_STYLE"
-set -g pane-border-format " #{?pane_active,#[$ACTIVE_FMT],}#{pane_title}#{?pane_in_mode, ⋅ #{pane_mode},}#[$BORDER_STYLE]"
-set -g message-command-style "bg=$SELECTED_BG fg=$SELECTED_FG"
-set -g message-style "bg=$SELECTED_BG fg=$SELECTED_FG"
+#set -g status off
+#set-hook -g window-linked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
+#set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
+
+set -g status-justify right
+set -g status-position bottom
+set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
+set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
+set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_INDEX"
+set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$PL_ARROW_L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
+set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
+set -g status-right-length 16
+set -g status-left-length 80
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"

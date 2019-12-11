@@ -22,4 +22,5 @@ source promptutils
 export PS1="\[$(bold)$(color $COL)\]➤ \[$(norm)\]"
 prompt_clear
 prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
+prompt_add 'win_title $(whoami)@$(hostname)'
 [ ! -z "$TMUX" ] && prompt_tmux
