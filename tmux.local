@@ -20,10 +20,10 @@ FG2=colour15
 BG3=colour2
 FG3=colour0
 
-SYNC="#{?pane_synchronized, ⥱ ,   }"
-ZOOM="#{?window_zoomed_flag, 📌,   }"
-PREFIX="#{?client_prefix, \u2387 ,   }"
-LOCK="#{?#{==:#{client_key_table},off}, 🔒,   }"
+SYNC="#{?pane_synchronized, ⥱ , }"
+ZOOM="#{?window_zoomed_flag, 📌, }"
+PREFIX="#{?client_prefix, \u2387 , }"
+LOCK="#{?#{==:#{client_key_table},off}, 🔒, }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
 CLOCK="#[fg=$FG3]$PL_ARROW_L1#[bg=$BG1 fg=$FG1] \u23fe %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
 set -g status-justify centre

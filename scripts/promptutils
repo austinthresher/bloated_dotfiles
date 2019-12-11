@@ -27,9 +27,9 @@ function prompt_add() {
 
 function prompt_tmux() {
 	prompt_add 'trap hook_pre debug'
-	PANETITLE=
 	pane_path "$(pwd)"
  	pane_title " $(tmux_powerline_sep '')"
+	PANETITLE=
 }
 
 
@@ -46,7 +46,7 @@ function pane_title() {
 }
 
 function pane_path() {
-	printf "\e]7;$1\e\\"
+	printf "\e]7;${1/#$HOME/\~}\e\\"
 }
 
 function tmux_powerline_sep() {
@@ -65,24 +65,28 @@ function tmux_powerline_sep() {
 }
 
 function hook_post() {
-	ret=$?
+	# Uncomment this to get the return code instead of elapsed time
+	#ret=$?
 	trap - debug
 	if [ -z "$PANETITLE" ]; then
 		ret=
+	else
+		ret=${SECONDS}s
 	fi
 	pane_title "$PANETITLE $(tmux_powerline_sep $ret)"
+	pane_path "$(pwd)"
 }
 
 function hook_pre() {
 	trap - debug
 	c=$BASH_COMMAND
 	if [[ "$PROMPT_COMMAND" != *"$c"* ]]; then
-		PANETITLE="$c"
+		PANETITLE="${c%% *}"
 	else
 		PANETITLE=""
 	fi
 	pane_title "$PANETITLE $(tmux_powerline_sep running)"
-	pane_path "$(pwd)"
+	SECONDS=0
 	trap hook_post debug
 }
 
