@@ -1,19 +1,5 @@
 #!/bin/bash
 
-function define_sed_osx() {
-	function sed_i() {
-		sed -i '.bak' "$@"
-	}
-	export -f sed_i
-}
-
-function define_sed_gnu() {
-	function sed_i() {
-		sed -i "$@"
-	}
-	export -f sed_i
-}
-
 unset ENABLE_ATTRIBUTES
 unset ENABLE_COLOR
 unset ENABLE_RGB
@@ -23,23 +9,25 @@ unset ENABLE_TITLE_ESCAPE
 unset ENABLE_TRAP
 unset ENABLE_PROMPT_COMMAND
 
-case $OSTYPE in
+case "$OSTYPE" in
 	*arwin*) # OSX
-		define_sed_osx()
+		function sed_i() { sed -i '.bak' "$@"; }
+		export -f sed_i
 		export ENABLE_COLOR=ON
 		;;
 	*gnu*) # Linux
-		define_sed_gnu()
-		export ENABLE_ATTRIBUTES
-		export ENABLE_COLOR
-		export ENABLE_RGB
-		export ENABLE_TIMESTAMP
-		export ENABLE_TITLE_ESCAPE
-		export ENABLE_TRAP
-		export ENABLE_PROMPT_COMMAND
-		export ENABLE_GIT
+		function sed_i() { sed -i "$@"; }
+		export -f sed_i
+		export ENABLE_ATTRIBUTES=ON
+		export ENABLE_COLOR=ON
+		export ENABLE_RGB=ON
+		export ENABLE_TIMESTAMP=ON
+		export ENABLE_TITLE_ESCAPE=ON
+		export ENABLE_TRAP=ON
+		export ENABLE_PROMPT_COMMAND=ON
+		export ENABLE_GIT=ON
 		;;
 	*)
-		define_sed_gnu()
+		#define_sed_gnu()
 		;;
 esac

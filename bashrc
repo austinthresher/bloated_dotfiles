@@ -15,9 +15,9 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
+source exports
 source colorutils
 source promptutils
-source exports
 
 [ -z "$SSH_CLIENT" ] && COL="102 236 150" || COL="204 102 102"
 export PS1="\[$(bold)$(color_rgb $COL)\]  \[$(norm)\]"

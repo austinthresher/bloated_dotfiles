@@ -40,17 +40,17 @@ BG_LITE_CYAN=106
 BG_WHITE=107
 
 if [ ! -z "$ENABLE_ATTRIBUTES" ]; then
-	function bold()   { :; }
-	function italic() { :; }
-	function under()  { :; }
-	function strike() { :; }
-	function norm()   { :; }
-else
 	function bold()   { printf "\e[1m"; }
 	function italic() { printf "\e[3m"; }
 	function under()  { printf "\e[4m"; }
 	function strike() { printf "\e[9m"; }
 	function norm()   { printf "\e[0m"; }
+else
+	function bold()   { :; }
+	function italic() { :; }
+	function under()  { :; }
+	function strike() { :; }
+	function norm()   { :; }
 fi
 
 if [ ! -z "$ENABLE_COLOR" ]; then

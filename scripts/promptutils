@@ -48,8 +48,8 @@ if [ ! -z "$ENABLE_TITLE_ESCAPE" ]; then
 			*) ;;
 		esac
 		}
-	function pane_title() { printf "\e]2;$1\e\\" }
-	function pane_path() { printf "\e]7;${1/#$HOME/\~}\e\\" }
+	function pane_title() { printf "\e]2;$1\e\\"; }
+	function pane_path() { printf "\e]7;${1/#$HOME/\~}\e\\"; }
 else
 	function win_title() { :; }
 	function pane_title() { :; }
