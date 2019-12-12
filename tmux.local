@@ -52,9 +52,9 @@ WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$PL_ARROW_L1#[bg=$SELECT_BG fg=$S
 SYNC="#{?pane_synchronized, ⥱ ,   }"
 ZOOM="#{?window_zoomed_flag, 📌,   }"
 PREFIX="#{?client_prefix, \u2387 ,   }"
-LOCK="#{?#{==:#{client_key_table},off}, 🔒,   }"
+LOCK="#{?#{==:#{client_key_table},off}, ,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
-CLOCK="#[fg=$STATUS_FG]$PL_ARROW_L1#[bg=$OUTER_BG fg=$OUTER_FG] \u23fe %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
+CLOCK="#[fg=$STATUS_FG]$PL_ARROW_L1#[bg=$OUTER_BG fg=$OUTER_FG]  %A, %B %d $PL_ARROW_L1#[reverse]\u23f0%l:%M %p "
 
 set -g pane-active-border-style fg=$OUTER_FG
 set -g pane-border-style fg=colour238
@@ -67,7 +67,7 @@ set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$PL_AR
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR $CLOCK"
 set -g status-right-length 80
 set -g status-left-length 80
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]#H:#{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"
 
 bind-key -n F1 select-window -t 1
 bind-key -n F2 select-window -t 2

@@ -3,7 +3,6 @@ source "%val{config}/plugins/plug.kak/rc/plug.kak"
 plug "andreyorst/plug.kak" noload
 plug "andreyorst/powerline.kak" defer powerline %{
         powerline-theme base16-gruvbox
-        powerline-separator arrow
 } config %{
         powerline-start
 }
@@ -49,7 +48,6 @@ set -add global ui_options ncurses_assistant=none
 set -add global ui_options ncurses_enable_mouse=true
 set -add global ui_options ncurses_change_colors=false
 set -add global ui_options ncurses_set_title=false
-hook global WinCreate .* %{ powerline-separator none }
 add-highlighter global/ show-matching
 
 # Mappings

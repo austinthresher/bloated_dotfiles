@@ -54,4 +54,4 @@ set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$PL_AR
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
 set -g status-right-length 16
 set -g status-left-length 80
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] ﲾ #H  #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"
