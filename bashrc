@@ -15,12 +15,13 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
+source features
 source exports
 source colorutils
 source promptutils
 
 [ -z "$SSH_CLIENT" ] && COL="102 236 150" || COL="204 102 102"
-export PS1="\[$(bold)$(color_rgb $COL)\]  \[$(norm)\]"
+export PS1="\[$(bold)$(color_rgb $COL)\]$PROMPT_TEXT\[$(norm)\]"
 prompt_clear
 prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
 prompt_add 'win_title $(whoami)@$(hostname)'

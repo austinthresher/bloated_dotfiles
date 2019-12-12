@@ -1,33 +1,47 @@
 #!/bin/bash
 
-unset ENABLE_ATTRIBUTES
-unset ENABLE_COLOR
-unset ENABLE_RGB
-unset ENABLE_GIT
-unset ENABLE_TIMESTAMP
-unset ENABLE_TITLE_ESCAPE
-unset ENABLE_TRAP
-unset ENABLE_PROMPT_COMMAND
+if [ ! -z "$ENABLE_UNICODE" ]; then
+	export PROMPT_TEXT="  "
 
-case "$OSTYPE" in
-	*arwin*) # OSX
-		function sed_i() { sed -i '.bak' "$@"; }
-		export -f sed_i
-		export ENABLE_COLOR=ON
-		;;
-	*gnu*) # Linux
-		function sed_i() { sed -i "$@"; }
-		export -f sed_i
-		export ENABLE_ATTRIBUTES=ON
-		export ENABLE_COLOR=ON
-		export ENABLE_RGB=ON
-		export ENABLE_TIMESTAMP=ON
-		export ENABLE_TITLE_ESCAPE=ON
-		export ENABLE_TRAP=ON
-		export ENABLE_PROMPT_COMMAND=ON
-		export ENABLE_GIT=ON
-		;;
-	*)
-		#define_sed_gnu()
-		;;
-esac
+	export CLOCK_ICON=""
+	export CALENDAR_ICON=""
+	export FOLDER_ICON=""
+	export HOME_ICON=""
+	export SERVER_ICON=""
+	export NETWORK_ICON=""
+	export TEMPERATURE_ICON="宅"
+	export LOCK_ICON=""
+	export PREFIX_ICON=""
+	export ZOOM_ICON=""
+	export SYNC_ICON="⥱"
+	export GIT_ICON=""
+	export LINE_ICON=""
+	export COLUMN_ICON=""
+
+	export POWERLINE_FILLED_LEFT=""
+	export POWERLINE_FILLED_RIGHT=""
+	export POWERLINE_LEFT=""
+	export POWERLINE_RIGHT=""
+else
+	export PROMPT_TEXT=" $ "
+
+	export CLOCK_ICON=""
+	export CALENDAR_ICON=""
+	export FOLDER_ICON=""
+	export HOME_ICON="~"
+	export SERVER_ICON=""
+	export NETWORK_ICON=""
+	export TEMPERATURE_ICON="F"
+	export LOCK_ICON="L"
+	export PREFIX_ICON="!"
+	export ZOOM_ICON="Z"
+	export SYNC_ICON="S"
+	export GIT_ICON=""
+	export LINE_ICON="L"
+	export COLUMN_ICON="C"
+
+	export POWERLINE_FILLED_LEFT="<"
+	export POWERLINE_FILLED_RIGHT=">"
+	export POWERLINE_LEFT="<"
+	export POWERLINE_RIGHT=">"
+fi

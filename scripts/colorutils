@@ -44,13 +44,11 @@ if [ ! -z "$ENABLE_ATTRIBUTES" ]; then
 	function italic() { printf "\e[3m"; }
 	function under()  { printf "\e[4m"; }
 	function strike() { printf "\e[9m"; }
-	function norm()   { printf "\e[0m"; }
 else
 	function bold()   { :; }
 	function italic() { :; }
 	function under()  { :; }
 	function strike() { :; }
-	function norm()   { :; }
 fi
 
 if [ ! -z "$ENABLE_COLOR" ]; then
@@ -60,7 +58,13 @@ else
 	function color() { :; }
 fi
 
-if [ -z "$ENABLE_RGB" ] || [ -z "$ENABLE_COLOR" ]; then
+if [ ! -z "$ENABLE_COLOR" -o ! -z "$ENABLE_ATTRIBUTES" ]; then
+	function norm() { printf "\e[0m"; }
+else
+	function norm() { :; }
+fi
+
+if [ -z "$ENABLE_RGB" -o -z "$ENABLE_COLOR" ]; then
 	function color_rgb() { :; }
 	function redefcol() { :; }
 	function redefbg() { :; }
