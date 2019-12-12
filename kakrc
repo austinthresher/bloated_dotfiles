@@ -57,7 +57,9 @@ map global normal '\' , -docstring 'leader'
 map global user 'p' ': fzf-mode<ret>' -docstring 'fzf'
 map global user 't' ': kaktree-enable<ret>: kaktree-toggle<ret>' -docstring 'filetree'
 map global normal  '[w]w: ctags-search<ret>'
-
+map global normal 0 '<a-h>;'
+map global normal $ '<a-l>;'
+map global normal w 'eb'
 # Misc
 set global indentwidth 0
 
