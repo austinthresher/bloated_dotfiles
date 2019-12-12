@@ -59,7 +59,7 @@ map global user 't' ': kaktree-enable<ret>: kaktree-toggle<ret>' -docstring 'fil
 map global normal  '[w]w: ctags-search<ret>'
 map global normal 0 '<a-h>;'
 map global normal $ '<a-l>;'
-map global normal w 'eb'
+map global normal w '[w]w'
 # Misc
 set global indentwidth 0
 
