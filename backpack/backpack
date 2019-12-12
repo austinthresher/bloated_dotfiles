@@ -105,10 +105,10 @@ checkout() {
 	get_installed $PKG_NAME && return 0
 	rm -f $LOCAL_LOG/$PKG_NAME.git
 	printf "pulling %s from %s\n" "$PKG_NAME" "$1"
-	[ ! -d $SRC_DEST ] && git clone $1 $SRC_DEST &>> $LOCAL_LOG/$PKG_NAME.git
+	[ ! -d $SRC_DEST ] && git clone $1 $SRC_DEST &> $LOCAL_LOG/$PKG_NAME.gitclone
 	cd $SRC_DEST
-	git pull &>> $LOCAL_LOG/$PKG_NAME.git
-	git submodule update --init --recursive &>> $LOCAL_LOG/$PKG_NAME.git
+	git pull &> $LOCAL_LOG/$PKG_NAME.gitpull
+	git submodule update --init --recursive &> $LOCAL_LOG/$PKG_NAME.submodule
 }
 
 # getfile <src-url> <dst-dir>

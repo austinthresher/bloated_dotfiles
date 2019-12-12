@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Environment variables used for configuration:
+#       ENABLE_ATTRIBUTES
+#       ENABLE_COLOR
+#       ENABLE_RGB
+
 FG_BLACK=30
 FG_DARK_RED=31
 FG_DARK_GREEN=32
@@ -34,16 +39,37 @@ BG_LITE_MAGENTA=105
 BG_LITE_CYAN=106
 BG_WHITE=107
 
-bold()   { printf "\e[1m"; }
-italic() { printf "\e[3m"; }
-under()  { printf "\e[4m";  }
-strike() { printf "\e[9m";  }
-norm()   { printf "\e[0m";  }
+if [ ! -z "$ENABLE_ATTRIBUTES" ]; then
+	function bold()   { :; }
+	function italic() { :; }
+	function under()  { :; }
+	function strike() { :; }
+	function norm()   { :; }
+else
+	function bold()   { printf "\e[1m"; }
+	function italic() { printf "\e[3m"; }
+	function under()  { printf "\e[4m"; }
+	function strike() { printf "\e[9m"; }
+	function norm()   { printf "\e[0m"; }
+fi
 
-# Accepts one of the above values as arg 1
-color()  { printf "\e[$1m"; }
-# Accepts 3 RGB values, each 0-255
-color_rgb() { printf "\e[38;2;$1;$2;$3m"; }
+if [ ! -z "$ENABLE_COLOR" ]; then
+	# Accepts one of the above values as arg 1
+	function color() { printf "\e[$1m"; }
+else
+	function color() { :; }
+fi
+
+if [ -z "$ENABLE_RGB" ] || [ -z "$ENABLE_COLOR" ]; then
+	function color_rgb() { :; }
+	function redefcol() { :; }
+	function redefbg() { :; }
+	function redeffg() { :; }
+	exit
+fi
+
+# If we make it here, we have true color
+function color_rgb() { printf "\e[38;2;$1;$2;$3m"; }
 
 # This escape code was difficult to search for. Found it here:
 # https://metacpan.org/release/Term-ExtendedColor-Xresources/source/lib/Term/ExtendedColor/Xresources.pm
