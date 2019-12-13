@@ -29,7 +29,7 @@ LOCK="#{?#{==:#{client_key_table},off}, $LOCK_ICON,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
 T=$TIME
 D=$DATE
-CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $CLOCK_ICON $T "
+CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $CLOCK_ICON$T "
 set -g pane-active-border-style fg=$OUTER_FG
 set -g pane-border-style fg=$TMUX_GRAY
 set -g status-justify right
@@ -39,8 +39,8 @@ set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
 set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_INDEX"
 set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR $CLOCK"
-set -g status-right-length 80
-set -g status-left-length 80
+set -g status-right-length $TMUX_LEFT_CHARS
+set -g status-left-length $TMUX_RIGHT_CHARS
 set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
 
 bind-key -n F1 if-shell 'tmux select-window -t :1' '' 'new-window -t :1'

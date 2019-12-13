@@ -44,5 +44,6 @@ case "$OSTYPE" in
 		;;
 esac
 
-test ${COLUMNS:-$(tput cols)} -lt 120 && export LIMITED_SPACE=ON
+export SCREEN_WIDTH=${COLUMNS:-$(tput cols)}
+test $SCREEN_WIDTH -lt 120 && export LIMITED_SPACE=ON
 

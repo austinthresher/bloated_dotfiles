@@ -80,3 +80,6 @@ else
 	export DATE="%A, %B %d"
 	export TIME="%l:%M %p"
 fi
+
+export TMUX_LEFT_CHARS=$(expr $SCREEN_WIDTH / 3)
+export TMUX_RIGHT_CHARS=$(expr $SCREEN_WIDTH / 3)

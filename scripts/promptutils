@@ -12,8 +12,8 @@ function shorten_path() {
 }
 
 function getdir() {
-		local dir=$(pwd)
-		dir=$(printf "${dir/#$HOME/\~}")
+	local dir=$(pwd)
+	dir=$(printf "${dir/#$HOME/\~}")
 	if [ -z "$LIMITED_SPACE" ]; then
 		printf "$dir"
 	else

@@ -41,5 +41,5 @@ set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_IND
 set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
 set -g status-right-length 16
-set -g status-left-length 80
+set -g status-left-length $TMUX_LEFT_CHARS
 set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
