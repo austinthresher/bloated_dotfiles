@@ -27,8 +27,9 @@ ZOOM="#{?window_zoomed_flag, $ZOOM_ICON,   }"
 PREFIX="#{?client_prefix, $PREFIX_ICON ,   }"
 LOCK="#{?#{==:#{client_key_table},off}, $LOCK_ICON,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
-CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON %A, %B %d $L1#[reverse] $CLOCK_ICON %l:%M %p "
-
+T=$TIME
+D=$DATE
+CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $CLOCK_ICON $T "
 set -g pane-active-border-style fg=$OUTER_FG
 set -g pane-border-style fg=$TMUX_GRAY
 set -g status-justify right

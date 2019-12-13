@@ -71,3 +71,12 @@ else
 	export TMUX_GRAY="default"
 	export TMUX_WHITE="default"
 fi
+
+SCREEN_WIDTH=${COLUMNS:-$(tput cols)}
+if [ $SCREEN_WIDTH -lt 120 ]; then
+	export DATE="%b %d"
+	export TIME="%l:%M"
+else
+	export DATE="%A, %B %d"
+	export TIME="%l:%M %p"
+fi
