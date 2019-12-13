@@ -14,6 +14,7 @@ case "$OSTYPE" in
 		function sed_i() { sed -i '.bak' "$@"; }
 		export -f sed_i
 		export ENABLE_COLOR=ON
+		export TMUX_DEFAULT_TERM=screen
 		;;
 	*gnu*) # Linux
 		function sed_i() { sed -i "$@"; }
@@ -26,15 +27,18 @@ case "$OSTYPE" in
 		export ENABLE_PROMPT_COMMAND=ON
 		export ENABLE_GIT=ON
 		case "$TERM" in
-			linux)
-				;;
-			*)
+			*256color)
 				export ENABLE_UNICODE=ON
 				export ENABLE_RGB=ON
+				export TMUX_DEFAULT_TERM=tmux-256color
+				;;
+			*)
+				export TMUX_DEFAULT_TERM=tmux
 				;;
 		esac
 		;;
 	*)
-		#define_sed_gnu()
+		function sed_i() { sed -i "$@"; }
+		export TMUX_DEFAULT_TERM=screen
 		;;
 esac

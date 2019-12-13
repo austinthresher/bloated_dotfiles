@@ -40,8 +40,8 @@ else
 	export LINE_ICON="L"
 	export COLUMN_ICON="C"
 
-	export POWERLINE_FILLED_LEFT="<"
-	export POWERLINE_FILLED_RIGHT=">"
+	export POWERLINE_FILLED_LEFT=""
+	export POWERLINE_FILLED_RIGHT=""
 	export POWERLINE_LEFT="<"
 	export POWERLINE_RIGHT=">"
 fi
