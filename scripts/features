@@ -8,6 +8,7 @@ unset ENABLE_TIMESTAMP
 unset ENABLE_TITLE_ESCAPE
 unset ENABLE_TRAP
 unset ENABLE_PROMPT_COMMAND
+unset LIMITED_SPACE
 
 case "$OSTYPE" in
 	*arwin*) # OSX
@@ -42,3 +43,6 @@ case "$OSTYPE" in
 		export TMUX_DEFAULT_TERM=screen
 		;;
 esac
+
+test ${COLUMNS:-$(tput cols)} -lt 120 && export LIMITED_SPACE=ON
+
