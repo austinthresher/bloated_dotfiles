@@ -56,7 +56,7 @@ else
 	function pane_path() { :; }
 fi
 
-if [ -z "$ENABLE_TRAP" ]; then
+if [ ! -z "$ENABLE_TRAP" ]; then
 	function prompt_tmux() {
 		prompt_add 'trap hook_pre debug'
 		pane_path "$(pwd)"
