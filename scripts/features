@@ -20,12 +20,19 @@ case "$OSTYPE" in
 		export -f sed_i
 		export ENABLE_ATTRIBUTES=ON
 		export ENABLE_COLOR=ON
-		export ENABLE_RGB=ON
 		export ENABLE_TIMESTAMP=ON
 		export ENABLE_TITLE_ESCAPE=ON
 		export ENABLE_TRAP=ON
 		export ENABLE_PROMPT_COMMAND=ON
 		export ENABLE_GIT=ON
+		case "$TERM" in
+			linux)
+				;;
+			*)
+				export ENABLE_UNICODE=ON
+				export ENABLE_RGB=ON
+				;;
+		esac
 		;;
 	*)
 		#define_sed_gnu()

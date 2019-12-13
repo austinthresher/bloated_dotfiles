@@ -45,3 +45,29 @@ else
 	export POWERLINE_LEFT="<"
 	export POWERLINE_RIGHT=">"
 fi
+
+if [ ! -z "$ENABLE_RGB" ]; then
+	export TMUX_LOCAL_PRIMARY_COL="#407350"
+	export TMUX_LOCAL_ACCENT_COLOR="#66EC96"
+	export TMUX_REMOTE_PRIMARY_COL="#732020#"
+	export TMUX_REMOTE_ACCENT_COLOR="#CC6666#"
+	export TMUX_BLACK="colour0"
+	export TMUX_GRAY="colour8"
+	export TMUX_WHITE="colour15"
+elif [ ! -z "$ENABLE_COLOR" ]; then
+	export TMUX_LOCAL_PRIMARY_COL="colour2"
+	export TMUX_LOCAL_ACCENT_COLOR="colour10"
+	export TMUX_REMOTE_PRIMARY_COL="colour1"
+	export TMUX_REMOTE_ACCENT_COLOR="colour9"
+	export TMUX_BLACK="colour0"
+	export TMUX_GRAY="colour8"
+	export TMUX_WHITE="colour15"
+else
+	export TMUX_LOCAL_PRIMARY_COL="default"
+	export TMUX_LOCAL_ACCENT_COLOR="default"
+	export TMUX_REMOTE_PRIMARY_COL="default"
+	export TMUX_REMOTE_ACCENT_COLOR="default"
+	export TMUX_BLACK="default"
+	export TMUX_GRAY="default"
+	export TMUX_WHITE="default"
+fi

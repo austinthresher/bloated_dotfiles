@@ -1,37 +1,18 @@
-# Lavender
-#PRIMARY_COLOR=colour60
-#ACCENT_COLOR=colour189
 
-# DVA
-#PRIMARY_COLOR=colour60
-#ACCENT_COLOR=colour175
+OUTER_BG=$TMUX_BLACK
+OUTER_FG=$TMUX_LOCAL_ACCENT_COLOR
 
-# Brick
-#PRIMARY_COLOR=#732020
-#ACCENT_COLOR=#CC6666
+INFO_BG=$TMUX_GRAY
+INFO_FG=$TMUX_WHITE
 
-# Blue
-#PRIMARY_COLOR=#405073
-#ACCENT_COLOR=#6696EC
+STATUS_BG=$TMUX_LOCAL_PRIMARY_COLOR
+STATUS_FG=$TMUX_BLACK
 
-# Cool sea green
-PRIMARY_COLOR=#407350
-ACCENT_COLOR=#66EC96
+SELECT_BG=$TMUX_LOCAL_ACCENT_COLOR
+SELECT_FG=$TMUX_BLACK
 
-OUTER_BG=colour0
-OUTER_FG=$ACCENT_COLOR #33
-
-INFO_BG=colour8
-INFO_FG=colour15
-
-STATUS_BG=$PRIMARY_COLOR #25
-STATUS_FG=colour0
-
-SELECT_BG=$ACCENT_COLOR
-SELECT_FG=colour0
-
-BELL_FG=colour15
-BELL_BG=colour0
+BELL_FG=$TMUX_WHITE
+BELL_BG=$TMUX_BLACK
 
 L1=$POWERLINE_FILLED_LEFT
 L2=$POWERLINE_LEFT
@@ -41,15 +22,15 @@ R2=$POWERLINE_RIGHT
 WINDOW_INDEX="$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$PLL1"
 WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$L1#[bg=$SELECT_BG fg=$SELECT_FG]"
 
-SYNC="#{?pane_synchronized, ⥱ ,   }"
-ZOOM="#{?window_zoomed_flag, 📌,   }"
-PREFIX="#{?client_prefix, \u2387 ,   }"
-LOCK="#{?#{==:#{client_key_table},off}, ,   }"
+SYNC="#{?pane_synchronized, $SYNC_ICON ,   }"
+ZOOM="#{?window_zoomed_flag, $ZOOM_ICON,   }"
+PREFIX="#{?client_prefix, $PREFIX_ICON ,   }"
+LOCK="#{?#{==:#{client_key_table},off}, $LOCK_ICON,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
-CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG]  %A, %B %d $L1#[reverse]\u23f0%l:%M %p "
+CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON %A, %B %d $L1#[reverse]\u23f0%l:%M %p "
 
 set -g pane-active-border-style fg=$OUTER_FG
-set -g pane-border-style fg=colour238
+set -g pane-border-style fg=$TMUX_GRAY
 set -g status-justify right
 set -g status-position bottom
 set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
@@ -59,7 +40,7 @@ set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[d
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR $CLOCK"
 set -g status-right-length 80
 set -g status-left-length 80
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]#H:#{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
 
 bind-key -n F1 if-shell 'tmux select-window -t :1' '' 'new-window -t :1'
 bind-key -n F2 if-shell 'tmux select-window -t :2' '' 'new-window -t :2'

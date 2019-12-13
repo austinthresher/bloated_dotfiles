@@ -1,41 +1,29 @@
-PL_ARROW_R1="\ue0b0"
-PL_ARROW_R2="\ue0b1"
-PL_ARROW_L1="\ue0b2"
-PL_ARROW_L2="\ue0b3"
-PL_TRIUP_R1="\ue0b8"
-PL_TRIUP_R2="\ue0b9"
-PL_TRIUP_L1="\ue0ba"
-PL_TRIUP_L2="\ue0bb"
-PL_TRIDN_R1="\ue0bc"
-PL_TRIDN_R2="\ue0bd"
-PL_TRIDN_L1="\ue0be"
-PL_TRIDN_L2="\ue0bf"
+OUTER_BG=$TMUX_BLACK
+OUTER_FG=$TMUX_REMOTE_ACCENT_COLOR
 
-# Brick
-PRIMARY_COLOR=#732020
-ACCENT_COLOR=#CC6666
+INFO_BG=$TMUX_GRAY
+INFO_FG=$TMUX_WHITE
 
-OUTER_BG=colour0
-OUTER_FG=$ACCENT_COLOR
+STATUS_BG=$TMUX_REMOTE_PRIMARY_COLOR
+STATUS_FG=$TMUX_BLACK
 
-INFO_BG=colour8
-INFO_FG=colour15
+SELECT_BG=$TMUX_REMOTE_ACCENT_COLOR
+SELECT_FG=$TMUX_BLACK
 
-STATUS_BG=$PRIMARY_COLOR
-STATUS_FG=colour0
+BELL_FG=$TMUX_WHITE
+BELL_BG=$TMUX_BLACK
 
-SELECT_BG=$ACCENT_COLOR
-SELECT_FG=colour0
+L1=$POWERLINE_FILLED_LEFT
+L2=$POWERLINE_LEFT
+R1=$POWERLINE_FILLED_RIGHT
+R2=$POWERLINE_RIGHT
 
-BELL_FG=colour15
-BELL_BG=colour0
+WINDOW_INDEX="$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
+WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$L1#[bg=$SELECT_BG fg=$SELECT_FG]"
 
-WINDOW_INDEX="$PL_ARROW_L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$PL_ARROW_L1"
-WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$PL_ARROW_L1#[bg=$SELECT_BG fg=$SELECT_FG]"
-
-SYNC="#{?pane_synchronized, ⥱ ,   }"
-ZOOM="#{?window_zoomed_flag, 📌,   }"
-PREFIX="#{?client_prefix, \u2387 ,   }"
+SYNC="#{?pane_synchronized, $SYNC_ICON ,   }"
+ZOOM="#{?window_zoomed_flag, $ZOOM_ICON,   }"
+PREFIX="#{?client_prefix, $PREFIX_ICON ,   }"
 ICONBAR="$SYNC$ZOOM$PREFIX"
 
 # Only show remote status bar when there are multiple windows
@@ -44,14 +32,14 @@ ICONBAR="$SYNC$ZOOM$PREFIX"
 #set-hook -g window-unlinked 'if -F "#{==:#{session_windows},1}" "set -g status off" "set -g status on"'
 
 set -g pane-active-border-style fg=$OUTER_FG
-set -g pane-border-style fg=colour238
+set -g pane-border-style fg=$TMUX_GRAY
 set -g status-justify right
 set -g status-position bottom
 set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
 set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
 set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_INDEX"
-set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$PL_ARROW_L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
-set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
+set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
+set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
 set -g status-right-length 16
 set -g status-left-length 80
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] ﲾ #H  #{pane_path}#[noreverse]$PL_ARROW_R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$PL_ARROW_R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
