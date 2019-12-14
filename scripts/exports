@@ -42,8 +42,8 @@ else
 
 	export POWERLINE_FILLED_LEFT=""
 	export POWERLINE_FILLED_RIGHT=""
-	export POWERLINE_LEFT="<"
-	export POWERLINE_RIGHT=">"
+	export POWERLINE_LEFT=""
+	export POWERLINE_RIGHT=""
 fi
 
 if [ ! -z "$ENABLE_RGB" ]; then
@@ -75,7 +75,7 @@ fi
 if [ ! -z "$LIMITED_SPACE" ]; then
 	export DATE="%b %d"
 	export TIME="%l:%M"
-	export TMUX_WINDOW_NAME=" "
+	export TMUX_WINDOW_NAME=""
 else
 	export DATE="%A, %B %d"
 	export TIME="%l:%M %p"

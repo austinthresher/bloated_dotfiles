@@ -19,7 +19,8 @@ L2=$POWERLINE_LEFT
 R1=$POWERLINE_FILLED_RIGHT
 R2=$POWERLINE_RIGHT
 
-WINDOW_INDEX="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
+WINDOW_INDEX="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index}"
+WINDOW_END=" #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
 WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$L1#[bg=$SELECT_BG fg=$SELECT_FG]"
 WINDOW_NORMAL="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
 SYNC="#{?pane_synchronized,$SYNC_ICON ,}"
@@ -32,8 +33,8 @@ D=$DATE
 CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $T "
 
 W=$TMUX_WINDOW_NAME
-set -g window-status-current-format "$WINDOW_SELECTED$W$WINDOW_INDEX"
-set -g window-status-format "$WINDOW_NORMAL$W$WINDOW_INDEX"
+set -g window-status-current-format "$WINDOW_SELECTED$W$WINDOW_INDEX*$WINDOW_END"
+set -g window-status-format "$WINDOW_NORMAL$W$WINDOW_INDEX$WINDOW_END"
 
 set -g pane-active-border-style fg=$OUTER_FG
 set -g pane-border-style fg=$TMUX_GRAY
