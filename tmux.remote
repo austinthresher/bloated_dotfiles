@@ -21,9 +21,9 @@ R2=$POWERLINE_RIGHT
 WINDOW_INDEX="$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
 WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$L1#[bg=$SELECT_BG fg=$SELECT_FG]"
 
-SYNC="#{?pane_synchronized, $SYNC_ICON ,   }"
-ZOOM="#{?window_zoomed_flag, $ZOOM_ICON,   }"
-PREFIX="#{?client_prefix, $PREFIX_ICON ,   }"
+SYNC="#{?pane_synchronized, $SYNC_ICON , }"
+ZOOM="#{?window_zoomed_flag, $ZOOM_ICON , }"
+PREFIX="#{?client_prefix, $PREFIX_ICON , }"
 ICONBAR="$SYNC$ZOOM$PREFIX"
 
 # Only show remote status bar when there are multiple windows
@@ -40,6 +40,6 @@ set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
 set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_INDEX"
 set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR"
-set -g status-right-length 16
+set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
 set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"

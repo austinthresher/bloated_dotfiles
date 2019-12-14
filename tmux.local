@@ -19,28 +19,31 @@ L2=$POWERLINE_LEFT
 R1=$POWERLINE_FILLED_RIGHT
 R2=$POWERLINE_RIGHT
 
-WINDOW_INDEX="$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
+WINDOW_INDEX="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index} #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
 WINDOW_SELECTED="#[bg=$STATUS_BG fg=$SELECT_BG]$L1#[bg=$SELECT_BG fg=$SELECT_FG]"
-
-SYNC="#{?pane_synchronized, $SYNC_ICON ,   }"
-ZOOM="#{?window_zoomed_flag, $ZOOM_ICON,   }"
-PREFIX="#{?client_prefix, $PREFIX_ICON ,   }"
-LOCK="#{?#{==:#{client_key_table},off}, $LOCK_ICON,   }"
+WINDOW_NORMAL="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
+SYNC="#{?pane_synchronized, $SYNC_ICON , }"
+ZOOM="#{?window_zoomed_flag, $ZOOM_ICON , }"
+PREFIX="#{?client_prefix, $PREFIX_ICON , }"
+LOCK="#{?#{==:#{client_key_table},off}, $LOCK_ICON , }"
 ICONBAR="$SYNC$ZOOM$PREFIX$LOCK"
-T=$TIME
+T="$CLOCK_ICON$TIME"
 D=$DATE
-CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $CLOCK_ICON$T "
+CLOCK="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $CALENDAR_ICON $D $L1#[reverse] $T "
+
+W=$TMUX_WINDOW_NAME
+set -g window-status-current-format "$WINDOW_SELECTED$W$WINDOW_INDEX"
+set -g window-status-format "$WINDOW_NORMAL$W$WINDOW_INDEX"
+
 set -g pane-active-border-style fg=$OUTER_FG
 set -g pane-border-style fg=$TMUX_GRAY
 set -g status-justify right
 set -g status-position bottom
 set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
 set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
-set -g window-status-current-format "$WINDOW_SELECTED #{window_name} $WINDOW_INDEX"
-set -g window-status-format "#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG] #{window_name} #[nobold fg=$STATUS_FG]$WINDOW_INDEX"
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR $CLOCK"
-set -g status-right-length $TMUX_LEFT_CHARS
-set -g status-left-length $TMUX_RIGHT_CHARS
+set -g status-right-length $TMUX_RIGHT_CHARS
+set -g status-left-length $TMUX_LEFT_CHARS
 set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
 
 bind-key -n F1 if-shell 'tmux select-window -t :1' '' 'new-window -t :1'
