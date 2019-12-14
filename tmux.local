@@ -45,7 +45,9 @@ set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
 set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$ICONBAR $CLOCK"
 set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse] $SERVER_ICON #H $R2 $FOLDER_ICON #{pane_path}#[noreverse]$R1 #{pane_title}#[bg=$STATUS_BG fg=$INFO_BG]$R1"
+PT="$TMUX_PANE_TITLE"
+PP="$TMUX_PANE_PATH"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$SERVER_ICON#H$R2$FOLDER_ICON$PP#[noreverse]$R1 $PT#[bg=$STATUS_BG fg=$INFO_BG]$R1"
 
 bind-key -n F1 if-shell 'tmux select-window -t :1' '' 'new-window -t :1'
 bind-key -n F2 if-shell 'tmux select-window -t :2' '' 'new-window -t :2'

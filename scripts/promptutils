@@ -104,7 +104,7 @@ if [ ! -z "$ENABLE_TRAP" ]; then
 		else
 			PANETITLE=""
 		fi
-		pane_title "$PANETITLE $(tmux_powerline_sep running)"
+		pane_title "$PANETITLE $(tmux_powerline_sep $RUNNING_ICON)"
 		SECONDS=0
 		trap hook_post debug
 	}

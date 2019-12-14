@@ -3,11 +3,12 @@
 if [ ! -z "$ENABLE_UNICODE" ]; then
 	export PROMPT_TEXT="  "
 
+	export RUNNING_ICON=""
 	export CLOCK_ICON=""
 	export CALENDAR_ICON=""
-	export FOLDER_ICON=""
+	export FOLDER_ICON="  "
 	export HOME_ICON=""
-	export SERVER_ICON=""
+	export SERVER_ICON="  "
 	export NETWORK_ICON=""
 	export TEMPERATURE_ICON="宅"
 	export LOCK_ICON=""
@@ -25,6 +26,7 @@ if [ ! -z "$ENABLE_UNICODE" ]; then
 else
 	export PROMPT_TEXT=" $ "
 
+	export RUNNING_ICON="!"
 	export CLOCK_ICON=""
 	export CALENDAR_ICON=""
 	export FOLDER_ICON=""
@@ -43,7 +45,7 @@ else
 	export POWERLINE_FILLED_LEFT=""
 	export POWERLINE_FILLED_RIGHT=""
 	export POWERLINE_LEFT=""
-	export POWERLINE_RIGHT=""
+	export POWERLINE_RIGHT=":"
 fi
 
 if [ ! -z "$ENABLE_RGB" ]; then
@@ -84,3 +86,11 @@ fi
 
 export TMUX_LEFT_CHARS=$( expr $SCREEN_WIDTH / 2 + 8 )
 export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH / 3 )
+
+if [ ! -z "$ENABLE_TRAP" ]; then
+	export TMUX_PANE_PATH="#{pane_path}"
+	export TMUX_PANE_TITLE="#{pane_title}"
+else
+	export TMUX_PANE_PATH="#{pane_current_path}"
+	export TMUX_PANE_TITLE="#{pane_current_command}"
+fi
