@@ -15,16 +15,36 @@ export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
 
-source features
-source exports
-source colorutils
-source promptutils
+source module.sh
 
-[ -z "$SSH_CLIENT" ] && COL="102 236 150" || COL="204 102 102"
-export PS1="\[$(bold)$(color_rgb $COL)\]$PROMPT_TEXT\[$(norm)\]"
-prompt_clear
-prompt_add 'rprint $(color $FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
-prompt_add 'win_title $(whoami)@$(hostname)'
-[ ! -z "$TMUX" ] && prompt_tmux
+case "$OSTYPE" in
+	*arwin*) # OSX
+		function sed_i() { sed -i '.bak' "$@"; }
+		export -f sed_i
+		load term-color-ascii
+		;;
+	*gnu*) # Linux
+		function sed_i() { sed -i "$@"; }
+		export -f sed_i
+		case "$TERM" in
+			*256color)
+				load term-rgb
+				;;
+			*)
+				load term-color-unicode
+				;;
+		esac
+		load prompt_command
+		load set_title
+		load trap
+		;;
+	*)
+		load term-dumb
+		;;
+esac
 
-win_title $(whoami)@$(hostname)
+load pwd
+load tmux
+load ps1
+
+require set_title && set_title $(whoami)@$(hostname)
