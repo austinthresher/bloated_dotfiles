@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if require resize; then
+	trap 'resize' WINCH
+fi
+
 require prompt_command_add || return
 require set_pane_path || return
 require set_pane_title || return
@@ -44,3 +48,5 @@ function hook_pre() {
 	SECONDS=0
 	trap hook_post debug
 }
+
+

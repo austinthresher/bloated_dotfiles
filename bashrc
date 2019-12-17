@@ -21,7 +21,11 @@ case "$OSTYPE" in
 	*arwin*) # OSX
 		function sed_i() { sed -i '.bak' "$@"; }
 		export -f sed_i
-		load term-color-ascii
+		load term-color
+		load ascii
+		load prompt_command
+		prompt_command_clear
+		prompt_command_add 'resize'
 		;;
 	*gnu*) # Linux
 		function sed_i() { sed -i "$@"; }
@@ -31,15 +35,17 @@ case "$OSTYPE" in
 				load term-rgb
 				;;
 			*)
-				load term-color-unicode
+				load term-color
 				;;
 		esac
+		load unicode 
 		load prompt_command
 		load set_title
 		load trap
 		;;
 	*)
 		load term-dumb
+		load ascii
 		;;
 esac
 
