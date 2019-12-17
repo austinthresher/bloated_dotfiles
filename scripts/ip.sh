@@ -2,7 +2,11 @@
 
 function get_ip() {
 	if [ -x "$(which ip)" ]; then
-		ip addr | $(which grep) "e..[0-9]$" | awk '{ print $2 }' | sed 's/\/.*//g'
+		ip addr \
+			| egrep "(wlan|enp|eth|en)[0-9](s[0-9][0-9])?" \
+			| grep inet \
+			| awk '{ print $3 }' \
+			| sed 's/\/.*//g'
 	else
 		printf "unknown"
 	fi
