@@ -18,11 +18,13 @@ function tmux_powerline_sep() {
 	printf " $1 "
 }
 
-function prompt_tmux() {
-	prompt_command_add 'trap hook_pre debug'
-	set_pane_path "$(pwd)"
-	set_pane_title " $(tmux_powerline_sep '')"
-	PANETITLE=
+function init_trap() {
+	if [ ! -z "$TMUX" ]; then
+		prompt_command_add 'trap hook_pre debug'
+		set_pane_path "$(pwd)"
+		set_pane_title " $(tmux_powerline_sep '')"
+		PANETITLE=
+	fi
 }
 
 function hook_post() {
@@ -48,5 +50,3 @@ function hook_pre() {
 	SECONDS=0
 	trap hook_post debug
 }
-
-

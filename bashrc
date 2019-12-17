@@ -53,4 +53,6 @@ load pwd
 load tmux
 load ps1
 
-require set_title && set_title $(whoami)@$(hostname)
+if require set_title; then
+	set_title $(whoami)@$(hostname)
+fi
