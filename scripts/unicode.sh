@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export PROMPT_TEXT="  "
-export RUNNING_ICON=""
+export RUNNING_ICON=""
 export CLOCK_ICON=""
 export CALENDAR_ICON=""
 export FOLDER_ICON="   "

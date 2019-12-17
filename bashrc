@@ -17,15 +17,13 @@ export PAGER=less
 
 source module.sh
 
+load cwd
 case "$OSTYPE" in
 	*arwin*) # OSX
 		function sed_i() { sed -i '.bak' "$@"; }
 		export -f sed_i
 		load term-color
 		load ascii
-		load prompt_command
-		prompt_command_clear
-		prompt_command_add 'resize'
 		;;
 	*gnu*) # Linux
 		function sed_i() { sed -i "$@"; }
@@ -39,7 +37,6 @@ case "$OSTYPE" in
 				;;
 		esac
 		load unicode 
-		load prompt_command
 		load set_title
 		load trap
 		;;
@@ -49,7 +46,6 @@ case "$OSTYPE" in
 		;;
 esac
 
-load pwd
 load tmux
 load ps1
 

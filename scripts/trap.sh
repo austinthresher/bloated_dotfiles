@@ -1,27 +1,22 @@
 #!/bin/bash
 
-if require resize; then
-	trap 'resize' WINCH
-fi
-
 require prompt_command_add || return
 require set_pane_path || return
 require set_pane_title || return
+require cwd || cwd() { pwd; }
+
+trap "$PROMPT_COMMAND" WINCH
 
 function tmux_powerline_sep() {
-	# TODO: Instead of syncing these by hand, set them where
-	# both bashrc and tmux can read them
-	local BG1=colour0
-	local BG2=colour8
-	local FG2=colour15
-	printf "#[bg=$BG2 fg=$BG1]\ue0b0#[bg=$BG2 fg=$FG2]"
+	printf "#[fg=7]"
 	printf " $1 "
 }
 
 function init_trap() {
+	prompt_command_add 'resize'
 	if [ ! -z "$TMUX" ]; then
 		prompt_command_add 'trap hook_pre debug'
-		set_pane_path "$(pwd)"
+		set_pane_path "$(cwd)"
 		set_pane_title " $(tmux_powerline_sep '')"
 		PANETITLE=
 	fi
@@ -35,7 +30,7 @@ function hook_post() {
 		sec=${SECONDS}s
 	fi
 	set_pane_title "$PANETITLE $(tmux_powerline_sep $sec)"
-	set_pane_path "$(pwd)"
+	set_pane_path "$(cwd)"
 }
 
 function hook_pre() {
