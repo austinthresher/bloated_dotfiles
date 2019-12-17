@@ -46,6 +46,7 @@ case "$OSTYPE" in
 		;;
 esac
 
+load ip
 load tmux
 load ps1
 

@@ -48,7 +48,7 @@ set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
 PT="$TMUX_PANE_TITLE"
 PP="$TMUX_PANE_PATH"
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$SERVER_ICON#H$FOLDER_ICON$PP #[noreverse]$R1 $PT#[bg=$STATUS_BG fg=$STATUS_FG]$R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$NETWORK_ICON$IP_ADDR$SERVER_ICON#H$FOLDER_ICON$PP #[noreverse]$R1 $PT#[bg=$STATUS_BG fg=$STATUS_FG]$R1"
 
 bind-key -n F1 if-shell 'tmux select-window -t :1' '' 'new-window -t :1'
 bind-key -n F2 if-shell 'tmux select-window -t :2' '' 'new-window -t :2'

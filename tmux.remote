@@ -43,4 +43,4 @@ set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
 PT="$TMUX_PANE_TITLE"
 PP="$TMUX_PANE_PATH"
-set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$SERVER_ICON#H$FOLDER_ICON$PP #[noreverse]$R1 $PT#[bg=$STATUS_BG fg=$STATUS_FG]$R1"
+set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$NETWORK_ICON$IP_ADDR$SERVER_ICON#H$FOLDER_ICON$PP #[noreverse]$R1 $PT#[bg=$STATUS_BG fg=$STATUS_FG]$R1"
