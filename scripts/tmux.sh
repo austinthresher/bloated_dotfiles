@@ -3,8 +3,8 @@ function prepare_tmux() {
 	if require rgb_color ; then
 		export TMUX_LOCAL_PRIMARY_COLOR="#407350"
 		export TMUX_LOCAL_ACCENT_COLOR="#66EC96"
-		export TMUX_REMOTE_PRIMARY_COLOR="#732020#"
-		export TMUX_REMOTE_ACCENT_COLOR="#CC6666#"
+		export TMUX_REMOTE_PRIMARY_COLOR="#732020"
+		export TMUX_REMOTE_ACCENT_COLOR="#CC6666"
 		export TMUX_BLACK="colour0"
 		export TMUX_GRAY="colour8"
 		export TMUX_WHITE="colour15"
