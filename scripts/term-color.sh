@@ -16,3 +16,4 @@ export TMUX_DEFAULT_TERM=tmux
 load attributes
 load color
 load prompt_command
+load right_print

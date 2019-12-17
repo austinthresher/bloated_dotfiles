@@ -16,6 +16,8 @@ else
 		|| export PS1="[ssh]$PROMPT_TEXT"
 fi
 
+export PS1="\w$PS1"
+
 require prompt_command_clear || return
 require prompt_command_add || return
 
