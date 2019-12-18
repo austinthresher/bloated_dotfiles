@@ -58,8 +58,7 @@ function prepare_tmux() {
 	export BELL_FG=$TMUX_WHITE
 	export BELL_BG=$TMUX_BLACK
 
-	awk -f $HOME/.dotfiles/scripts/awk/powerline.awk > $HOME/.powerline
-	source $HOME/.powerline
+	source $HOME/.generated/tmux-powerline-env
 }
 
 alias tmux='prepare_tmux && tmux'

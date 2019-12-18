@@ -1,14 +1,6 @@
 # Color theme
 # ===========
 
-# Separator strings
-# ==============
-
-L1=$POWERLINE_FILLED_LEFT
-L2=$POWERLINE_LEFT
-R1=$POWERLINE_FILLED_RIGHT
-R2=$POWERLINE_RIGHT
-
 # Styles
 # ======
 set -g pane-active-border-style fg=$OUTER_FG
@@ -30,33 +22,33 @@ set -g status-left-length $TMUX_LEFT_CHARS
 #_SEL_="#[bg=$STATUS_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
 #_NORM_="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
 #_SHARED_="$TMUX_WINDOW_NAME$_IDX_$_END_"
-#set -g window-status-format "$_NORM_$_SHARED_"
-#set -g window-status-current-format "$_SEL_$_SHARED_"
+set -g window-status-format "${S_L_I}$TMUX_WINDOW_NAME${I_L_S}#{window_index} "
+set -g window-status-current-format "${S_L_A}$TMUX_WINDOW_NAME${A_L_S}#{window_index}*"
 
 # Icon bar
 # --------
-_S_="#{?pane_synchronized, $SYNC_ICON,}"
-_Z_="#{?window_zoomed_flag, $ZOOM_ICON,}"
-_P_="#{?client_prefix, $PREFIX_ICON,}"
-_L_="#{?#{==:#{client_key_table},off}, $LOCK_ICON,}"
-_ICONBAR_="$_S_$_Z_$_P_$_L_"
+S_="#{?pane_synchronized, $SYNC_ICON,}"
+Z_="#{?window_zoomed_flag, $ZOOM_ICON,}"
+P_="#{?client_prefix, $PREFIX_ICON,}"
+L_="#{?#{==:#{client_key_table},off}, $LOCK_ICON,}"
+ICONBAR_="$S_$Z_$P_$L_"
 
 # Clock
 # -----
-_TIME_="$CLOCK_ICON$TMUX_TIME"
-_DATE_="$CALENDAR_ICON$TMUX_DATE"
-_CLOCK_="$_DATE_ ${L_RV}$_TIME_ "
+TIME_="$CLOCK_ICON$TMUX_TIME"
+DATE_="$CALENDAR_ICON$TMUX_DATE"
+CLOCK_="$DATE_ ${L_RV}$TIME_ "
 
 # Network / host info
 # -------------------
-_LOCATION_="$NETWORK_ICON$IP_ADDR ${R_RV}$SERVER_ICON#H${R_NO}$FOLDER_ICON$TMUX_PANE_PATH "
+LOCATION_="$NETWORK_ICON$IP_ADDR ${R_RV}$SERVER_ICON#H${R_NO}$FOLDER_ICON$TMUX_PANE_PATH "
 
 # Formats
 # =======
 #set -g status 2
 #set -g status-format[1] "#[nolist align=right range=right]$CLOCK"
-set -g status-right "${STATUS}$_ICONBAR_${S_L_O}$_CLOCK_"
-set -g status-left "${OUTER}$_LOCATION_${O_R_S} $TMUX_PANE_TITLE"
+set -g status-right "${S_L_I} $ICONBAR_ ${I_L_O}$CLOCK_"
+set -g status-left "${OUTER}$LOCATION_${O_R_S} $TMUX_PANE_TITLE"
 
 # Keybinds
 # ========
