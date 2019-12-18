@@ -25,13 +25,13 @@ set -g status-left-length $TMUX_LEFT_CHARS
 
 # Window list
 # -----------
-_IDX_="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index}"
-_END_=" #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
-_SEL_="#[bg=$STATUS_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
-_NORM_="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
-_SHARED_="$TMUX_WINDOW_NAME$_IDX_$_END_"
-set -g window-status-format "$_NORM_$_SHARED_"
-set -g window-status-current-format "$_SEL_$_SHARED_"
+#_IDX_="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index}"
+#_END_=" #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
+#_SEL_="#[bg=$STATUS_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
+#_NORM_="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
+#_SHARED_="$TMUX_WINDOW_NAME$_IDX_$_END_"
+#set -g window-status-format "$_NORM_$_SHARED_"
+#set -g window-status-current-format "$_SEL_$_SHARED_"
 
 # Icon bar
 # --------
@@ -39,26 +39,24 @@ _S_="#{?pane_synchronized, $SYNC_ICON,}"
 _Z_="#{?window_zoomed_flag, $ZOOM_ICON,}"
 _P_="#{?client_prefix, $PREFIX_ICON,}"
 _L_="#{?#{==:#{client_key_table},off}, $LOCK_ICON,}"
-ICONBAR="$_S_$_Z_$_P_$_L_"
+_ICONBAR_="$_S_$_Z_$_P_$_L_"
 
 # Clock
 # -----
 _TIME_="$CLOCK_ICON$TMUX_TIME"
-_DATE_="$CALENDAR_ICON $TMUX_DATE"
-_CLOCK_="#[fg=$STATUS_FG]$L1#[bg=$OUTER_BG fg=$OUTER_FG] $_DATE_ $L1#[reverse] $_TIME_ "
+_DATE_="$CALENDAR_ICON$TMUX_DATE"
+_CLOCK_="$_DATE_ ${L_RV}$_TIME_ "
 
 # Network / host info
 # -------------------
-_LOCATION_="$NETWORK_ICON$IP_ADDR$SERVER_ICON#H$FOLDER_ICON$TMUX_PANE_PATH "
+_LOCATION_="$NETWORK_ICON$IP_ADDR ${R_RV}$SERVER_ICON#H${R_NO}$FOLDER_ICON$TMUX_PANE_PATH "
 
 # Formats
 # =======
-set -g status 2
-set -g status-format[1] "#[nolist align=right range=right]$CLOCK"
-set -g status-right "#[bg=$STATUS_BG fg=$INFO_BG]$L1#[bg=$INFO_BG fg=$INFO_FG]$_ICONBAR_ $_CLOCK_"
-#set -g status-left "#[bg=$OUTER_BG fg=$OUTER_FG reverse]$_LOCATION_#[noreverse]$R1 $TMUX_PANE_TITLE#[bg=$STATUS_BG fg=$STATUS_FG]$R1"
-
-set -g status-left "${OUTER}hello${O_R_S}world${S_R_O}!"
+#set -g status 2
+#set -g status-format[1] "#[nolist align=right range=right]$CLOCK"
+set -g status-right "${STATUS}$_ICONBAR_${S_L_O}$_CLOCK_"
+set -g status-left "${OUTER}$_LOCATION_${O_R_S} $TMUX_PANE_TITLE"
 
 # Keybinds
 # ========

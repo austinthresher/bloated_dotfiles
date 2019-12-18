@@ -47,8 +47,8 @@ function prepare_tmux() {
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
 
-	export OUTER_BG=$TMUX_LOCAL_ACCENT_COLOR
-	export OUTER_FG=$TMUX_BLACK
+	export OUTER_BG=$TMUX_BLACK
+	export OUTER_FG=$TMUX_LOCAL_ACCENT_COLOR
 	export INFO_BG=$TMUX_GRAY
 	export INFO_FG=$TMUX_WHITE
 	export STATUS_BG=$TMUX_LOCAL_PRIMARY_COLOR
@@ -57,7 +57,6 @@ function prepare_tmux() {
 	export ACTIVE_FG=$TMUX_BLACK
 	export BELL_FG=$TMUX_WHITE
 	export BELL_BG=$TMUX_BLACK
-
 
 	awk -f $HOME/.dotfiles/scripts/awk/powerline.awk > $HOME/.powerline
 	source $HOME/.powerline

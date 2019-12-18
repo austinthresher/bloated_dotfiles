@@ -2,9 +2,9 @@
 
 export PROMPT_TEXT="  "
 export RUNNING_ICON=""
-export CLOCK_ICON=""
-export CALENDAR_ICON=""
-export FOLDER_ICON="   "
+export CLOCK_ICON="  "
+export CALENDAR_ICON="  "
+export FOLDER_ICON="  "
 export HOME_ICON=""
 export SERVER_ICON="  "
 export NETWORK_ICON="  "
