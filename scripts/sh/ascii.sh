@@ -1,12 +1,12 @@
 #!/bin/bash
 
 export RUNNING_ICON="!"
-export CLOCK_ICON=""
+export CLOCK_ICON=" "
 export CALENDAR_ICON=""
-export FOLDER_ICON=":"
+export FOLDER_ICON="$"
 export HOME_ICON="~"
-export SERVER_ICON=""
-export NETWORK_ICON=""
+export SERVER_ICON="@"
+export NETWORK_ICON='##'
 export TEMPERATURE_ICON="F"
 export LOCK_ICON="L"
 export PREFIX_ICON="!"
@@ -18,4 +18,4 @@ export COLUMN_ICON="C"
 export POWERLINE_FILLED_LEFT=""
 export POWERLINE_FILLED_RIGHT=""
 export POWERLINE_LEFT=""
-export POWERLINE_RIGHT=":"
+export POWERLINE_RIGHT=""

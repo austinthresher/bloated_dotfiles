@@ -19,13 +19,11 @@ function git_changes() {
 }
 
 function git_prompt() {
-	if [ ! -z "$PS1_GIT" ]; then
-		_R=$(git_repo)
-		_B=$(git_branch)
-		_C=$(git_changes)
-		_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
-		if [ "${#_R}" != "0" ]; then
-			printf "❰%s/%s%s❱" "$_R" "$_B" "$_C"
-		fi
+	_R=$(git_repo)
+	_B=$(git_branch)
+#	_C=$(git_changes)
+	_P=$(printf "%s" $(git_repo)/$(git_branch)$(git_changes))
+	if [ "${#_R}" != "0" ]; then
+		printf "%s/%s" "$_R" "$_B"
 	fi
 }

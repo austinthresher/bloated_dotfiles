@@ -18,15 +18,14 @@ fi
 
 export PS1="\w$PS1"
 
-require prompt_command_clear || return
-require prompt_command_add || return
+loaded prompt_command || return
 
 prompt_command_clear
 if require color && require right_print; then
 	prompt_command_add 'right_print $(color $COL_FG_DARK_GRAY)$(date +%H:%M:%S)$(norm)'
 fi
 if require set_title; then
-	prompt_command_add 'set_title $(whoami)@$(hostname)'
+  prompt_command_add 'set_title $(whoami)@$(hostname)'
 fi
 if require init_trap; then
 	init_trap

@@ -8,8 +8,7 @@ require cwd || cwd() { pwd; }
 trap "$PROMPT_COMMAND" WINCH
 
 function tmux_powerline_sep() {
-	printf "#[fg=7]"
-	printf " $1 "
+	printf "#[fg=0]$COMMAND_ICON $1"
 }
 
 function init_trap() {
@@ -17,7 +16,7 @@ function init_trap() {
 	if [ ! -z "$TMUX" ]; then
 		prompt_command_add 'trap hook_pre debug'
 		set_pane_path "$(cwd)"
-		set_pane_title " $(tmux_powerline_sep '')"
+		set_pane_title "#[fg=0]$COMMAND_ICON "
 		PANETITLE=
 	fi
 }
@@ -25,11 +24,12 @@ function init_trap() {
 function hook_post() {
 	trap - debug
 	if [ -z "$PANETITLE" ]; then
+	  set_pane_title "#[fg=0]$COMMAND_ICON "
 		sec=
 	else
 		sec=${SECONDS}s
+	  set_pane_title "#[push-default]#[fg=0]$COMMAND_ICON#[default] $PANETITLE "
 	fi
-	set_pane_title "$PANETITLE $(tmux_powerline_sep $sec)"
 	set_pane_path "$(cwd)"
 }
 
@@ -38,10 +38,11 @@ function hook_pre() {
 	c=$BASH_COMMAND
 	if [[ "$PROMPT_COMMAND" != *"$c"* ]]; then
 		PANETITLE="${c%% *}"
+	  set_pane_title "#[push-default]#[fg=0]$COMMAND_ICON#[default] #[fg=$TMUX_WHITE]$PANETITLE "
 	else
 		PANETITLE=""
+	  set_pane_title "#[fg=0]$COMMAND_ICON "
 	fi
-	set_pane_title "$PANETITLE $(tmux_powerline_sep $RUNNING_ICON)"
 	SECONDS=0
 	trap hook_post debug
 }

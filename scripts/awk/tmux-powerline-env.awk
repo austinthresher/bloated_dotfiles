@@ -13,7 +13,7 @@
 # transitions by turning on reverse video instead of changing styles.
 
 BEGIN {
-	n_styles = split("OUTER INFO STATUS ACTIVE BELL ", styles, " ")
+	n_styles = split("WINDOW SEPARATOR INACTIVE NORM ALT GRAY BRIGHT URGENT ", styles, " ")
 	for (i=1;i<=n_styles;i++) {
 		short_styles[i] = substr(styles[i],1,1)
 	}
@@ -35,24 +35,30 @@ BEGIN {
       left_short = short_styles[i]
       right_style = styles[j]
       right_short = short_styles[j]
-
-      # Right arrow
-      # BG of char is on right, FG on left, so:
-      #   FG = left style bg
-      #   BG = right style bg
       name_r = left_short "_R_" right_short
-      from_r = "${FG_USE_" left_style "_BG}" "${BG_USE_" right_style "_BG}"
-      to_r = "${" right_style "}"
-      print("export " name_r "=\"" from_r "$POWERLINE_FILLED_RIGHT" to_r "\"")
-
-      # Left arrow
-      # BG of char is on left, FG on right, so:
-      #   FG = right style bg
-      #   BG = left style bg
       name_l = left_short "_L_" right_short
-      from_l = "${FG_USE_" right_style "_BG}" "${BG_USE_" left_style "_BG}"
-      to_l = "${" right_style "}"
-      print("export " name_l "=\"" from_l "$POWERLINE_FILLED_LEFT" to_l "\"")
+
+      if (left_style != right_style) {
+        # Right arrow
+        # BG of char is on right, FG on left, so:
+        #   FG = left style bg
+        #   BG = right style bg
+        from_r = "${FG_USE_" left_style "_BG}" "${BG_USE_" right_style "_BG}"
+        to_r = "${" right_style "}"
+        print("export " name_r "=\"" from_r "$POWERLINE_FILLED_RIGHT" to_r "\"")
+
+        # Left arrow
+        # BG of char is on left, FG on right, so:
+        #   FG = right style bg
+        #   BG = left style bg
+        from_l = "${FG_USE_" right_style "_BG}" "${BG_USE_" left_style "_BG}"
+        to_l = "${" right_style "}"
+        print("export " name_l "=\"" from_l "$POWERLINE_FILLED_LEFT" to_l "\"")
+      } else {
+        # Non-filled versions
+        print("export " name_r "=\"$POWERLINE_RIGHT\"")
+        print("export " name_l "=\"$POWERLINE_LEFT\"")
+      }
 		}
 	}
 	print("export R_RV=\"#[reverse]$POWERLINE_FILLED_RIGHT\"")

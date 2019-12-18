@@ -1,54 +1,84 @@
-# Color theme
-# ===========
+# Utility defines
+# ===============
+PUSH="#[push-default]#[fg=$TMUX_ICON_COLOR]"
+POP="#[default]#[pop-default]"
 
 # Styles
 # ======
-set -g pane-active-border-style fg=$OUTER_FG
-set -g pane-border-style fg=$TMUX_GRAY
-set -g status-justify right
+set -g pane-active-border-style "fg=$SEPARATOR_FG,bg=$SEPARATOR_BG"
+set -g pane-border-style "fg=$SEPARATOR_FG,bg=$SEPARATOR_BG"
+set -g status-justify left
 set -g status-position bottom
-set -g status-style "bg=$STATUS_BG fg=$STATUS_FG"
-set -g window-status-bell-style "fg=$BELL_FG bg=$BELL_BG bold"
+set -g status-style "bg=$NORM_BG fg=$NORM_FG"
+set -g window-status-bell-style "fg=$URGENT_FG bg=$URGENT_BG bold"
 set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
-
+set -g window-active-style "bg=$TMUX_WINDOW_COLOR"
+#
 # Status line elements
 # ====================
 
+set -g pane-border-status bottom
+
 # Window list
 # -----------
-#_IDX_="#[nobold fg=$STATUS_FG]$L1#[reverse] #{window_index}"
-#_END_=" #[noreverse]#[fg=$STATUS_BG bg=$STATUS_FG]$L1"
-#_SEL_="#[bg=$STATUS_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
-#_NORM_="#[push-default]#[bg=$STATUS_BG fg=$STATUS_FG]$L2#[default]#[bg=$STATUS_BG]"
+#_IDX_="#[nobold fg=$NORM_FG]$L1#[reverse] #{window_index}"
+#_END_=" #[noreverse]#[fg=$NORM_BG bg=$NORM_FG]$L1"
+#_SEL_="#[bg=$NORM_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
+#_NORM_="#[push-default]#[bg=$NORM_BG fg=$NORM_FG]$L2#[default]#[bg=$NORM_BG]"
 #_SHARED_="$TMUX_WINDOW_NAME$_IDX_$_END_"
-set -g window-status-format "${S_L_I}$TMUX_WINDOW_NAME${I_L_S}#{window_index} "
-set -g window-status-current-format "${S_L_A}$TMUX_WINDOW_NAME${A_L_S}#{window_index}*"
+set -g window-status-separator " "
+set -g window-status-format "${N_L_I} #{window_index} ${I_R_N}$TMUX_WINDOW_NAME"
+set -g window-status-current-format "${N_L_B}[#{window_index}]$TMUX_WINDOW_NAME${B_R_N}"
 
 # Icon bar
 # --------
-S_="#{?pane_synchronized, $SYNC_ICON,}"
-Z_="#{?window_zoomed_flag, $ZOOM_ICON,}"
-P_="#{?client_prefix, $PREFIX_ICON,}"
-L_="#{?#{==:#{client_key_table},off}, $LOCK_ICON,}"
-ICONBAR_="$S_$Z_$P_$L_"
+S="#{?pane_synchronized,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $SYNC_ICON"
+Z="#{?window_zoomed_flag,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $ZOOM_ICON"
+P="#{?client_prefix,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $PREFIX_ICON"
+L="#{?#{==:#{client_key_table},off},#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $LOCK_ICON"
+ICONBAR="${S}${Z}${P}${L}"
 
 # Clock
 # -----
-TIME_="$CLOCK_ICON$TMUX_TIME"
-DATE_="$CALENDAR_ICON$TMUX_DATE"
-CLOCK_="$DATE_ ${L_RV}$TIME_ "
+TIME="${CLOCK_ICON}${TMUX_TIME}"
+DATE="${CALENDAR_ICON}${TMUX_DATE}"
+CLOCK="${N_L_A}${DATE} ${A_L_B}${TIME} ${B_R_N} "
 
 # Network / host info
 # -------------------
-LOCATION_="$NETWORK_ICON$IP_ADDR ${R_RV}$SERVER_ICON#H${R_NO}$FOLDER_ICON$TMUX_PANE_PATH "
+IP="${PUSH}${NETWORK_ICON}${POP}${IP_ADDR}"
+SRV="${PUSH}${SERVER_ICON}${POP}#H"
+DIR="${PUSH}${FOLDER_ICON}${POP}${TMUX_PANE_PATH}"
+LOCATION="${IP}${SRV}"
 
 # Formats
 # =======
+RIGHT="${N_L_A} ${LOCATION} ${A_L_N}${N_L_I}${ICONBAR} ${I_L_N}${CLOCK}"
+
+TAB_COLOR="#{?pane_active,#[fg=$TMUX_WINDOW_COLOR],#[fg=$TMUX_BLACK]}"
+TAB_LEFT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_LEFT}"
+TAB_RIGHT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_RIGHT}"
+
+_W_L_A="#{?pane_active,${W_L_A},${N_L_A}}"
+_A_R_W="#{?pane_active,${A_R_W},${A_R_N}}"
+
+set -g pane-border-format "$TAB_LEFT${_W_L_A}${DIR} ${_A_R_W} ${_W_L_A} ${TMUX_PANE_TITLE}${_A_R_W} ${_W_L_A}#(~/.dotfiles/scripts/git-status.sh)${_A_R_W}$TAB_RIGHT"
+
+# Single bar
+# ----------
+set -g status on
+set -g status-left " "
+set -g status-left-length 1
+set -g status-right "${RIGHT}"
+
+# Dual bar
 #set -g status 2
-#set -g status-format[1] "#[nolist align=right range=right]$CLOCK"
-set -g status-right "${S_L_I} $ICONBAR_ ${I_L_O}$CLOCK_"
-set -g status-left "${OUTER}$LOCATION_${O_R_S} $TMUX_PANE_TITLE"
+#set -g status-left-length 0
+#set -g status-right-length 0
+#set -g status-left ""
+#set -g status-right ""
+#set -g status-format[1] "#[nolist align=left range=left]#[nounderscore]${LEFT}#[nolist align=right range=right]${RIGHT}"
 
 # Keybinds
 # ========

@@ -43,6 +43,7 @@ case "$OSTYPE" in
 		load unicode 
 		load set_title
 		load trap
+    load git
 		;;
 	*)
 		load term-dumb
