@@ -30,5 +30,5 @@ export backpack_lib=$backpack_root/lib
 export backpack_scripts=$backpack_root/scripts
 export backpack=$backpack_scripts/backpack
 export PATH=$backpack_bin:$backpack_scripts:$PATH
-export LD_LIBRARY_PATH=$backpack_lib:%s
+export LD_LIBRARY_PATH=$backpack_lib:$LD_LIBRARY_PATH
 EOF

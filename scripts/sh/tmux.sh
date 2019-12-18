@@ -46,6 +46,21 @@ function prepare_tmux() {
 		export TMUX_PANE_PATH="#{pane_current_path}"
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
+
+	export OUTER_BG=$TMUX_LOCAL_ACCENT_COLOR
+	export OUTER_FG=$TMUX_BLACK
+	export INFO_BG=$TMUX_GRAY
+	export INFO_FG=$TMUX_WHITE
+	export STATUS_BG=$TMUX_LOCAL_PRIMARY_COLOR
+	export STATUS_FG=$TMUX_BLACK
+	export ACTIVE_BG=$TMUX_LOCAL_ACCENT_COLOR
+	export ACTIVE_FG=$TMUX_BLACK
+	export BELL_FG=$TMUX_WHITE
+	export BELL_BG=$TMUX_BLACK
+
+
+	awk -f $HOME/.dotfiles/scripts/awk/powerline.awk > $HOME/.powerline
+	source $HOME/.powerline
 }
 
 alias tmux='prepare_tmux && tmux'

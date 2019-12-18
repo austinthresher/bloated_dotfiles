@@ -12,11 +12,11 @@ function die() {
 }
 
 function load() {
-	if [ -e "$HOME/.dotfiles/scripts/$1.sh" ]; then
-		source "$HOME/.dotfiles/scripts/$1.sh"
+	if [ -e "$HOME/.dotfiles/scripts/sh/$1.sh" ]; then
+		source "$HOME/.dotfiles/scripts/sh/$1.sh"
 		LOADED+="$1 "
 	else
-		echo "Couldn't find $1"
+		echo "Couldn't find module '$1'"
 	fi
 }
 

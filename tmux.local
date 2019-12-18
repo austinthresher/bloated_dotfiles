@@ -1,23 +1,6 @@
 # Color theme
 # ===========
 
-OUTER_BG=$TMUX_LOCAL_ACCENT_COLOR
-OUTER_FG=$TMUX_BLACK
-INFO_BG=$TMUX_GRAY
-INFO_FG=$TMUX_WHITE
-STATUS_BG=$TMUX_LOCAL_PRIMARY_COLOR
-STATUS_FG=$TMUX_BLACK
-ACTIVE_BG=$TMUX_LOCAL_ACCENT_COLOR
-ACTIVE_FG=$TMUX_BLACK
-BELL_FG=$TMUX_WHITE
-BELL_BG=$TMUX_BLACK
-
-# Style shorthand
-# ===============
-
-# TODO: this won't work if I source it, it has to be part of the script or set in bash beforehand
-source $HOME/.dotfiles/public-dotfiles/powerline.tmux
-
 # Separator strings
 # ==============
 
@@ -25,8 +8,6 @@ L1=$POWERLINE_FILLED_LEFT
 L2=$POWERLINE_LEFT
 R1=$POWERLINE_FILLED_RIGHT
 R2=$POWERLINE_RIGHT
-
-
 
 # Styles
 # ======

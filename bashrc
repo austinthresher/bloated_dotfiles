@@ -10,7 +10,7 @@ alias vim='vim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
 
-export PATH=$HOME/.dotfiles/scripts:$PATH
+export PATH=$HOME/.dotfiles/scripts/sh:$PATH
 export EDITOR=vim
 export VISUAL=vim
 export PAGER=less
