@@ -8,8 +8,8 @@ function prepare_tmux() {
 		export TMUX_BLACK="colour0"
 		export TMUX_GRAY="colour8"
 		export TMUX_WHITE="colour15"
-    export TMUX_LOCAL_WINDOW_COLOR="#051007"
-    export TMUX_LOCAL_SEPARATOR_COLOR="#020603"
+		export TMUX_LOCAL_WINDOW_COLOR="#051007"
+		export TMUX_LOCAL_SEPARATOR_COLOR="#020603"
 	elif require color ; then
 		export TMUX_LOCAL_PRIMARY_COLOR="colour2"
 		export TMUX_LOCAL_ACCENT_COLOR="colour10"
@@ -18,7 +18,8 @@ function prepare_tmux() {
 		export TMUX_BLACK="colour0"
 		export TMUX_GRAY="colour8"
 		export TMUX_WHITE="colour15"
-    export TMUX_LOCAL_WINDOW="colour0"
+		export TMUX_LOCAL_WINDOW_COLOR="colour0"
+		export TMUX_LOCAL_SEPARATOR_COLOR="colour236"
 	else
 		export TMUX_LOCAL_PRIMARY_COLOR="default"
 		export TMUX_LOCAL_ACCENT_COLOR="default"
@@ -27,7 +28,8 @@ function prepare_tmux() {
 		export TMUX_BLACK="default"
 		export TMUX_GRAY="default"
 		export TMUX_WHITE="default"
-    export TMUX_LOCAL_WINDOW="default"
+		export TMUX_LOCAL_WINDOW_COLOR="default"
+		export TMUX_LOCAL_SEPARATOR_COLOR="default"
 	fi
 	
 	if [ ! -z "$LIMITED_SPACE" ]; then
