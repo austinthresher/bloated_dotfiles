@@ -7,30 +7,30 @@ require cwd || cwd() { pwd; }
 
 trap "$PROMPT_COMMAND" WINCH
 
-function tmux_powerline_sep() {
-	printf "#[fg=0]$COMMAND_ICON $1"
+PANE_ICON="${TMUX_PUSH}${COMMAND_ICON}${TMUX_POP}"
+
+function update_tmux() {
+  set_pane_path "$(cwd)"
+  if [ "$#" == 0 ]; then
+    set_pane_title "$PANE_ICON "
+  else
+    set_pane_title "$PANE_ICON $@ "
+  fi
+  $(which tmux) refresh-client
 }
 
 function init_trap() {
-	prompt_command_add 'resize'
+	require resize && prompt_command_add 'resize'
 	if [ ! -z "$TMUX" ]; then
 		prompt_command_add 'trap hook_pre debug'
-		set_pane_path "$(cwd)"
-		set_pane_title "#[fg=0]$COMMAND_ICON "
+    update_tmux
 		PANETITLE=
 	fi
 }
 
 function hook_post() {
 	trap - debug
-	if [ -z "$PANETITLE" ]; then
-	  set_pane_title "#[fg=0]$COMMAND_ICON "
-		sec=
-	else
-		sec=${SECONDS}s
-	  set_pane_title "#[push-default]#[fg=0]$COMMAND_ICON#[default] $PANETITLE "
-	fi
-	set_pane_path "$(cwd)"
+  update_tmux $PANETITLE
 }
 
 function hook_pre() {
@@ -38,11 +38,10 @@ function hook_pre() {
 	c=$BASH_COMMAND
 	if [[ "$PROMPT_COMMAND" != *"$c"* ]]; then
 		PANETITLE="${c%% *}"
-	  set_pane_title "#[push-default]#[fg=0]$COMMAND_ICON#[default] #[fg=$TMUX_WHITE]$PANETITLE "
+	  update_tmux "#[fg=$TMUX_WHITE]$PANETITLE"
 	else
-		PANETITLE=""
-	  set_pane_title "#[fg=0]$COMMAND_ICON "
+		PANETITLE=
+    update_tmux
 	fi
-	SECONDS=0
 	trap hook_post debug
 }

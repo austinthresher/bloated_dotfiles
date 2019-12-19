@@ -40,8 +40,8 @@ function prepare_tmux() {
 		export TMUX_WINDOW_NAME=" #{window_name} "
 	fi
 	
-	export TMUX_LEFT_CHARS=$( expr $SCREEN_WIDTH / 2 )
-	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH / 2 )
+	export TMUX_LEFT_CHARS=1
+	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH \* 3 / 2 )
 	
 	if loaded trap ; then
 		export TMUX_PANE_PATH="#{pane_path}"
@@ -50,12 +50,15 @@ function prepare_tmux() {
 		export TMUX_PANE_PATH="#{pane_current_path}"
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
-
+  # TODO: check SSH_CLIENT
   export TMUX_SEPARATOR_COLOR=$TMUX_LOCAL_SEPARATOR_COLOR
   export TMUX_ACCENT_COLOR=$TMUX_LOCAL_ACCENT_COLOR
   export TMUX_PRIMARY_COLOR=$TMUX_LOCAL_PRIMARY_COLOR
   export TMUX_WINDOW_COLOR=$TMUX_LOCAL_WINDOW_COLOR
   export TMUX_ICON_COLOR=$TMUX_BLACK
+
+  export TMUX_PUSH="#[push-default]#[fg=$TMUX_ICON_COLOR]"
+  export TMUX_POP="#[default]#[pop-default]"
 
   export WINDOW_BG=$TMUX_WINDOW_COLOR
   export WINDOW_FG="default"
@@ -84,4 +87,22 @@ function prepare_tmux() {
 	source $HOME/.generated/tmux-powerline-env
 }
 
-alias tmux='prepare_tmux && tmux'
+function launch_tmux() {
+  prepare_tmux
+  if [ "$#" == 0 ]; then
+    # If no arguments are given, try to attach to an existing session
+    if $(which tmux) has-session &> /dev/null; then
+      echo "attaching to session"
+      sleep 0.25 #TODO: Round to 1 on platforms that don't support floats
+      $(which tmux) attach
+    else
+      echo "creating new session"
+      sleep 0.25
+      $(which tmux)
+    fi
+  else
+    $(which tmux) "$@"
+  fi
+}
+
+alias tmux='launch_tmux'

@@ -1,7 +1,7 @@
 # Utility defines
 # ===============
-PUSH="#[push-default]#[fg=$TMUX_ICON_COLOR]"
-POP="#[default]#[pop-default]"
+I_="$TMUX_PUSH"
+_I="$TMUX_POP"
 
 # Styles
 # ======
@@ -14,7 +14,7 @@ set -g window-status-bell-style "fg=$URGENT_FG bg=$URGENT_BG bold"
 set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
 set -g window-active-style "bg=$TMUX_WINDOW_COLOR"
-#
+
 # Status line elements
 # ====================
 
@@ -22,11 +22,6 @@ set -g pane-border-status bottom
 
 # Window list
 # -----------
-#_IDX_="#[nobold fg=$NORM_FG]$L1#[reverse] #{window_index}"
-#_END_=" #[noreverse]#[fg=$NORM_BG bg=$NORM_FG]$L1"
-#_SEL_="#[bg=$NORM_BG fg=$ACTIVE_BG]$L1#[bg=$ACTIVE_BG fg=$ACTIVE_FG]"
-#_NORM_="#[push-default]#[bg=$NORM_BG fg=$NORM_FG]$L2#[default]#[bg=$NORM_BG]"
-#_SHARED_="$TMUX_WINDOW_NAME$_IDX_$_END_"
 set -g window-status-separator " "
 set -g window-status-format "${N_L_I} #{window_index} ${I_R_N}$TMUX_WINDOW_NAME"
 set -g window-status-current-format "${N_L_B}[#{window_index}]$TMUX_WINDOW_NAME${B_R_N}"
@@ -47,38 +42,32 @@ CLOCK="${N_L_A}${DATE} ${A_L_B}${TIME} ${B_R_N} "
 
 # Network / host info
 # -------------------
-IP="${PUSH}${NETWORK_ICON}${POP}${IP_ADDR}"
-SRV="${PUSH}${SERVER_ICON}${POP}#H"
-DIR="${PUSH}${FOLDER_ICON}${POP}${TMUX_PANE_PATH}"
+IP="${I_}${NETWORK_ICON}${_I}${IP_ADDR}"
+SRV="${I_}${SERVER_ICON}${_I}#H"
+SESS="${I_}${SESSION_ICON}${_I}#{?#{m:[0-9],#{session_name}},unnamed session,#{session_name}}"
 LOCATION="${IP}${SRV}"
 
 # Formats
 # =======
-RIGHT="${N_L_A} ${LOCATION} ${A_L_N}${N_L_I}${ICONBAR} ${I_L_N}${CLOCK}"
+RIGHT="${N_L_A}${SESS} ${A_L_N}${N_L_A} ${LOCATION} ${A_L_N}${N_L_I}${ICONBAR} ${I_L_N}${CLOCK}"
 
 TAB_COLOR="#{?pane_active,#[fg=$TMUX_WINDOW_COLOR],#[fg=$TMUX_BLACK]}"
 TAB_LEFT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_LEFT}"
 TAB_RIGHT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_RIGHT}"
 
+# Separator color changes if its the active pane 
 _W_L_A="#{?pane_active,${W_L_A},${N_L_A}}"
 _A_R_W="#{?pane_active,${A_R_W},${A_R_N}}"
+DIR="${_W_L_A}${I_}${FOLDER_ICON}${_I}${TMUX_PANE_PATH} ${_A_R_W}"
+TITLE="${_W_L_A} ${TMUX_PANE_TITLE}${_A_R_W}"
+BRANCH="#(~/.dotfiles/scripts/git-status.sh #{pane_current_path})"
+GIT="#{?#{==:$BRANCH,},,${_W_L_A}${I_}${GIT_ICON}${_I}$BRANCH ${_A_R_W}}"
+set -g pane-border-format "$TAB_LEFT${DIR} ${TITLE} ${GIT}$TAB_RIGHT"
 
-set -g pane-border-format "$TAB_LEFT${_W_L_A}${DIR} ${_A_R_W} ${_W_L_A} ${TMUX_PANE_TITLE}${_A_R_W} ${_W_L_A}#(~/.dotfiles/scripts/git-status.sh)${_A_R_W}$TAB_RIGHT"
-
-# Single bar
-# ----------
 set -g status on
 set -g status-left " "
 set -g status-left-length 1
 set -g status-right "${RIGHT}"
-
-# Dual bar
-#set -g status 2
-#set -g status-left-length 0
-#set -g status-right-length 0
-#set -g status-left ""
-#set -g status-right ""
-#set -g status-format[1] "#[nolist align=left range=left]#[nounderscore]${LEFT}#[nolist align=right range=right]${RIGHT}"
 
 # Keybinds
 # ========
