@@ -19,34 +19,53 @@ export PAGER=less
 mkdir -p $HOME/.generated
 awk -f "$HOME/.dotfiles/scripts/awk/tmux-powerline-env.awk" > $HOME/.generated/tmux-powerline-env
 
+if [ -z "$SSH_CLIENT" ]; then
+	case "$OSTYPE" in
+		*arwin*)
+			export OS="osx"
+			export COLORS=256
+			;;
+		*gnu*)
+			export OS="linux"
+			export COLORS=24
+			;;
+		*)
+			export OS="unknown"
+			export COLORS=8
+			;;
+	esac
+	export THEME="local"
+else
+	export THEME="remote"
+fi
+
+if [ -z "$OS" ]; then
+	export OS="unknown"
+	export COLORS=0
+fi
+
 source module.sh
 
 load cwd
-case "$OSTYPE" in
-	*arwin*) # OSX
-#		function sed_i() { sed -i '.bak' "$@"; }
-#		export -f sed_i
-		load term-color
+
+case "$COLORS" in
+	24) load term-rgb ;;
+	256) load term-color256 ;;
+	8) load term-color ;;
+	*) load term-dumb ;;
+esac
+
+case "$OS" in
+	osx)
 		load ascii
 		;;
-	*gnu*) # Linux
-#		function sed_i() { sed -i "$@"; }
-#		export -f sed_i
-		case "$TERM" in
-			*256color)
-				load term-rgb
-				;;
-			*)
-				load term-color
-				;;
-		esac
+	linux)
 		load unicode 
 		load set_title
 		load trap
-    load git
+		load git
 		;;
-	*)
-		load term-dumb
+	unknown)
 		load ascii
 		;;
 esac
