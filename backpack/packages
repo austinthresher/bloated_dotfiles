@@ -66,28 +66,20 @@ download https://geoff.greer.fm/ag/releases/the_silver_searcher-1.0.3.tar.gz
 define install   : configure --disable-lzma , make -j , make -j install
 define uninstall : make uninstall
 
-package ed
-download http://mirrors.ocf.berkeley.edu/gnu/ed/ed-1.4.tar.gz
-define install   : configure , make -j , make -j install
-define uninstall : make uninstall
-
 package gawk
 download http://ftp.gnu.org/gnu/gawk/gawk-5.0.1.tar.gz
 define install   : configure , make -j , make -j install
 define uninstall : make uninstall
 
-package kakoune
-checkout https://github.com/mawww/kakoune.git
-define install : make -j , export PREFIX=$LOCAL_PREFIX , make install
+package cmake
+download http://www.cmake.org/files/v2.8/cmake-2.8.3.tar.gz
+define install : configure , make -j , make -j install
 
-#package zsh
-#download http://www.zsh.org/pub/zsh-5.7.1.tar.xz
-#define install : configure , make -j , make install
+package neovim
+download https://github.com/neovim/neovim/archive/v0.4.3.tar.gz
+define install : make CMAKE_BUILD_TYPE=Release , make CMAKE_INSTALL_PREFIX=$LOCAL_PREFIX install , ln -s $LOCAL_BIN/nvim $LOCAL_BIN/vim
 
-#package fish
-#download https://github.com/fish-shell/fish-shell/releases/download/3.0.1/fish-3.0.1.tar.gz
-#define install configure , make -j , make install
-
+#TODO: building fzf requires go 1.11
 #package fzf
 #checkout https://github.com/junegunn/fzf.git
 #define install : bash -c './install --all'
