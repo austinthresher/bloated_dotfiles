@@ -9,6 +9,8 @@ alias more='less'
 alias vim='vim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
+# Pass the host OS and color support alongside TERM
+alias ssh='env TERM="$OS:$COLORS:$TERM" ssh -t'
 
 export PATH=$HOME/.dotfiles/scripts/sh:$PATH
 export EDITOR=vim
@@ -19,7 +21,13 @@ export PAGER=less
 mkdir -p $HOME/.generated
 awk -f "$HOME/.dotfiles/scripts/awk/tmux-powerline-env.awk" > $HOME/.generated/tmux-powerline-env
 
-if [ -z "$SSH_CLIENT" ]; then
+if [[ "$TERM" == *":"* ]]; then
+	export THEME="red"
+	OS_COLORS=${TERM%:*}
+	export OS=${OS_COLORS%:*}
+	export COLORS=${OS_COLORS#*:}
+	export TERM=${TERM##*:}
+else
 	case "$OSTYPE" in
 		*arwin*)
 			export OS="osx"
@@ -35,8 +43,6 @@ if [ -z "$SSH_CLIENT" ]; then
 			;;
 	esac
 	export THEME="green"
-else
-	export THEME="red"
 fi
 
 if [ -z "$OS" ]; then
