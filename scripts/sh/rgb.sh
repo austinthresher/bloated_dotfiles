@@ -1,6 +1,7 @@
 #!/bin/bash
 
-function rgb_color() { printf "\e[38;2;$1;$2;$3m"; }
+function rgbfg() { printf "\e[38;2;$1;$2;$3m"; }
+function rgbbg() { printf "\e[48;2;$1;$2;$3m"; }
 
 # This escape code was difficult to search for. Found it here:
 # https://metacpan.org/release/Term-ExtendedColor-Xresources/source/lib/Term/ExtendedColor/Xresources.pm

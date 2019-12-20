@@ -1,15 +1,7 @@
 #!/bin/bash
 
-if require rgb_color; then
-	[ -z "$SSH_CLIENT" ] \
-		&& C=$(rgb_color 102 236 150) \
-		|| C=$(rgb_color 204 102 102) 
-	export PS1="\[$(bold)$C\]$PROMPT_TEXT\[$(norm)\]"
-elif require color; then
-	[ -z "$SSH_CLIENT" ] \
-		&& C=$(color $COL_FG_GREEN) \
-		|| C=$(color $COL_FG_RED)
-	export PS1="\[$(bold)$C\]$PROMPT_TEXT\[$(norm)\]"
+if loaded attributes; then
+	export PS1="\[$(bold)$PROMPT_COLOR\]$PROMPT_TEXT\[$(norm)\]"
 else
 	[ -z "$SSH_CLIENT" ] \
 		&& export PS1="[tty]$PROMPT_TEXT" \

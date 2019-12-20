@@ -5,15 +5,15 @@ _I="$TMUX_POP"
 
 # Styles
 # ======
-set -g pane-active-border-style "fg=$SEPARATOR_FG,bg=$SEPARATOR_BG"
-set -g pane-border-style "fg=$SEPARATOR_FG,bg=$SEPARATOR_BG"
+set -g pane-active-border-style "$SEPARATOR_FG,$SEPARATOR_BG"
+set -g pane-border-style "$SEPARATOR_FG,$SEPARATOR_BG"
 set -g status-justify left
 set -g status-position bottom
-set -g status-style "bg=$NORM_BG fg=$NORM_FG"
-set -g window-status-bell-style "fg=$URGENT_FG bg=$URGENT_BG bold"
+set -g status-style "$NORM_BG,$NORM_FG"
+set -g window-status-bell-style "$URGENT_FG,$URGENT_BG,bold"
 set -g status-right-length $TMUX_RIGHT_CHARS
 set -g status-left-length $TMUX_LEFT_CHARS
-set -g window-active-style "bg=$TMUX_WINDOW_COLOR"
+set -g window-active-style "$WINDOW_BG"
 
 # Status line elements
 # ====================
@@ -28,10 +28,10 @@ set -g window-status-current-format "${N_L_B}[#{window_index}]$TMUX_WINDOW_NAME$
 
 # Icon bar
 # --------
-S="#{?pane_synchronized,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $SYNC_ICON"
-Z="#{?window_zoomed_flag,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $ZOOM_ICON"
-P="#{?client_prefix,#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $PREFIX_ICON"
-L="#{?#{==:#{client_key_table},off},#[fg=$TMUX_WHITE],#[fg=$TMUX_BLACK]} $LOCK_ICON"
+S="#{?pane_synchronized,#[$TMUX_WHITE_FG],#[$TMUX_BLACK_FG]} $SYNC_ICON"
+Z="#{?window_zoomed_flag,#[$TMUX_WHITE_FG],#[$TMUX_BLACK_FG]} $ZOOM_ICON"
+P="#{?client_prefix,#[$TMUX_WHITE_FG],#[$TMUX_BLACK_FG]} $PREFIX_ICON"
+L="#{?#{==:#{client_key_table},off},#[$TMUX_WHITE_FG],#[$TMUX_BLACK_FG]} $LOCK_ICON"
 ICONBAR="${S}${Z}${P}${L}"
 
 # Clock
@@ -51,7 +51,7 @@ LOCATION="${IP}${SRV}"
 # =======
 RIGHT="${N_L_A}${SESS} ${A_L_N}${N_L_A} ${LOCATION} ${A_L_N}${N_L_I}${ICONBAR} ${I_L_N}${CLOCK}"
 
-TAB_COLOR="#{?pane_active,#[fg=$TMUX_WINDOW_COLOR],#[fg=$TMUX_BLACK]}"
+TAB_COLOR="#{?pane_active,#[${TMUX_BLACK_FG}],#[${TMUX_BLACK_FG}]"
 TAB_LEFT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_LEFT}"
 TAB_RIGHT="${SEPARATOR}${TAB_COLOR}${TAB_BOTTOM_RIGHT}"
 

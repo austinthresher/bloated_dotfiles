@@ -1,36 +1,5 @@
 #!/bin/bash
 function prepare_tmux() {
-	if require rgb_color ; then
-		export TMUX_LOCAL_PRIMARY_COLOR="#407350"
-		export TMUX_LOCAL_ACCENT_COLOR="#66EC96"
-		export TMUX_REMOTE_PRIMARY_COLOR="#732020"
-		export TMUX_REMOTE_ACCENT_COLOR="#CC6666"
-		export TMUX_BLACK="colour0"
-		export TMUX_GRAY="colour8"
-		export TMUX_WHITE="colour15"
-		export TMUX_LOCAL_WINDOW_COLOR="#051007"
-		export TMUX_LOCAL_SEPARATOR_COLOR="#020603"
-	elif require color ; then
-		export TMUX_LOCAL_PRIMARY_COLOR="colour2"
-		export TMUX_LOCAL_ACCENT_COLOR="colour10"
-		export TMUX_REMOTE_PRIMARY_COLOR="colour1"
-		export TMUX_REMOTE_ACCENT_COLOR="colour9"
-		export TMUX_BLACK="colour0"
-		export TMUX_GRAY="colour8"
-		export TMUX_WHITE="colour15"
-		export TMUX_LOCAL_WINDOW_COLOR="colour0"
-		export TMUX_LOCAL_SEPARATOR_COLOR="colour236"
-	else
-		export TMUX_LOCAL_PRIMARY_COLOR="default"
-		export TMUX_LOCAL_ACCENT_COLOR="default"
-		export TMUX_REMOTE_PRIMARY_COLOR="default"
-		export TMUX_REMOTE_ACCENT_COLOR="default"
-		export TMUX_BLACK="default"
-		export TMUX_GRAY="default"
-		export TMUX_WHITE="default"
-		export TMUX_LOCAL_WINDOW_COLOR="default"
-		export TMUX_LOCAL_SEPARATOR_COLOR="default"
-	fi
 	
 	if [ ! -z "$LIMITED_SPACE" ]; then
 		export TMUX_DATE="%b %d"
@@ -52,39 +21,33 @@ function prepare_tmux() {
 		export TMUX_PANE_PATH="#{pane_current_path}"
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
-  # TODO: check SSH_CLIENT
-  export TMUX_SEPARATOR_COLOR=$TMUX_LOCAL_SEPARATOR_COLOR
-  export TMUX_ACCENT_COLOR=$TMUX_LOCAL_ACCENT_COLOR
-  export TMUX_PRIMARY_COLOR=$TMUX_LOCAL_PRIMARY_COLOR
-  export TMUX_WINDOW_COLOR=$TMUX_LOCAL_WINDOW_COLOR
-  export TMUX_ICON_COLOR=$TMUX_BLACK
 
-  export TMUX_PUSH="#[push-default]#[fg=$TMUX_ICON_COLOR]"
+  export TMUX_PUSH="#[push-default]${TMUX_BLACK_FG}"
   export TMUX_POP="#[default]#[pop-default]"
 
-  export WINDOW_BG=$TMUX_WINDOW_COLOR
+  export WINDOW_BG=$TMUX_BLACK_BG
   export WINDOW_FG="default"
 
-  export SEPARATOR_FG=$TMUX_SEPARATOR_COLOR
-  export SEPARATOR_BG=$TMUX_SEPARATOR_COLOR
+  export SEPARATOR_FG=$TMUX_FG_COLOR
+  export SEPARATOR_BG=$TMUX_BLACK_BG
 
-  export INACTIVE_BG=$TMUX_GRAY
-  export INACTIVE_FG=$TMUX_BLACK
+  export INACTIVE_BG=$TMUX_WHITE_BG
+  export INACTIVE_FG=$TMUX_BLACK_FG
 
-  export NORM_FG=$TMUX_LOCAL_PRIMARY_COLOR
+  export NORM_FG=$TMUX_FG_COLOR
   export NORM_BG=$TMUX_BLACK
 
-  export ALT_FG=$TMUX_LOCAL_ACCENT_COLOR
-  export ALT_BG=$TMUX_LOCAL_PRIMARY_COLOR
+  export ALT_FG=$TMUX_BLACK_FG
+  export ALT_BG=$TMUX_BG_COLOR
 
-  export GRAY_BG=$TMUX_GRAY
-  export GRAY_FG=$TMUX_LOCAL_ACCENT_COLOR
+  export GRAY_BG=$TMUX_WHITE_BG
+  export GRAY_FG=$TMUX_FG_COLOR
 
-  export BRIGHT_BG=$TMUX_LOCAL_ACCENT_COLOR
-  export BRIGHT_FG=$TMUX_BLACK
+  export BRIGHT_BG=$TMUX_BG_COLOR
+  export BRIGHT_FG=$TMUX_WHITE_FG
 
-  export URGENT_BG=$TMUX_WHITE
-  export URGENT_FG=$TMUX_BLACK
+  export URGENT_BG=$TMUX_WHITE_BG
+  export URGENT_FG=$TMUX_BLACK_FG
 
 	source $HOME/.generated/tmux-powerline-env
 }

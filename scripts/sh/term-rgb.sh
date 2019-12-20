@@ -1,7 +1,7 @@
 #!/bin/bash
 
-load term-color
-load italic
-load strike
+# inherit from term-256color
+load term-256color
+
 load rgb
-export TMUX_DEFAULT_TERM=tmux-256color
+load strike

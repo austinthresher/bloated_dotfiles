@@ -34,9 +34,9 @@ if [ -z "$SSH_CLIENT" ]; then
 			export COLORS=8
 			;;
 	esac
-	export THEME="local"
+	export THEME="blue"
 else
-	export THEME="remote"
+	export THEME="red"
 fi
 
 if [ -z "$OS" ]; then
@@ -54,6 +54,8 @@ case "$COLORS" in
 	8) load term-color ;;
 	*) load term-dumb ;;
 esac
+
+load theme
 
 case "$OS" in
 	osx)
