@@ -1,5 +1,5 @@
 if [ -z "$THEME" ]; then
-  export THEME="green"
+  export THEME="blue"
 fi
 
 case "$COLORS" in
@@ -22,8 +22,8 @@ case "$COLORS" in
     export BASH_WHITE_BG="$(color $COL_BG_WHITE)"
     export TMUX_BLACK_FG="fg=0"
     export TMUX_BLACK_BG="bg=0"
-    export TMUX_RED_FG="fg=0"
-    export TMUX_RED_BG="bg=0"
+    export TMUX_RED_FG="fg=1"
+    export TMUX_RED_BG="bg=1"
     export TMUX_GREEN_FG="fg=2"
     export TMUX_GREEN_BG="bg=2"
     export TMUX_YELLOW_FG="fg=3"
@@ -72,8 +72,8 @@ case "$COLORS" in
     export TMUX_WHITE_BG="bg=colour253"
     ;;
   24)
-    export BASH_BLACK_FG="$(rgbfg 16 16 16)"
-    export BASH_BLACK_BG="$(rgbbg 0 0 0)"
+    export BASH_BLACK_FG="$(rgbfg 32 32 32)"
+    export BASH_BLACK_BG="$(rgbbg 16 16 16)"
     export BASH_RED_FG="$(rgbfg 204 102 102)"
     export BASH_RED_BG="$(rgbbg 115 32 32)"
     export BASH_GREEN_FG="$(rgbfg 102 236 150)"
@@ -88,22 +88,22 @@ case "$COLORS" in
     export BASH_CYAN_BG="$(rgbbg 32 115 115)"
     export BASH_WHITE_FG="$(rgbfg 255 255 255)"
     export BASH_WHITE_BG="$(rgbbg 240 240 240)"
-    export TMUX_BLACK_FG="fg=#101010"
-    export TMUX_BLACK_BG="bg=#000000"
-    export TMUX_RED_FG="fg=#CC6666"
+    export TMUX_BLACK_FG="fg=#202020"
+    export TMUX_BLACK_BG="bg=#101010"
+    export TMUX_RED_FG="fg=#cc6666"
     export TMUX_RED_BG="bg=#732020"
-    export TMUX_GREEN_FG="fg=#66EC96"
+    export TMUX_GREEN_FG="fg=#66ec96"
     export TMUX_GREEN_BG="bg=#407350"
     export TMUX_YELLOW_FG="fg=#969666"
     export TMUX_YELLOW_BG="bg=#737320"
-    export TMUX_BLUE_FG="fg=#6696EC"
+    export TMUX_BLUE_FG="fg=#6696eC"
     export TMUX_BLUE_BG="bg=#405073"
     export TMUX_MAGENTA_FG="fg=#966696"
     export TMUX_MAGENTA_BG="bg=#732073"
     export TMUX_CYAN_FG="fg=#669696"
     export TMUX_CYAN_BG="bg=#207373"
-    export TMUX_WHITE_FG="fg=#FFFFFF"
-    export TMUX_WHITE_BG="bg=#F0F0F0"
+    export TMUX_WHITE_FG="fg=#ffffff"
+    export TMUX_WHITE_BG="bg=#f0f0f0"
     ;;
   *)
     export TMUX_BLACK_FG="default"
@@ -128,17 +128,23 @@ esac
 case "$THEME" in
   green)
     export PROMPT_COLOR=$BASH_GREEN_FG
-    export TMUX_FG_COLOR=$TMUX_GREEN_FG
-    export TMUX_BG_COLOR=$TMUX_GREEN_BG
-    ;;
-  red)
-    export PROMPT_COLOR=$BASH_RED_FG
-    export TMUX_FG_COLOR=$TMUX_RED_FG
-    export TMUX_BG_COLOR=$TMUX_RED_BG
+    export TMUX_PRIMARY_FG=$TMUX_GREEN_FG
+    export TMUX_PRIMARY_BG=$TMUX_GREEN_BG
+    export TMUX_ACCENT_FG=$TMUX_MAGENTA_FG
+    export TMUX_ACCENT_BG=$TMUX_MAGENTA_BG
     ;;
   blue)
     export PROMPT_COLOR=$BASH_BLUE_FG
-    export TMUX_FG_COLOR=$TMUX_BLUE_FG
-    export TMUX_BG_COLOR=$TMUX_BLUE_BG
+    export TMUX_PRIMARY_FG=$TMUX_BLUE_FG
+    export TMUX_PRIMARY_BG=$TMUX_BLUE_BG
+    export TMUX_ACCENT_FG=$TMUX_CYAN_FG
+    export TMUX_ACCENT_BG=$TMUX_CYAN_BG
+    ;;
+  red)
+    export PROMPT_COLOR=$BASH_RED_FG
+    export TMUX_PRIMARY_FG=$TMUX_RED_FG
+    export TMUX_PRIMARY_BG=$TMUX_RED_BG
+    export TMUX_ACCENT_FG=$TMUX_GREEN_FG
+    export TMUX_ACCENT_BG=$TMUX_GREEN_BG
     ;;
 esac

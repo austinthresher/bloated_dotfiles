@@ -8,7 +8,7 @@ function prepare_tmux() {
 	else
 		export TMUX_DATE="%A, %B %d"
 		export TMUX_TIME="%l:%M %p"
-		export TMUX_WINDOW_NAME=" #{window_name} "
+		export TMUX_WINDOW_NAME=" #{window_name}"
 	fi
 	
 	export TMUX_LEFT_CHARS=1
@@ -22,28 +22,28 @@ function prepare_tmux() {
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
 
-  export TMUX_PUSH="#[push-default]${TMUX_BLACK_FG}"
+  export TMUX_PUSH="#[push-default]#[${TMUX_PRIMARY_FG}]"
   export TMUX_POP="#[default]#[pop-default]"
 
   export WINDOW_BG=$TMUX_BLACK_BG
-  export WINDOW_FG="default"
+  export WINDOW_FG="$TMUX_WHITE_FG"
 
-  export SEPARATOR_FG=$TMUX_FG_COLOR
-  export SEPARATOR_BG=$TMUX_BLACK_BG
+  export SEPARATOR_FG=$TMUX_PRIMARY_FG
+  export SEPARATOR_BG="bg=default"
 
-  export INACTIVE_BG=$TMUX_WHITE_BG
+  export INACTIVE_BG=$TMUX_ACCENT_BG
   export INACTIVE_FG=$TMUX_BLACK_FG
 
-  export NORM_FG=$TMUX_FG_COLOR
-  export NORM_BG=$TMUX_BLACK
+  export NORM_FG=$TMUX_ACCENT_FG
+  export NORM_BG="bg=default"
 
-  export ALT_FG=$TMUX_BLACK_FG
-  export ALT_BG=$TMUX_BG_COLOR
+  export ACCENT_FG=$TMUX_BLACK_FG
+  export ACCENT_BG=$TMUX_ACCENT_BG
 
-  export GRAY_BG=$TMUX_WHITE_BG
-  export GRAY_FG=$TMUX_FG_COLOR
+  export PRIMARY_FG=$TMUX_WHITE_FG
+  export PRIMARY_BG=$TMUX_PRIMARY_BG
 
-  export BRIGHT_BG=$TMUX_BG_COLOR
+  export BRIGHT_BG=$TMUX_ACCENT_BG
   export BRIGHT_FG=$TMUX_WHITE_FG
 
   export URGENT_BG=$TMUX_WHITE_BG

@@ -13,7 +13,7 @@
 # transitions by turning on reverse video instead of changing styles.
 
 BEGIN {
-	n_styles = split("WINDOW SEPARATOR INACTIVE NORM ALT GRAY BRIGHT URGENT ", styles, " ")
+	n_styles = split("WINDOW SEPARATOR INACTIVE NORM ACCENT PRIMARY BRIGHT URGENT ", styles, " ")
 	for (i=1;i<=n_styles;i++) {
 		short_styles[i] = substr(styles[i],1,1)
 	}
@@ -22,11 +22,16 @@ BEGIN {
   # FG_USE_STYLE_BG expands to #[fg=$STYLE_BG]
   # FG_USE_STYLE_FG expands to #[fg=$STYLE_FG]
 	for (i=1;i<=n_styles;i++) {
-		print("BG_USE_" styles[i] "_BG=#[bg=$" styles[i] "_BG]")
-		print("BG_USE_" styles[i] "_FG=#[bg=$" styles[i] "_FG]")
-		print("FG_USE_" styles[i] "_BG=#[fg=$" styles[i] "_BG]")
-		print("FG_USE_" styles[i] "_FG=#[fg=$" styles[i] "_FG]")
-		print("export " styles[i] "=$BG_USE_" styles[i] "_BG$FG_USE_" styles[i] "_FG")
+		print("BG_USE_" styles[i] "_BG=#[bg=${" styles[i] "_BG##*=}]")
+		print("BG_USE_" styles[i] "_FG=#[bg=${" styles[i] "_FG##*=}]")
+		print("FG_USE_" styles[i] "_BG=#[fg=${" styles[i] "_BG##*=}]")
+		print("FG_USE_" styles[i] "_FG=#[fg=${" styles[i] "_FG##*=}]")
+		print("export " styles[i] "=${BG_USE_" styles[i] "_BG}${FG_USE_" styles[i] "_FG}")
+		#print("BG_USE_" styles[i] "_BG=#[bg=${" styles[i] "_BG:3}]")
+		#print("BG_USE_" styles[i] "_FG=#[bg=${" styles[i] "_FG:3}]")
+		#print("FG_USE_" styles[i] "_BG=#[fg=${" styles[i] "_BG:3}]")
+		#print("FG_USE_" styles[i] "_FG=#[fg=${" styles[i] "_FG:3}]")
+		#print("export " styles[i] "=${BG_USE_" styles[i] "_BG:3}${FG_USE_" styles[i] "_FG:3}")
 	}
 	for (i=1;i<=n_styles;i++) {
 		for (j=1;j<=n_styles;j++) {

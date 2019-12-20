@@ -34,7 +34,7 @@ if [ -z "$SSH_CLIENT" ]; then
 			export COLORS=8
 			;;
 	esac
-	export THEME="blue"
+	export THEME="green"
 else
 	export THEME="red"
 fi
@@ -50,7 +50,7 @@ load cwd
 
 case "$COLORS" in
 	24) load term-rgb ;;
-	256) load term-color256 ;;
+	256) load term-256color ;;
 	8) load term-color ;;
 	*) load term-dumb ;;
 esac

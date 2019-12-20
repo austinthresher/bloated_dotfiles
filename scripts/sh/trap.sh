@@ -12,9 +12,9 @@ PANE_ICON="${TMUX_PUSH}${COMMAND_ICON}${TMUX_POP}"
 function update_tmux() {
   set_pane_path "$(cwd)"
   if [ "$#" == 0 ]; then
-    set_pane_title "$PANE_ICON "
+    set_pane_title "$PANE_ICON -"
   else
-    set_pane_title "$PANE_ICON $@ "
+    set_pane_title "$PANE_ICON $@"
   fi
   $(which tmux) refresh-client
 }
@@ -38,7 +38,7 @@ function hook_pre() {
 	c=$BASH_COMMAND
 	if [[ "$PROMPT_COMMAND" != *"$c"* ]]; then
 		PANETITLE="${c%% *}"
-	  update_tmux "#[fg=$TMUX_WHITE]$PANETITLE"
+	  update_tmux "#[bold]$PANETITLE#[nobold]"
 	else
 		PANETITLE=
     update_tmux
