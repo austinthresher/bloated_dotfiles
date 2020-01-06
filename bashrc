@@ -1,5 +1,5 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
-[ -e "$HOME/.bp/config" ] && source "$HOME/.bp/config"
+[ -d "$HOME/.backpack/bin" ] && export PATH="$HOME/.backpack/bin:$PATH"
 
 unset -f command_not_found_handle
 

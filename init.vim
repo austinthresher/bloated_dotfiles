@@ -63,8 +63,8 @@ au BufNewFile,BufRead *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
 " Automatically update the date on my todo list when saved
 au BufWritePre TODO.md call TODODate()
 
-set background=light
-colorscheme luna
+set background=dark
+"colorscheme luna
 
 syntax on
 
@@ -143,27 +143,27 @@ set mouse=a
 "let g:gutentags_cache_dir = "$HOME/.vim/tags"
 "let g:gutentags_modules = ['ctags', 'gtags_cscope']
 
-let g:EasyMotion_do_mapping = 0 " Disable default mappings
+"let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " Jump to anywhere you want with minimal keystrokes, with just one key binding.
-nmap w <Plug>(easymotion-overwin-f)
+"nmap w <Plug>(easymotion-overwin-f)
 " Need one more keystroke, but on average, it may be more comfortable.
-nmap m <Plug>(easymotion-overwin-f2)
+"nmap m <Plug>(easymotion-overwin-f2)
 
 " JK motions: Line motions
-map C-j <Plug>(easymotion-j)
-map C-k <Plug>(easymotion-k)
+"map C-j <Plug>(easymotion-j)
+"map C-k <Plug>(easymotion-k)
 
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
-let g:show_spaces_that_precede_tabs=1
-let g:strip_whitelines_at_eof=1
+"let g:better_whitespace_enabled=1
+"let g:strip_whitespace_on_save=1
+"let g:show_spaces_that_precede_tabs=1
+"let g:strip_whitelines_at_eof=1
 
-"nnoremap <Leader>q :Bdelete<CR>
+nnoremap <Leader>q :bd<CR>
 
-let g:highlightedyank_highlight_duration = 100
+"let g:highlightedyank_highlight_duration = 100
 
-autocmd FileType vim let b:vcm_tab_complete = 'vim'
+"autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
-let g:lt_location_list_toggle_map = '<leader>l'
-let g:lt_quickfix_list_toggle_map = '<leader>f'
+"let g:lt_location_list_toggle_map = '<leader>l'
+"let g:lt_quickfix_list_toggle_map = '<leader>f'

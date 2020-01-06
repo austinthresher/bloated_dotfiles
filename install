@@ -21,6 +21,7 @@ function prompt_to_replace() {
 }
 
 mkdir -p "$HOME/.config/vis"
+mkdir -p "$HOME/.config/nvim"
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
@@ -29,3 +30,4 @@ prompt_to_replace tmux.local  $HOME/.tmux.local
 prompt_to_replace gdbinit     $HOME/.gdbinit
 prompt_to_replace conkyrc     $HOME/.conkyrc
 prompt_to_replace visrc.lua   $HOME/.config/vis/visrc.lua
+prompt_to_replace init.vim    $HOME/.config/nvim/init.vim
