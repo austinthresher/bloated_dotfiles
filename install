@@ -20,20 +20,12 @@ function prompt_to_replace() {
 	ln -s $PWD/$1 $2
 }
 
-mkdir -p $HOME/.config/kak
-mkdir -p $HOME/.config/kak/colors
-mkdir -p $HOME/.config/kak/plugins
-
-pushd $HOME/.config/kak/plugins
-git clone https://github.com/andreyorst/plug.kak.git plug.kak
-popd
+mkdir -p "$HOME/.config/vis"
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
 prompt_to_replace tmux.conf   $HOME/.tmux.conf
 prompt_to_replace tmux.local  $HOME/.tmux.local
-prompt_to_replace tmux.remote $HOME/.tmux.remote
 prompt_to_replace gdbinit     $HOME/.gdbinit
 prompt_to_replace conkyrc     $HOME/.conkyrc
-prompt_to_replace kakrc       $HOME/.config/kak/kakrc
-prompt_to_replace mono.kak    $HOME/.config/kak/colors/mono.kak
+prompt_to_replace visrc.lua   $HOME/.config/vis/visrc.lua
