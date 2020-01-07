@@ -22,6 +22,11 @@ function prompt_to_replace() {
 
 mkdir -p "$HOME/.config/vis"
 mkdir -p "$HOME/.config/nvim"
+mkdir -p "$HOME/.config/nvim/colors"
+
+[ ! -f "$HOME/.config/nvim/colors/two-firewatch.vim" ] \
+	&& wget https://raw.githubusercontent.com/rakr/vim-two-firewatch/master/colors/two-firewatch.vim \
+	-O "$HOME/.config/nvim/colors/two-firewatch.vim"
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
