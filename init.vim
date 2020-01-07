@@ -141,6 +141,12 @@ inoremap <c-x> <c-o>dW
 
 set mouse=a
 
+" neovim terminal mode
+:tnoremap <Esc> <C-\><C-n>
+:tnoremap <C-Space> <C-\><C-n>
+
+"autocmd TermOpen * a
+
 "set statusline+=%{gutentags#statusline()}
 "let g:gutentags_project_root = ['Makefile', '.root']
 "let g:gutentags_cache_dir = "$HOME/.vim/tags"
