@@ -25,7 +25,7 @@ mkdir -p "$HOME/.config/vis/plugins"
 
 if [ ! -f "$HOME/.config/vis/plugins/vis-filetype-settings.lua" ]; then
 	wget https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua \
-		-O "$HOME/.config/vis/plugins/vis-filetype-settings.lua"
+		-O "$HOME/.config/vis/plugins/vis-filetype-settings.lua" --no-check-certificate
 fi
 
 mkdir -p "$HOME/.config/nvim"
@@ -33,7 +33,7 @@ mkdir -p "$HOME/.config/nvim/colors"
 
 if [ ! -f "$HOME/.config/nvim/colors/zenburn.vim" ]; then
 	wget https://raw.githubusercontent.com/jnurmine/Zenburn/master/colors/zenburn.vim \
-		-O "$HOME/.config/nvim/colors/zenburn.vim"
+		-O "$HOME/.config/nvim/colors/zenburn.vim" --no-check-certificate
 fi
 
 
