@@ -1,11 +1,11 @@
 set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
-set termguicolors
 
+set termguicolors
 set background=dark
-let g:two_firewatch_italics=1
-colorscheme two-firewatch
+colorscheme zenburn
+
 set noicon
 set notitle
 set titleold=

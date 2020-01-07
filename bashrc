@@ -1,7 +1,11 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
-[ -d "$HOME/.backpack/bin" ] && export PATH="$HOME/.backpack/bin:$PATH"
+[ -e "$HOME/.backpack/config" ] && source "$HOME/.backpack/config"
 
 unset -f command_not_found_handle
+
+if [ "$TERM" == xterm -a ! -z "$VTE_VERSION" ]; then
+	export TERM=xterm-256color
+fi
 
 alias ls='ls -F'
 alias grep='grep -n'

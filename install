@@ -21,12 +21,21 @@ function prompt_to_replace() {
 }
 
 mkdir -p "$HOME/.config/vis"
+mkdir -p "$HOME/.config/vis/plugins"
+
+if [ ! -f "$HOME/.config/vis/plugins/vis-filetype-settings.lua" ]; then
+	wget https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua \
+		-O "$HOME/.config/vis/plugins/vis-filetype-settings.lua"
+fi
+
 mkdir -p "$HOME/.config/nvim"
 mkdir -p "$HOME/.config/nvim/colors"
 
-[ ! -f "$HOME/.config/nvim/colors/two-firewatch.vim" ] \
-	&& wget https://raw.githubusercontent.com/rakr/vim-two-firewatch/master/colors/two-firewatch.vim \
-	-O "$HOME/.config/nvim/colors/two-firewatch.vim"
+if [ ! -f "$HOME/.config/nvim/colors/zenburn.vim" ]; then
+	wget https://raw.githubusercontent.com/jnurmine/Zenburn/master/colors/zenburn.vim \
+		-O "$HOME/.config/nvim/colors/zenburn.vim"
+fi
+
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
