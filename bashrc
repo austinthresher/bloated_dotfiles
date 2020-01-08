@@ -18,8 +18,8 @@ alias gdb='gdb -q'
 alias ssh='env TERM="$OS:$COLORS:$TERM" ssh -t'
 
 export PATH=$HOME/.dotfiles/scripts/sh:$PATH
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=vi
+export VISUAL=vi
 export PAGER=less
 
 # Some configuration was easier with code generation. Generate those scripts:
