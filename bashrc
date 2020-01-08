@@ -1,5 +1,6 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 [ -e "$HOME/.backpack/config" ] && source "$HOME/.backpack/config"
+[ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
 unset -f command_not_found_handle
 
@@ -10,7 +11,7 @@ fi
 alias ls='ls -F'
 alias grep='grep -n'
 alias more='less'
-alias vim='vim -c"set notitle"'
+alias vim='nvim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
 # Pass the host OS and color support alongside TERM
@@ -72,7 +73,7 @@ case "$OS" in
 		load ascii
 		;;
 	linux)
-		load unicode 
+		load ascii #unicode 
 		load set_title
 		load trap
 		load git

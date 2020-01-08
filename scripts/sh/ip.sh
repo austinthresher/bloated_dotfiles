@@ -8,7 +8,7 @@ function get_ip() {
 			| awk '{ print $2 }' \
 			| sed 's/\/.*//g'
 	else
-		printf "unknown"
+		printf "no ip"
 	fi
 }
 export IP_ADDR=$(get_ip)

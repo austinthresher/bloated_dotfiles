@@ -15,14 +15,16 @@ function prepare_tmux() {
 	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH \* 3 / 2 )
 	
 	if loaded trap ; then
+		# Uncomment this when tmux releases support for pane_path
+		export TMUX_PANE_PATH="#{pane_path}"
 		export TMUX_PANE_TITLE="#{pane_title}"
 	else
+		export TMUX_PANE_PATH="#{pane_current_path}"
 		export TMUX_PANE_TITLE="#{pane_current_command}"
 	fi
-	export TMUX_PANE_PATH="#{s|$HOME|$HOME_ICON|:pane_current_path}"
 
-	export TMUX_PUSH="#[${TMUX_PRIMARY_FG}]"
-	export TMUX_POP="#[${TMUX_WHITE_FG}]"
+	export TMUX_PUSH="#[push-default]#[${TMUX_PRIMARY_FG}]"
+	export TMUX_POP="#[default]#[pop-default]"
 
 	export WINDOW_BG=$TMUX_BLACK_BG
 	export WINDOW_FG="$TMUX_WHITE_FG"
