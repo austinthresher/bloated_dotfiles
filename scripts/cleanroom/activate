@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Takes one of the scripts in this directory as an argument
+env -i USER="$USER" HOME="$HOME" bash --rcfile "$1"

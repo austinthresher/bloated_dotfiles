@@ -1,0 +1,4 @@
+export TERM=vt100
+export OSTYPE=unknown
+source "$HOME/.profile"
+export PS1="[unknown] $PS1"

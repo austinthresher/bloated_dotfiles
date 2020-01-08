@@ -1,6 +1,7 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 [ -e "$HOME/.backpack/config" ] && source "$HOME/.backpack/config"
 [ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+[ -d "/Users/homebrew/.homebrew/bin" ] && export PATH="/home/homebrew/.homebrew/bin:$PATH"
 
 unset -f command_not_found_handle
 
