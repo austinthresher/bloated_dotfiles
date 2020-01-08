@@ -12,7 +12,7 @@ function prepare_tmux() {
 	fi
 	
 	export TMUX_LEFT_CHARS=1
-	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH \* 3 / 2 )
+	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH \* 2 / 3 )
 	
 	if loaded trap ; then
 		export TMUX_PANE_TITLE="#{pane_title}"
