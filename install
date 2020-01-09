@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # prompt_to_replace <file-in-current-dir> <abs-path-to-replace>
-function prompt_to_replace() {
+function prompt_to_replace {
 	if [ -L "$2" ]; then
 		rm $2;
 	elif [ -f "$2" ]; then
@@ -20,22 +20,46 @@ function prompt_to_replace() {
 	ln -s $PWD/$1 $2
 }
 
+# netget <file-url>
+function netget {
+	local src="$1"
+	local dst="${1##*/}"
+	if which wget &> /dev/null  && [ -x "$(which wget)" ]; then
+		wget -O "$dst" "$src" --no-check-certificate
+	elif which perl &> /dev/null  && [ -x "$(which perl)" ]; then
+		perl -MLWP::Simple -e "getstore \"$src\", \"$dst\""
+	elif which curl &> /dev/null && [ -x "$(which curl)" ]; then
+		curl -L "$src" -o "$dst" --insecure
+	else
+		echo "No download utility found. Script cannot continue."
+		return 127
+	fi
+	echo "$dst"
+}
+
+# dl_if_missing <dst-path> <src-url>
+function dl_if_missing {
+	if [ ! -f "$1" ]; then
+		local fname=$(netget "$2")
+		mv "$fname" "$1"
+	fi
+}
+
 mkdir -p "$HOME/.config/vis"
 mkdir -p "$HOME/.config/vis/plugins"
 
-if [ ! -f "$HOME/.config/vis/plugins/vis-filetype-settings.lua" ]; then
-	wget https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua \
-		-O "$HOME/.config/vis/plugins/vis-filetype-settings.lua" --no-check-certificate
-fi
+dl_if_missing "$HOME/.config/vis/plugins/vis-filetype-settings.lua" \
+	https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua
 
 mkdir -p "$HOME/.config/nvim"
 mkdir -p "$HOME/.config/nvim/colors"
+mkdir -p "$HOME/.config/nvim/autoload"
+mkdir -p "$HOME/.config/nvim/plugins"
 
-if [ ! -f "$HOME/.config/nvim/colors/zenburn.vim" ]; then
-	wget https://raw.githubusercontent.com/jnurmine/Zenburn/master/colors/zenburn.vim \
-		-O "$HOME/.config/nvim/colors/zenburn.vim" --no-check-certificate
-fi
-
+dl_if_missing "$HOME/.config/nvim/autoload/plug.vim" \
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim 
+dl_if_missing "$HOME/.config/nvim/colors/zenburn.vim" \
+	https://raw.githubusercontent.com/jnurmine/Zenburn/master/colors/zenburn.vim
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc

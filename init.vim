@@ -176,3 +176,9 @@ nnoremap <Leader>q :bd<CR>
 
 "let g:lt_location_list_toggle_map = '<leader>l'
 "let g:lt_quickfix_list_toggle_map = '<leader>f'
+
+call plug#begin('~/.config/nvim/plugins')
+
+Plug 'tpope/vim-fugitive'
+
+call plug#end()
