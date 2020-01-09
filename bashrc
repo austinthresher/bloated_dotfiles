@@ -16,7 +16,7 @@ alias vim='nvim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
 # Pass the host OS and color support alongside TERM
-alias ssh='env TERM="$OS:$COLORS:$TERM" ssh -t'
+alias ssh='env TERM="$PLATFORM:$COLORS:$TERM" ssh -t'
 
 export PATH=$HOME/.dotfiles/scripts/sh:$PATH
 export EDITOR=vi
@@ -27,33 +27,50 @@ export PAGER=less
 mkdir -p $HOME/.generated
 awk -f "$HOME/.dotfiles/scripts/awk/tmux-powerline-env.awk" > $HOME/.generated/tmux-powerline-env
 
+function set_term_colors {
+	if [ -z "$COLORS" ]; then
+		case "$TERM" in
+			xterm-kitty)
+				export COLORS=24
+				;;
+			*256color)
+				export COLORS=256
+				;;
+			*)
+				export COLORS=8
+				;;
+		esac
+	fi
+}
+
 if [[ "$TERM" == *":"* ]]; then
 	export THEME="red"
-	OS_COLORS=${TERM%:*}
-	export OS=${OS_COLORS%:*}
-	export COLORS=${OS_COLORS#*:}
+	PLATFORM_COLORS=${TERM%:*}
+	export PLATFORM=${PLATFORM_COLORS%:*}
+	export COLORS=${PLATFORM_COLORS#*:}
 	export TERM=${TERM##*:}
-else
+elif [ -z "$PLATFORM" ]; then
 	case "$OSTYPE" in
 		*arwin*)
-			export OS="osx"
-			export COLORS=256
+			export PLATFORM=osx
+			set_term_colors
 			;;
 		*gnu*)
-			export OS="linux"
-			export COLORS=24
+			export PLATFORM=linux
+			set_term_colors
 			;;
 		*)
-			export OS="unknown"
+			export PLATFORM=unknown
 			export COLORS=8
 			;;
 	esac
-	export THEME="green"
+	export THEME=green
 fi
 
-if [ -z "$OS" ]; then
-	export OS="unknown"
+if [ -z "$PLATFORM" ]; then
+	export PLATFORM=unknown
 	export COLORS=0
+	export THEME=blue
 fi
 
 source module.sh
@@ -69,7 +86,7 @@ esac
 
 load theme
 
-case "$OS" in
+case "$PLATFORM" in
 	osx)
 		load ascii
 		;;
