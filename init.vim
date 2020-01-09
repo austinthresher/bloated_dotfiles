@@ -2,9 +2,6 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 
-set termguicolors
-set background=dark
-colorscheme zenburn
 
 set noicon
 set notitle
@@ -145,40 +142,62 @@ set mouse=a
 :tnoremap <Esc> <C-\><C-n>
 :tnoremap <C-Space> <C-\><C-n>
 
-"autocmd TermOpen * a
-
-"set statusline+=%{gutentags#statusline()}
-"let g:gutentags_project_root = ['Makefile', '.root']
-"let g:gutentags_cache_dir = "$HOME/.vim/tags"
-"let g:gutentags_modules = ['ctags', 'gtags_cscope']
-
-"let g:EasyMotion_do_mapping = 0 " Disable default mappings
-
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-"nmap w <Plug>(easymotion-overwin-f)
-" Need one more keystroke, but on average, it may be more comfortable.
-"nmap m <Plug>(easymotion-overwin-f2)
-
-" JK motions: Line motions
-"map C-j <Plug>(easymotion-j)
-"map C-k <Plug>(easymotion-k)
-
-"let g:better_whitespace_enabled=1
-"let g:strip_whitespace_on_save=1
-"let g:show_spaces_that_precede_tabs=1
-"let g:strip_whitelines_at_eof=1
-
 nnoremap <Leader>q :bd<CR>
 
-"let g:highlightedyank_highlight_duration = 100
+let g:highlightedyank_highlight_duration = 100
 
-"autocmd FileType vim let b:vcm_tab_complete = 'vim'
+autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
-"let g:lt_location_list_toggle_map = '<leader>l'
-"let g:lt_quickfix_list_toggle_map = '<leader>f'
+let g:lt_location_list_toggle_map = '<leader>L'
+let g:lt_quickfix_list_toggle_map = '<leader>l'
 
 call plug#begin('~/.config/nvim/plugins')
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'sheerun/vim-polyglot'
+Plug 'sainnhe/vim-color-forest-night'
+Plug 'luochen1990/rainbow'
+Plug 'justinmk/vim-sneak'
+Plug 'bling/vim-bufferline'
+Plug 'thinca/vim-ref'
+Plug 'danro/rename.vim'
+Plug 'pbrisbin/vim-mkdir'
+Plug 'vim-scripts/ShowTrailingWhitespace'
+Plug 'vim-scripts/DeleteTrailingWhitespace'
+Plug 'ciaranm/detectindent'
+Plug 'roman/golden-ratio'
+Plug 'ajh17/vimcompletesme'
+Plug 'unblevable/quick-scope'
+
+Plug 'terryma/vim-multiple-cursors'
+Plug 'fatih/vim-go'
+Plug 'Shougo/defx.nvim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'tell-k/vim-autopep8'
+Plug 'dkprice/vim-easygrep'
+Plug 'thinca/vim-ref'
+Plug 'valloric/listtoggle'
+Plug 'vim-voom/voom'
+Plug 'jeetsukumaran/vim-indentwise'
+Plug 'keith/investigate.vim'
+Plug 'sgur/vim-editorconfig'
+Plug 'haishanh/night-owl.vim'
+Plug 'vim-scripts/errormarker.vim'
+Plug 'liuchengxu/vim-which-key'
+Plug 'mbbill/echofunc'
+Plug 'aaronbieber/vim-quicktask'
+Plug 'junegunn/vim-journal'
+Plug 'amix/open_file_under_cursor.vim'
 
 call plug#end()
+
+let g:rainbow_active = 1
+let g:autopep8_on_save = 1
+let g:qs_highlight_on_keys = ['f', 'F']
+
+set termguicolors
+set background=dark
+colorscheme night-owl

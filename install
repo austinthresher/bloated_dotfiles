@@ -57,9 +57,7 @@ mkdir -p "$HOME/.config/nvim/autoload"
 mkdir -p "$HOME/.config/nvim/plugins"
 
 dl_if_missing "$HOME/.config/nvim/autoload/plug.vim" \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim 
-dl_if_missing "$HOME/.config/nvim/colors/zenburn.vim" \
-	https://raw.githubusercontent.com/jnurmine/Zenburn/master/colors/zenburn.vim
+	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc

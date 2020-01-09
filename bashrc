@@ -91,7 +91,7 @@ case "$PLATFORM" in
 		load ascii
 		;;
 	linux)
-		load ascii #unicode 
+		load ascii #unicode
 		load set_title
 		load trap
 		load git
