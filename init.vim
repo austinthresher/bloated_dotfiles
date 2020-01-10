@@ -222,11 +222,16 @@ let g:eighties_bufname_additional_patterns = []
 function! LightlineGit()
 	return fugitive#head() !=# '' ? $GIT_ICON . ' ' . fugitive#head() : ''
 endfunction
-let g:lightline = { 'colorscheme': 'one' }
+function! LightlineFilename()
+	let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+	let modified = &modified ? '+' : ''
+	return filename . modified
+endfunction
+let g:lightline = { 'colorscheme': 'powerlineish' }
 let g:lightline.active = { 'left': [], 'right': [] }
 let g:lightline.active.left = [
 	\ [ 'mode', 'paste' ],
-	\ [ 'readonly', 'filename', 'modified' ],
+	\ [ 'readonly', 'filename' ],
 	\ [ 'gitbranch' ],
 	\ ]
 let g:lightline.active.right = [
@@ -237,7 +242,7 @@ let g:lightline.active.right = [
 let g:lightline.tabline = { 'left': [['buffers']], 'right': [['tabs']] }
 let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
 let g:lightline.component_type = { 'buffers': 'tabsel' }
-let g:lightline.component_function = { 'gitbranch': 'LightlineGit' }
+let g:lightline.component_function = { 'gitbranch': 'LightlineGit', 'filename': 'LightlineFilename' }
 let g:lightline.tab = { 'active': [ 'active_l', 'tabnum', 'active_r' ], 'inactive': [ 'inactive', 'tabnum', 'inactive' ] }
 let g:lightline.tab_component = { 'active_l': '<', 'active_r': '>', 'inactive': ' ' }
 autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
