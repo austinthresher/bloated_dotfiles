@@ -2,29 +2,28 @@ set nocompatible
 set encoding=utf-8
 scriptencoding utf-8
 
-
 set noicon
 set notitle
 set titleold=
 
 function! KernelTabs()
-   set shiftwidth=8
-   set tabstop=8
-   set softtabstop=8
-   set noexpandtab
+	set shiftwidth=8
+	set tabstop=8
+	set softtabstop=8
+	set noexpandtab
 endfunction
 
 function! SpaceTabs()
-   set shiftwidth=4
-   set softtabstop=4
-   set expandtab
+	set shiftwidth=4
+	set softtabstop=4
+	set expandtab
 endfunction
 
 function! PVTabs()
-   set shiftwidth=3
-   set tabstop=3
-   set softtabstop=3
-   set expandtab
+	set shiftwidth=3
+	set tabstop=3
+	set softtabstop=3
+	set expandtab
 endfunction
 
 function! TODODate()
@@ -74,7 +73,7 @@ set ruler
 set laststatus=2
 set confirm
 set modeline
-
+set cursorline
 set listchars=eol:$
 set showbreak=↪\
 set listchars+=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
@@ -102,7 +101,7 @@ set undolevels=16000
 set backspace=indent,eol,start
 set nostartofline
 
-set fillchars=stl:\ ,stlnc:\ ,fold:\ ,vert:'
+set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 
 " === maps ===
 
@@ -125,17 +124,6 @@ inoremap <NUL> <ESC>:noh<CR>
 " same for neovim
 inoremap <C-Space> <ESC>:noh<CR>
 
-" Readline / emacs style navigation in input mode
-inoremap <c-a> <c-o>^
-inoremap <c-e> <c-o>$
-inoremap <c-f> <c-o>l
-inoremap <c-b> <c-o>h
-inoremap <c-d> <c-o>x
-inoremap <c-k> <c-o>d$
-inoremap <c-u> <c-o>d0
-inoremap <c-w> <c-o>dB
-inoremap <c-x> <c-o>dW
-
 set mouse=a
 
 " neovim terminal mode
@@ -153,51 +141,132 @@ let g:lt_quickfix_list_toggle_map = '<leader>l'
 
 call plug#begin('~/.config/nvim/plugins')
 
-Plug 'tpope/vim-fugitive'
+" colorschemes
+Plug 'haishanh/night-owl.vim'
+Plug 'sainnhe/vim-color-forest-night'
+
+" style / visual tweaks
+Plug 'luochen1990/rainbow'
+Plug 'ryanoasis/vim-devicons'
+Plug 'vim-scripts/errormarker.vim'
+Plug 'vim-scripts/ShowTrailingWhitespace'
+Plug 'unblevable/quick-scope'
+Plug 'airblade/vim-gitgutter'
+Plug 'justincampbell/vim-eighties'
+Plug 'itchyny/lightline.vim'
+Plug 'mengelbrecht/lightline-bufferline'
+
+" documentation / help
+Plug 'thinca/vim-ref' "TODO: test these two individually
+Plug 'keith/investigate.vim'
+Plug 'sheerun/vim-polyglot'
+
+" movement / commands
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-unimpaired'
-Plug 'sheerun/vim-polyglot'
-Plug 'sainnhe/vim-color-forest-night'
-Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-characterize'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-abolish'
 Plug 'justinmk/vim-sneak'
-Plug 'bling/vim-bufferline'
-Plug 'thinca/vim-ref'
-Plug 'danro/rename.vim'
-Plug 'pbrisbin/vim-mkdir'
-Plug 'vim-scripts/ShowTrailingWhitespace'
 Plug 'vim-scripts/DeleteTrailingWhitespace'
-Plug 'ciaranm/detectindent'
-Plug 'roman/golden-ratio'
-Plug 'ajh17/vimcompletesme'
-Plug 'unblevable/quick-scope'
 
-Plug 'terryma/vim-multiple-cursors'
-Plug 'fatih/vim-go'
-Plug 'Shougo/defx.nvim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tmux-plugins/vim-tmux-focus-events'
-Plug 'tell-k/vim-autopep8'
-Plug 'dkprice/vim-easygrep'
-Plug 'thinca/vim-ref'
-Plug 'valloric/listtoggle'
-Plug 'vim-voom/voom'
+" misc utility
+Plug 'pbrisbin/vim-mkdir'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-apathy'
+Plug 'tpope/vim-vinegar'
 Plug 'jeetsukumaran/vim-indentwise'
-Plug 'keith/investigate.vim'
 Plug 'sgur/vim-editorconfig'
-Plug 'haishanh/night-owl.vim'
-Plug 'vim-scripts/errormarker.vim'
-Plug 'liuchengxu/vim-which-key'
-Plug 'mbbill/echofunc'
-Plug 'aaronbieber/vim-quicktask'
-Plug 'junegunn/vim-journal'
-Plug 'amix/open_file_under_cursor.vim'
+Plug 'valloric/listtoggle'
+Plug 'tpope/vim-fugitive'
+Plug 'ajh17/vimcompletesme'
+Plug 'majutsushi/tagbar'
+"
+" TODO: test these
+" Plug 'terryma/vim-multiple-cursors'
+" Plug 'fatih/vim-go'
+" Plug 'Shougo/defx.nvim'
+" Plug 'tmux-plugins/vim-tmux-focus-events'
+" Plug 'dkprice/vim-easygrep'
+" Plug 'vim-voom/voom'
+" Plug 'liuchengxu/vim-which-key'
+" Plug 'mbbill/echofunc'
+" Plug 'aaronbieber/vim-quicktask'
+" Plug 'junegunn/vim-journal'
+" Plug 'amix/open_file_under_cursor.vim'
 
 call plug#end()
 
+" luochen1990/rainbow
 let g:rainbow_active = 1
-let g:autopep8_on_save = 1
+
+" unblevable/quick-scope
 let g:qs_highlight_on_keys = ['f', 'F']
 
+
+" majutsushi/tagbar
+nmap <leader>t :TagbarToggle<CR>
+
+" justincampbell/vim-eighties
+let g:eighties_enabled = 1
+let g:eighties_minimum_width = 80
+let g:eighties_extra_width = 0
+let g:eighties_compute = 1
+let g:eighties_bufname_additional_patterns = []
+
+" itchyny/lightline-vim
+
+function! LightlineGit()
+	return fugitive#head() !=# '' ? $GIT_ICON . ' ' . fugitive#head() : ''
+endfunction
+let g:lightline = { 'colorscheme': 'one' }
+let g:lightline.active = { 'left': [], 'right': [] }
+let g:lightline.active.left = [
+	\ [ 'mode', 'paste' ],
+	\ [ 'readonly', 'filename', 'modified' ],
+	\ [ 'gitbranch' ],
+	\ ]
+let g:lightline.active.right = [
+	\ [ 'lineinfo' ],
+	\ [ 'percent' ],
+	\ [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ]
+	\ ]
+let g:lightline.tabline = { 'left': [['buffers']], 'right': [['tabs']] }
+let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
+let g:lightline.component_type = { 'buffers': 'tabsel' }
+let g:lightline.component_function = { 'gitbranch': 'LightlineGit' }
+let g:lightline.tab = { 'active': [ 'active_l', 'tabnum', 'active_r' ], 'inactive': [ 'inactive', 'tabnum', 'inactive' ] }
+let g:lightline.tab_component = { 'active_l': '<', 'active_r': '>', 'inactive': ' ' }
+autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
+
+" lightline-bufferline
+if !empty($UNICODE_FONT)
+	let g:lightline#bufferline#enable_devicons = 1
+	let g:lightline#bufferline#unicode_symbols = 1
+endif
+let g:lightline#bufferline#show_number=2
+let g:lightline#bufferline#unnamed="[No Name]"
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+
+
+set laststatus=2
+set showtabline=2
+set noshowmode
+
+" colorscheme
 set termguicolors
 set background=dark
 colorscheme night-owl
+

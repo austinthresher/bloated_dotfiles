@@ -15,8 +15,10 @@ alias more='less'
 alias vim='nvim -c"set notitle"'
 alias kk='kak'
 alias gdb='gdb -q'
-# Pass the host OS and color support alongside TERM
+
+# Pass the platform and color support alongside TERM
 alias ssh='env TERM="$PLATFORM:$COLORS:$TERM" ssh -t'
+alias _ssh='$(which ssh)'
 
 export PATH=$HOME/.dotfiles/scripts/sh:$PATH
 export EDITOR=vi
@@ -32,6 +34,7 @@ function set_term_colors {
 		case "$TERM" in
 			xterm-kitty)
 				export COLORS=24
+				export TERM=xterm-256color
 				;;
 			*256color)
 				export COLORS=256
@@ -91,7 +94,7 @@ case "$PLATFORM" in
 		load ascii
 		;;
 	linux)
-		load ascii #unicode
+		load unicode
 		load set_title
 		load trap
 		load git

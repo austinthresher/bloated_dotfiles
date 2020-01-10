@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export UNICODE_FONT=true
 export PROMPT_TEXT="  "
 export CLOCK_ICON=""
 export CALENDAR_ICON=" "
