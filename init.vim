@@ -105,12 +105,8 @@ set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 
 " === maps ===
 
-" Edit and source .vimrc shortcuts
-nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
-
-nnoremap <F5> "=strftime("%b %d, %Y")<CR>P
-inoremap <F5> <C-R>=strftime("%b %d, %Y")<CR>
+nnoremap <leader>d "=strftime("%b %d, %Y")<CR>P
+inoremap <leader>d <C-R>=strftime("%b %d, %Y")<CR>
 
 " Quick buffer list and selection
 nnoremap <leader>b :ls<CR>:b
@@ -184,7 +180,8 @@ Plug 'valloric/listtoggle'
 Plug 'tpope/vim-fugitive'
 Plug 'ajh17/vimcompletesme'
 Plug 'majutsushi/tagbar'
-"
+Plug 'wvffle/vimterm'
+
 " TODO: test these
 " Plug 'terryma/vim-multiple-cursors'
 " Plug 'fatih/vim-go'
@@ -206,6 +203,9 @@ let g:rainbow_active = 1
 " unblevable/quick-scope
 let g:qs_highlight_on_keys = ['f', 'F']
 
+" wvffle/vimterm
+nnoremap <leader>T :call vimterm#toggle() <CR>
+tnoremap <leader>T <C-\><C-n>:call vimterm#toggle() <CR>
 
 " majutsushi/tagbar
 nmap <leader>t :TagbarToggle<CR>
@@ -218,7 +218,6 @@ let g:eighties_compute = 1
 let g:eighties_bufname_additional_patterns = []
 
 " itchyny/lightline-vim
-
 function! LightlineGit()
 	return fugitive#head() !=# '' ? $GIT_ICON . ' ' . fugitive#head() : ''
 endfunction
@@ -240,11 +239,23 @@ let g:lightline.active.right = [
 	\ [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ]
 	\ ]
 let g:lightline.tabline = { 'left': [['buffers']], 'right': [['tabs']] }
-let g:lightline.component_expand = { 'buffers': 'lightline#bufferline#buffers' }
+let g:lightline.component_expand = {
+	\ 'buffers': 'lightline#bufferline#buffers'
+	\ }
 let g:lightline.component_type = { 'buffers': 'tabsel' }
-let g:lightline.component_function = { 'gitbranch': 'LightlineGit', 'filename': 'LightlineFilename' }
-let g:lightline.tab = { 'active': [ 'active_l', 'tabnum', 'active_r' ], 'inactive': [ 'inactive', 'tabnum', 'inactive' ] }
-let g:lightline.tab_component = { 'active_l': '<', 'active_r': '>', 'inactive': ' ' }
+let g:lightline.component_function = {
+	\ 'gitbranch': 'LightlineGit',
+	\ 'filename': 'LightlineFilename'
+	\ }
+let g:lightline.tab = {
+	\ 'active': [ 'active_l', 'tabnum', 'active_r' ],
+	\ 'inactive': [ 'inactive', 'tabnum', 'inactive' ]
+	\ }
+let g:lightline.tab_component = {
+	\ 'active_l': '<',
+	\ 'active_r': '>',
+	\ 'inactive': ' '
+	\ }
 autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
 
 " lightline-bufferline
@@ -264,8 +275,6 @@ nmap <Leader>7 <Plug>lightline#bufferline#go(7)
 nmap <Leader>8 <Plug>lightline#bufferline#go(8)
 nmap <Leader>9 <Plug>lightline#bufferline#go(9)
 nmap <Leader>0 <Plug>lightline#bufferline#go(10)
-
-
 set laststatus=2
 set showtabline=2
 set noshowmode
