@@ -1,0 +1,20 @@
+conky.config = {
+	background = true,
+	own_window = true,
+	own_window_type = 'override',
+	own_window_class = 'Conky',
+	own_window_transparent = true,
+	own_window_argb_visual = true,
+	alignment = 'bottom_right',
+	gap_x = 32,
+	gap_y = 32,
+	draw_shades = false,
+	draw_outline = false,
+	draw_borders = false,
+	use_xft = true,
+	font = 'Sans Serif:size=18'
+};
+
+conky.text = [[
+	${time %A, %B %d %l:%M %p}
+]];

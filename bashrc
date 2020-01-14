@@ -1,7 +1,5 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
-[ -e "$HOME/.backpack/config" ] && source "$HOME/.backpack/config"
-[ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-[ -d "/Users/homebrew/.homebrew/bin" ] && export PATH="/home/homebrew/.homebrew/bin:$PATH"
+[ -e "$HOME/.bpinit" ] && source "$HOME/.bpinit"
 
 unset -f command_not_found_handle
 
@@ -9,11 +7,22 @@ if [ "$TERM" == xterm -a ! -z "$VTE_VERSION" ]; then
 	export TERM=xterm-256color
 fi
 
+function launch_vim {
+	if [ -f "$(which nvim)" ]; then
+		$(which nvim) "$@"
+	elif [ -f "$(which vim)" ]; then
+		$(which vim) "$@"
+	else
+		$(which vi) "$@"
+	fi
+}
+
 alias ls='ls -F'
 alias grep='grep -n'
 alias more='less'
-alias vim='nvim -c"set notitle"'
-alias kk='kak'
+alias nvim='launch_vim'
+alias vim='launch_vim'
+alias vi='launch_vim'
 alias gdb='gdb -q'
 
 # Pass the platform and color support alongside TERM
