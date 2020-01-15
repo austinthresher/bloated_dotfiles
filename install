@@ -61,6 +61,7 @@ dl_if_missing "$HOME/.config/nvim/autoload/plug.vim" \
 
 mkdir -p "$HOME/.config/i3"
 
+prompt_to_replace profile     $HOME/.profile
 prompt_to_replace bashrc      $HOME/.bashrc
 prompt_to_replace inputrc     $HOME/.inputrc
 prompt_to_replace tmux.conf   $HOME/.tmux.conf
@@ -72,3 +73,4 @@ prompt_to_replace init.vim    $HOME/.config/nvim/init.vim
 prompt_to_replace i3config    $HOME/.config/i3/config
 prompt_to_replace compton.conf $HOME/.config/compton.conf
 prompt_to_replace conkyrc     $HOME/.conkyrc
+
