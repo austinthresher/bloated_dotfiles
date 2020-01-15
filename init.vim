@@ -191,7 +191,7 @@
 			return (encoding !=# '' && encoding !=# 'utf-8') ? encoding : ''
 		endfunction
 
-		let g:lightline = { 'colorscheme': 'powerlineish' }
+		let g:lightline = { 'colorscheme': 'custom' }
 		let g:lightline.active = { 'left': [], 'right': [] }
 		let g:lightline.inactive = { 'left': [], 'right': [] }
 		let g:lightline.active.left = [
