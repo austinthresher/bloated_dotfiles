@@ -122,6 +122,7 @@
 	Plug 'ajh17/vimcompletesme'
 	Plug 'majutsushi/tagbar'
 	Plug 'wvffle/vimterm'
+	" Plug 'fatih/vim-go'
 
 	" TODO: test these
 	" Plug 'terryma/vim-multiple-cursors'
@@ -254,6 +255,9 @@
 		set showtabline=2
 		set noshowmode
 	" }}}
+	" vim-go {{{
+		let g:go_bin_path = $HOME . '/.backpack/pkg/go/bin'
+	"}}}
 " }}}
 " Theme {{{
 	set termguicolors

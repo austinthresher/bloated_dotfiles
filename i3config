@@ -12,13 +12,15 @@
 exec compton --daemon
 focus_follows_mouse no
 for_window [class="plasmashell"] floating enable
-for_window [title="Desktop"] kill, floating enable, border none
+# for_window [title="Desktop"] kill, floating enable, border none
 no_focus [class="plasmashell" window_type="notification"]
 no_focus [class="plasmashell" window_type="on_screen_display"]
 for_window [class=".*"] border pixel 0
 
-gaps inner 64 
-gaps outer 32
+gaps inner 24 
+gaps outer 12
+gaps bottom 64
+gaps top 16
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.

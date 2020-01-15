@@ -1,5 +1,6 @@
 conky.config = {
 	background = true,
+	double_buffer = true,
 	own_window = true,
 	own_window_type = 'override',
 	own_window_class = 'Conky',
@@ -12,9 +13,12 @@ conky.config = {
 	draw_outline = false,
 	draw_borders = false,
 	use_xft = true,
-	font = 'Sans Serif:size=18'
+	font = 'Sans Serif:size=18',
+	update_interval = 1,
+	minimum_width = 1366,
+	maximum_width = 1366,
 };
 
 conky.text = [[
-	${time %A, %B %d %l:%M %p}
+	${battery}${alignr}${time %A, %B %d}    ${color #666666}${time %l:%M %p}
 ]];
