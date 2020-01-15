@@ -1,4 +1,4 @@
-" Compatibility / System settings {{{
+" compatibility / system settings {{{
 	set foldenable
 	set foldmethod=marker
 	set nocompatible
@@ -8,11 +8,12 @@
 	set notitle
 	set titleold=
 " }}}
-" Vanilla AutoCommands {{{
+" vanilla autocommands {{{
 	autocmd!
-	au BufNewFile,BufRead *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
+	au bufnewfile,bufread *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
+	au bufnewfile,bufread conkyrc set filetype=lua
 " }}}
-" General Configuration {{{
+" general configuration {{{
 	syntax on
 	set showcmd
 	set noerrorbells
@@ -49,49 +50,55 @@
 	set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 	set mouse=a
 " }}}
-" Mappings {{{
-	" Insert date
-	nnoremap <leader>d "=strftime("%b %d, %Y")<CR>P
-	inoremap <leader>d <C-R>=strftime("%b %d, %Y")<CR>
+" mappings {{{
+	" insert date
+	nnoremap <leader>d "=strftime("%b %d, %y")<cr>p
+	inoremap <leader>d <c-r>=strftime("%b %d, %y")<cr>
 
-	" Quick buffer list and selection
-	nnoremap <leader>b :ls<CR>:b
+	" quick buffer list and selection
+	nnoremap <leader>b :ls<cr>:b
 
-	" Cycle through buffer
-	nnoremap <leader>[ :bp<CR>
-	nnoremap <leader>] :bn<CR>
+	" cycle through buffer
+	nnoremap <leader>[ :bp<cr>
+	nnoremap <leader>] :bn<cr>
 
 	" vim ctrl+space for esc
-	inoremap <NUL> <ESC>:noh<CR>
+	inoremap <nul> <esc>:noh<cr>
 	" same for neovim
-	inoremap <C-Space> <ESC>:noh<CR>
+	inoremap <c-space> <esc>:noh<cr>
 
 	" neovim terminal mode
-	tnoremap <Esc> <C-\><C-n>
-	tnoremap <C-Space> <C-\><C-n>
+	tnoremap <esc> <c-\><c-n>
+	tnoremap <c-space> <c-\><c-n>
 
 	" quick quit
-	nnoremap <Leader>q :bd<CR>
+	nnoremap <leader>q :bd<cr>
 
 " }}}
-" List of Plugins {{{
+" list of plugins {{{
 	call plug#begin('~/.config/nvim/plugins')
 
 	" colorschemes
+	Plug 'flazz/vim-colorschemes'
 	Plug 'haishanh/night-owl.vim'
 	Plug 'sainnhe/vim-color-forest-night'
+	Plug 'sickill/vim-monokai'
+	Plug 'sonph/onehalf'
+	Plug 'altercation/vim-colors-solarized'
+	Plug 'dracula/vim'
 
 	" style / visual tweaks
 	Plug 'luochen1990/rainbow'
 	Plug 'ryanoasis/vim-devicons'
 	Plug 'vim-scripts/errormarker.vim'
-	Plug 'vim-scripts/ShowTrailingWhitespace'
 	Plug 'unblevable/quick-scope'
 	Plug 'airblade/vim-gitgutter'
-	Plug 'justincampbell/vim-eighties'
 	Plug 'itchyny/lightline.vim'
 	Plug 'mengelbrecht/lightline-bufferline'
 	Plug 'machakann/vim-highlightedyank'
+	Plug 'jaxbot/semantic-highlight.vim'
+	Plug 'thiagoalessio/rainbow_levels.vim'
+	Plug 'valloric/vim-indent-guides'
 
 	" documentation / help
 	Plug 'thinca/vim-ref' "TODO: test these two individually
@@ -108,34 +115,56 @@
 	Plug 'tpope/vim-eunuch'
 	Plug 'tpope/vim-abolish'
 	Plug 'justinmk/vim-sneak'
-	Plug 'vim-scripts/DeleteTrailingWhitespace'
 
 	" misc utility
 	Plug 'pbrisbin/vim-mkdir'
 	Plug 'tpope/vim-sleuth'
 	Plug 'tpope/vim-apathy'
 	Plug 'tpope/vim-vinegar'
+	Plug 'tpope/vim-endwise'
 	Plug 'jeetsukumaran/vim-indentwise'
 	Plug 'sgur/vim-editorconfig'
 	Plug 'valloric/listtoggle'
 	Plug 'tpope/vim-fugitive'
 	Plug 'ajh17/vimcompletesme'
-	Plug 'majutsushi/tagbar'
+	Plug 'majutsushi/tagbar' " TODO: Decide between these two
+	Plug 'vim-scripts/taglist.vim'
 	Plug 'wvffle/vimterm'
-	" Plug 'fatih/vim-go'
+	Plug 'mattboehm/vim-unstack'
+
+	" TODO: make these play nice together or write something similar
+	Plug 'mattboehm/vim-accordion'
+	Plug 'justincampbell/vim-eighties'
+
+	" TODO: organize/test these
+	Plug 'ehamberg/vim-cute-python'
+	Plug 'bfrg/vim-cpp-modern'
+	Plug 'tbastos/vim-lua'
+	Plug 'skywind3000/vim-quickui'
+	Plug 'vim-scripts/ScrollColors'
+	Plug 'godlygeek/tabular'
+	Plug 'irrationalistic/vim-tasks'
+	Plug 'vim-scripts/json-formatter.vim'
+	Plug 'vitalk/vim-shebang'
+	Plug 'dkprice/vim-easygrep'
+	Plug 'amix/open_file_under_cursor.vim'
+	Plug 'lfv89/vim-interestingwords'
 
 	" TODO: test these
+	" Plug 'lfv89/vim-foldfocus'
+	" Plug 'thirtythreeforty/lessspace.vim'
+	" Plug 'metakirby5/codi.vim'
 	" Plug 'terryma/vim-multiple-cursors'
-	" Plug 'fatih/vim-go'
 	" Plug 'Shougo/defx.nvim'
 	" Plug 'tmux-plugins/vim-tmux-focus-events'
-	" Plug 'dkprice/vim-easygrep'
 	" Plug 'vim-voom/voom'
 	" Plug 'liuchengxu/vim-which-key'
 	" Plug 'mbbill/echofunc'
 	" Plug 'aaronbieber/vim-quicktask'
 	" Plug 'junegunn/vim-journal'
-	" Plug 'amix/open_file_under_cursor.vim'
+	" Plug 'andrewradev/splitjoin.vim'
+	" Plug 'kana/vim-submode'
+	" Plug 'tommcdo/vim-lion'
 
 	call plug#end()
 " }}}
@@ -255,9 +284,30 @@
 		set showtabline=2
 		set noshowmode
 	" }}}
-	" vim-go {{{
-		let g:go_bin_path = $HOME . '/.backpack/pkg/go/bin'
+	" semantic-highlight.vim {{{
+		nnoremap <leader>h :SemanticHighlightToggle<CR>
+		" leg s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
+		" let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
 	"}}}
+	" filestyle {{{
+"		let g:filestyle_ignore = ['text', 'tagbar', 'help']
+	" }}}
+	" rainbow_levels.vim {{{
+		nnoremap <leader>r :RainbowLevelsToggle<CR>
+		hi! RainbowLevel0 ctermbg=240 guibg=#585858
+		hi! RainbowLevel1 ctermbg=239 guibg=#4e4e4e
+		hi! RainbowLevel2 ctermbg=238 guibg=#444444
+		hi! RainbowLevel3 ctermbg=237 guibg=#3a3a3a
+		hi! RainbowLevel4 ctermbg=236 guibg=#303030
+		hi! RainbowLevel5 ctermbg=235 guibg=#262626
+		hi! RainbowLevel6 ctermbg=234 guibg=#1c1c1c
+		hi! RainbowLevel7 ctermbg=233 guibg=#121212
+		hi! RainbowLevel8 ctermbg=232 guibg=#080808
+	" }}}
+	" interestingwords {{{
+		" let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
+		" let g:interestingWordsTermColors = ['154', '121', '211', '137', '214', '222']
+	" }}}
 " }}}
 " Theme {{{
 	set termguicolors
