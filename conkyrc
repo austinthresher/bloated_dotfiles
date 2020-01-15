@@ -20,5 +20,5 @@ conky.config = {
 };
 
 conky.text = [[
-	${battery}${alignr}${time %A, %B %d}    ${color #666666}${time %l:%M %p}
+${execi 1 ~/.dotfiles/scripts/i3-workspace.sh} ${battery} ${alignr}${color #666666}${time %A, %B %d}    ${color}${time %l:%M %p}
 ]];
