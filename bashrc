@@ -46,7 +46,11 @@ function set_term_colors {
 				export TERM=xterm-256color
 				;;
 			*256color)
-				export COLORS=256
+				if [ -z "$VTE_VERSION" ]; then
+					export COLORS=256
+				else
+					export COLORS=24
+				fi
 				;;
 			*)
 				export COLORS=8

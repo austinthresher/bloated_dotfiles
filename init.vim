@@ -79,13 +79,13 @@
 	call plug#begin('~/.config/nvim/plugins')
 
 	" colorschemes
-	Plug 'flazz/vim-colorschemes'
 	Plug 'haishanh/night-owl.vim'
 	Plug 'sainnhe/vim-color-forest-night'
 	Plug 'sickill/vim-monokai'
 	Plug 'sonph/onehalf'
 	Plug 'altercation/vim-colors-solarized'
 	Plug 'dracula/vim'
+	Plug 'morhetz/gruvbox'
 
 	" style / visual tweaks
 	Plug 'luochen1990/rainbow'
@@ -220,7 +220,7 @@
 			return (encoding !=# '' && encoding !=# 'utf-8') ? encoding : ''
 		endfunction
 
-		let g:lightline = { 'colorscheme': 'custom' }
+		let g:lightline = { 'colorscheme': 'jellybeans' }
 		let g:lightline.active = { 'left': [], 'right': [] }
 		let g:lightline.inactive = { 'left': [], 'right': [] }
 		let g:lightline.active.left = [
@@ -312,5 +312,8 @@
 " Theme {{{
 	set termguicolors
 	set background=dark
-	colorscheme night-owl
+	let g:gruvbox_italic=1
+	colorscheme gruvbox
+	highlight Normal ctermbg=NONE guibg=NONE
+	highlight Folded ctermbg=NONE guibg=NONE
 " }}}
