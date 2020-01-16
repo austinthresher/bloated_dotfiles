@@ -3,7 +3,6 @@ conky.config = {
 	double_buffer = true,
 	own_window = true,
 	own_window_class = 'Conky',
-	own_window_name = 'Conky',
 	own_window_type = 'override',
 	own_window_transparent = true,
 	own_window_argb_visual = true,
@@ -16,17 +15,22 @@ conky.config = {
 	draw_borders = false,
 	use_xft = true,
 	font = 'Saira Extra Condensed:size=18',
-	--font = 'News Cycle:size=18',
-	--font = 'Gidugu:size=18',
-	--font = 'Chathura:size=18',
-	--font = 'Geo:size=18',
-	update_interval = 1,
+	update_interval = 0.1,
 	minimum_width = %WIDTH%,
 	maximum_width = %WIDTH%,
+	color0 = 'EEFFFF',
+	color1 = '556666',
+	color2 = '223333',
+	color3 = '333311',
+	-- i3 workspace switcher
+	template0 = '${color0}${font Monofett:size=18}${execpi 0.1'
+		  ..' ~/.dotfiles/scripts/i3-workspace.sh}${font}${color0}',
+	template1 = '${alignr}${color2}${battery}    ',
+	template2 = '${alignr}${execpi 1 ~/.dotfiles/scripts/get-playing-ampache.sh}    '
 };
 
 conky.text = [[
-     ${font Monofett:size=18}${execpi 1 ~/.dotfiles/scripts/i3-workspace.sh}${font} ${color}\
-${alignr}${color #333333}${battery}    \
-${color #666666}${time %A, %B %d}    ${color}${time %l:%M %p} \
+     ${template0}\
+${template2}\
+${color1}${time %A, %B %d}    ${color0}${time %l:%M %p} \
     ]];
