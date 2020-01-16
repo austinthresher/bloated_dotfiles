@@ -10,7 +10,7 @@
 #
 
 exec compton --daemon
-exec conky
+exec ~/.dotfiles/scripts/launch-conky.sh
 focus_follows_mouse no
 for_window [class=".*"] border pixel 0
 
