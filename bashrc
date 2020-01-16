@@ -3,10 +3,6 @@
 
 unset -f command_not_found_handle
 
-if [ "$TERM" == xterm -a ! -z "$VTE_VERSION" ]; then
-	export TERM=xterm-256color
-fi
-
 function launch_vim {
 	if [ -f "$(which nvim)" ]; then
 		$(which nvim) "$@"
