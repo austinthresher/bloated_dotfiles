@@ -21,7 +21,6 @@
 	set laststatus=2
 	set confirm
 	set modeline
-	set cursorline
 	set listchars=eol:$
 	set showbreak=↪\
 	set listchars+=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·

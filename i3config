@@ -12,12 +12,10 @@
 exec compton --daemon
 exec ~/.dotfiles/scripts/launch-conky.sh
 focus_follows_mouse no
-for_window [class=".*"] border pixel 2
+for_window [class=".*"] border pixel 1
 
+# launch-conky uses i3-msg to change this based on resolution
 gaps inner 24 
-gaps outer 12
-gaps bottom 64
-gaps top 16
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
