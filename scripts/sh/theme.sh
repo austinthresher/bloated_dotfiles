@@ -126,19 +126,19 @@ case "$COLORS" in
 esac
 
 case "$THEME" in
-  green)
-    export PROMPT_COLOR=$BASH_CYAN_FG
-    export TMUX_PRIMARY_FG=$TMUX_CYAN_FG
-    export TMUX_PRIMARY_BG=$TMUX_CYAN_BG
+  yellow)
+    export PROMPT_COLOR=$BASH_MAGENTA_FG
+    export TMUX_PRIMARY_FG=$TMUX_YELLOW_FG
+    export TMUX_PRIMARY_BG=$TMUX_YELLOW_BG
     export TMUX_ACCENT_FG=$TMUX_MAGENTA_FG
     export TMUX_ACCENT_BG=$TMUX_MAGENTA_BG
     ;;
   blue)
     export PROMPT_COLOR=$BASH_BLUE_FG
-    export TMUX_PRIMARY_FG=$TMUX_BLUE_FG
-    export TMUX_PRIMARY_BG=$TMUX_BLUE_BG
-    export TMUX_ACCENT_FG=$TMUX_YELLOW_FG
-    export TMUX_ACCENT_BG=$TMUX_YELLOW_BG
+    export TMUX_PRIMARY_FG=$TMUX_CYAN_FG
+    export TMUX_PRIMARY_BG=$TMUX_CYAN_BG
+    export TMUX_ACCENT_FG=$TMUX_BLUE_FG
+    export TMUX_ACCENT_BG=$TMUX_BLUE_BG
     ;;
   red)
     export PROMPT_COLOR=$BASH_RED_FG

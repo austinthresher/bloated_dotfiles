@@ -85,13 +85,13 @@ elif [ -z "$PLATFORM" ]; then
 			export COLORS=8
 			;;
 	esac
-	export THEME=green
+	export THEME=blue
 fi
 
 if [ -z "$PLATFORM" ]; then
 	export PLATFORM=unknown
 	export COLORS=0
-	export THEME=blue
+	export THEME=yellow
 fi
 
 source module.sh

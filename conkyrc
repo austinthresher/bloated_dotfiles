@@ -18,19 +18,21 @@ conky.config = {
 	update_interval = 0.1,
 	minimum_width = %WIDTH%,
 	maximum_width = %WIDTH%,
-	color0 = 'EEFFFF',
-	color1 = '556666',
-	color2 = '223333',
-	color3 = '333311',
+	color0 = 'fe8019', -- workspace active color
+	color1 = '282828', -- workspace inactive color
+	color2 = 'fabd2f', -- battery status
+	color3 = '8ec07c', -- song title
+	color4 = 'a89984', -- date
+	color5 = 'fbf1c7', -- time
 	-- i3 workspace switcher
 	template0 = '${color0}${font Monofett:size=18}${execpi 0.1'
 		  ..' ~/.dotfiles/scripts/i3-workspace.sh}${font}${color0}',
 	template1 = '${alignr}${color2}${battery}    ',
-	template2 = '${alignr}${execpi 1 ~/.dotfiles/scripts/get-playing-ampache.sh}    '
+	template2 = '${alignr}${color3}${execpi 1 ~/.dotfiles/scripts/get-playing-ampache.sh}    '
 };
 
 conky.text = [[
      ${template0}\
-${template2}\
-${color1}${time %A, %B %d}    ${color0}${time %l:%M %p} \
+${template2}     \
+${color4}${time %A, %B %d}        ${color5}${time %l:%M %p} \
     ]];
