@@ -72,22 +72,22 @@ case "$COLORS" in
     export TMUX_WHITE_BG="bg=colour246"
     ;;
   24)
-    export BASH_BLACK_FG="$(rgbfg 32 32 32)"
-    export BASH_BLACK_BG="$(rgbbg 16 16 16)"
-    export BASH_RED_FG="$(rgbfg 204 102 102)"
-    export BASH_RED_BG="$(rgbbg 115 32 32)"
-    export BASH_GREEN_FG="$(rgbfg 102 236 150)"
-    export BASH_GREEN_BG="$(rgbbg 64 115 80)"
-    export BASH_YELLOW_FG="$(rgbfg 150 150 102)"
-    export BASH_YELLOW_BG="$(rgbbg 115 115 32)"
-    export BASH_BLUE_FG="$(rgbfg 102 150 236)"
-    export BASH_BLUE_BG="$(rgbbg 64 80 115)"
-    export BASH_MAGENTA_FG="$(rgbfg 150 102 150)"
-    export BASH_MAGENTA_BG="$(rgbbg 115 32 115)"
-    export BASH_CYAN_FG="$(rgbfg 150 102 150)"
-    export BASH_CYAN_BG="$(rgbbg 32 115 115)"
-    export BASH_WHITE_FG="$(rgbfg 255 255 255)"
-    export BASH_WHITE_BG="$(rgbbg 240 240 240)"
+    export BASH_BLACK_FG="$(rgbfg 40 40 40)"
+    export BASH_BLACK_BG="$(rgbbg 146 131 116)"
+    export BASH_RED_FG="$(rgbfg 251 73 52)"
+    export BASH_RED_BG="$(rgbbg 204 36 29)"
+    export BASH_GREEN_FG="$(rgbfg 184 187 38)"
+    export BASH_GREEN_BG="$(rgbbg 152 151 26)"
+    export BASH_YELLOW_FG="$(rgbfg 250 189 47)"
+    export BASH_YELLOW_BG="$(rgbbg 215 153 33)"
+    export BASH_BLUE_FG="$(rgbfg 131 165 152)"
+    export BASH_BLUE_BG="$(rgbbg 69 133 136)"
+    export BASH_MAGENTA_FG="$(rgbfg 211 134 155)"
+    export BASH_MAGENTA_BG="$(rgbbg 177 98 134)"
+    export BASH_CYAN_FG="$(rgbfg 142 192 124)"
+    export BASH_CYAN_BG="$(rgbbg 104 157 106)"
+    export BASH_WHITE_FG="$(rgbfg 235 219 178)"
+    export BASH_WHITE_BG="$(rgbbg 168 153 132)"
     export TMUX_BLACK_FG="fg=#282828"
     export TMUX_BLACK_BG="bg=#928374"
     export TMUX_RED_FG="fg=#fb4934"
@@ -127,9 +127,9 @@ esac
 
 case "$THEME" in
   green)
-    export PROMPT_COLOR=$BASH_GREEN_FG
-    export TMUX_PRIMARY_FG=$TMUX_GREEN_FG
-    export TMUX_PRIMARY_BG=$TMUX_GREEN_BG
+    export PROMPT_COLOR=$BASH_CYAN_FG
+    export TMUX_PRIMARY_FG=$TMUX_CYAN_FG
+    export TMUX_PRIMARY_BG=$TMUX_CYAN_BG
     export TMUX_ACCENT_FG=$TMUX_MAGENTA_FG
     export TMUX_ACCENT_BG=$TMUX_MAGENTA_BG
     ;;
@@ -137,8 +137,8 @@ case "$THEME" in
     export PROMPT_COLOR=$BASH_BLUE_FG
     export TMUX_PRIMARY_FG=$TMUX_BLUE_FG
     export TMUX_PRIMARY_BG=$TMUX_BLUE_BG
-    export TMUX_ACCENT_FG=$TMUX_CYAN_FG
-    export TMUX_ACCENT_BG=$TMUX_CYAN_BG
+    export TMUX_ACCENT_FG=$TMUX_YELLOW_FG
+    export TMUX_ACCENT_BG=$TMUX_YELLOW_BG
     ;;
   red)
     export PROMPT_COLOR=$BASH_RED_FG

@@ -34,6 +34,11 @@ export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
 
+if [ ! -z "$TMUX" ]; then
+	export LD_LIBRARY_PATH=
+	export PKG_CONFIG_PATH=
+fi
+
 # Some configuration was easier with code generation. Generate those scripts:
 mkdir -p $HOME/.generated
 awk -f "$HOME/.dotfiles/scripts/awk/tmux-powerline-env.awk" > $HOME/.generated/tmux-powerline-env

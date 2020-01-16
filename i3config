@@ -213,6 +213,6 @@ client.background       #1D2021
 #   }
 # }
 
-bindsym Mod4+d exec "dmenu_run -nf '#A89984' -nb '#665C54' -sb '#D65D0E' -sf '#FBF1C7' -fn 'monospace-10' -p 'dmenu prompt &gt;'"
+bindsym Mod4+d exec "dmenu_run -nf '#A89984' -nb '#665C54' -sb '#D65D0E' -sf '#FBF1C7' -fn 'monospace-10' -p '>'"
 
 # bindsym Mod4+d exec --no-startup-id i3-dmenu-desktop
