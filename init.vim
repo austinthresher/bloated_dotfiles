@@ -86,9 +86,11 @@
 " }}}
 
 " Theme {{{
+	let g:gruvbox_italic=1
 	try
 		set termguicolors
 		colorscheme gruvbox
+
 	catch /.*/
 		try
 			colorscheme gruvbox
@@ -96,4 +98,6 @@
 			colorscheme blue
 		endtry
 	endtry
+	hi Normal ctermbg=None guibg=None
+	hi Folded ctermbg=None guibg=None cterm=bold gui=bold
 " }}}
