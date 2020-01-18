@@ -61,6 +61,7 @@ function set_term_colors {
 	fi
 }
 
+
 if [[ "$TERM" == *":"* ]]; then
 	export THEME="red"
 	PLATFORM_COLORS=${TERM%:*}
@@ -74,7 +75,11 @@ elif [ -z "$PLATFORM" ]; then
 			set_term_colors
 			;;
 		*gnu*)
-			export PLATFORM=linux
+			if [ -z "$WSL_DISTRO_NAME" ]; then
+				export PLATFORM=linux
+			else
+				export PLATFORM=wsl
+			fi
 			set_term_colors
 			;;
 		*)
@@ -83,6 +88,11 @@ elif [ -z "$PLATFORM" ]; then
 			;;
 	esac
 	export THEME=blue
+fi
+
+# Override above detection for WSL
+if [ ! -z "$WSL_DISTRO_NAME" ]; then
+	export PLATFORM=wsl
 fi
 
 if [ -z "$PLATFORM" ]; then
@@ -110,6 +120,12 @@ case "$PLATFORM" in
 		;;
 	linux)
 		load unicode
+		load set_title
+		load trap
+		load git
+		;;
+	wsl)
+		load ascii
 		load set_title
 		load trap
 		load git
