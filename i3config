@@ -9,13 +9,11 @@
 # layout, use the i3-config-wizard
 #
 
-exec compton --daemon
-exec ~/.dotfiles/scripts/launch-conky.sh
+# i3-helper uses i3-msg to set gaps based on res and launches conky and compton
+exec_always ~/.dotfiles/scripts/i3-helper.sh
 focus_follows_mouse no
 for_window [class=".*"] border pixel 1
 
-# launch-conky uses i3-msg to change this based on resolution
-gaps inner 24 
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
