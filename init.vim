@@ -4,9 +4,6 @@
 	set nocompatible
 	set encoding=utf-8
 	scriptencoding utf-8
-	set noicon
-	set notitle
-	set titleold=
 " }}}
 " vanilla autocommands {{{
 	autocmd!
@@ -27,13 +24,11 @@
 	set shiftround
 	set autoindent
 	set matchtime=1
-	set title
 	set hidden
 	set history=100
 	set equalalways
 	set eadirection=both
 	set tabpagemax=50
-	set showcmd
 	set showmode
 	set more
 	set ignorecase
@@ -50,10 +45,6 @@
 	set mouse=a
 " }}}
 " mappings {{{
-	" insert date
-	nnoremap <leader>d "=strftime("%b %d, %y")<cr>p
-	inoremap <leader>d <c-r>=strftime("%b %d, %y")<cr>
-
 	" quick buffer list and selection
 	nnoremap <leader>b :ls<cr>:b
 
@@ -77,7 +68,6 @@
 " list of plugins {{{
 	call plug#begin('~/.config/nvim/plugins')
 
-	" colorschemes
 	Plug 'haishanh/night-owl.vim'
 	Plug 'sainnhe/vim-color-forest-night'
 	Plug 'sickill/vim-monokai'
@@ -85,37 +75,14 @@
 	Plug 'altercation/vim-colors-solarized'
 	Plug 'dracula/vim'
 	Plug 'morhetz/gruvbox'
-
-	" style / visual tweaks
 	Plug 'luochen1990/rainbow'
 	Plug 'ryanoasis/vim-devicons'
-	Plug 'vim-scripts/errormarker.vim'
-	Plug 'unblevable/quick-scope'
-	Plug 'airblade/vim-gitgutter'
 	Plug 'itchyny/lightline.vim'
 	Plug 'mengelbrecht/lightline-bufferline'
 	Plug 'machakann/vim-highlightedyank'
-	Plug 'jaxbot/semantic-highlight.vim'
-	Plug 'thiagoalessio/rainbow_levels.vim'
-	Plug 'valloric/vim-indent-guides'
-
-	" documentation / help
-	Plug 'thinca/vim-ref' "TODO: test these two individually
+	Plug 'thinca/vim-ref'
 	Plug 'keith/investigate.vim'
 	Plug 'sheerun/vim-polyglot'
-
-	" movement / commands
-	Plug 'tpope/vim-repeat'
-	Plug 'tpope/vim-unimpaired'
-	Plug 'tpope/vim-rsi'
-	Plug 'tpope/vim-surround'
-	Plug 'tpope/vim-commentary'
-	Plug 'tpope/vim-characterize'
-	Plug 'tpope/vim-eunuch'
-	Plug 'tpope/vim-abolish'
-	Plug 'justinmk/vim-sneak'
-
-	" misc utility
 	Plug 'pbrisbin/vim-mkdir'
 	Plug 'tpope/vim-sleuth'
 	Plug 'tpope/vim-apathy'
@@ -123,47 +90,17 @@
 	Plug 'tpope/vim-endwise'
 	Plug 'jeetsukumaran/vim-indentwise'
 	Plug 'sgur/vim-editorconfig'
-	Plug 'valloric/listtoggle'
 	Plug 'tpope/vim-fugitive'
 	Plug 'ajh17/vimcompletesme'
-	Plug 'majutsushi/tagbar' " TODO: Decide between these two
 	Plug 'vim-scripts/taglist.vim'
 	Plug 'wvffle/vimterm'
 	Plug 'mattboehm/vim-unstack'
-
-	" TODO: make these play nice together or write something similar
-	Plug 'mattboehm/vim-accordion'
 	Plug 'justincampbell/vim-eighties'
-
-	" TODO: organize/test these
-	Plug 'ehamberg/vim-cute-python'
 	Plug 'bfrg/vim-cpp-modern'
 	Plug 'tbastos/vim-lua'
-	Plug 'skywind3000/vim-quickui'
 	Plug 'vim-scripts/ScrollColors'
-	Plug 'godlygeek/tabular'
-	Plug 'irrationalistic/vim-tasks'
-	Plug 'vim-scripts/json-formatter.vim'
 	Plug 'vitalk/vim-shebang'
-	Plug 'dkprice/vim-easygrep'
-	Plug 'amix/open_file_under_cursor.vim'
 	Plug 'lfv89/vim-interestingwords'
-
-	" TODO: test these
-	" Plug 'lfv89/vim-foldfocus'
-	" Plug 'thirtythreeforty/lessspace.vim'
-	" Plug 'metakirby5/codi.vim'
-	" Plug 'terryma/vim-multiple-cursors'
-	" Plug 'Shougo/defx.nvim'
-	" Plug 'tmux-plugins/vim-tmux-focus-events'
-	" Plug 'vim-voom/voom'
-	" Plug 'liuchengxu/vim-which-key'
-	" Plug 'mbbill/echofunc'
-	" Plug 'aaronbieber/vim-quicktask'
-	" Plug 'junegunn/vim-journal'
-	" Plug 'andrewradev/splitjoin.vim'
-	" Plug 'kana/vim-submode'
-	" Plug 'tommcdo/vim-lion'
 
 	call plug#end()
 " }}}
@@ -174,22 +111,15 @@
 	" vimcompletesme {{{
 		autocmd FileType vim let b:vcm_tab_complete = 'vim'
 	" }}}
-	" listtoggle {{{
-		let g:lt_location_list_toggle_map = '<leader>L'
-		let g:lt_quickfix_list_toggle_map = '<leader>l'
-	" }}}
 	" rainbow {{{
 		let g:rainbow_active = 1
-	" }}}
-	" quick-scope {{{
-		let g:qs_highlight_on_keys = ['f', 'F']
 	" }}}
 	" vimterm {{{
 		nnoremap <leader>T :call vimterm#toggle() <CR>
 		tnoremap <leader>T <C-\><C-n>:call vimterm#toggle() <CR>
 	" }}}
-	" tagbar {{{
-		nmap <leader>t :TagbarToggle<CR>
+	" taglist {{{
+		nmap <leader>t :TlistToggle<CR>
 	" }}}
 	" vim-eighties {{{
 		let g:eighties_enabled = 1
@@ -283,14 +213,6 @@
 		set showtabline=2
 		set noshowmode
 	" }}}
-	" semantic-highlight.vim {{{
-		nnoremap <leader>h :SemanticHighlightToggle<CR>
-		" leg s:semanticGUIColors = [ '#72d572', '#c5e1a5', '#e6ee9c', '#fff59d', '#ffe082', '#ffcc80', '#ffab91', '#bcaaa4', '#b0bec5', '#ffa726', '#ff8a65', '#f9bdbb', '#f9bdbb', '#f8bbd0', '#e1bee7', '#d1c4e9', '#ffe0b2', '#c5cae9', '#d0d9ff', '#b3e5fc', '#b2ebf2', '#b2dfdb', '#a3e9a4', '#dcedc8' , '#f0f4c3', '#ffb74d' ]
-		" let g:semanticTermColors = [28,1,2,3,4,5,6,7,25,9,10,34,12,13,14,15,16,125,124,19]
-	"}}}
-	" filestyle {{{
-"		let g:filestyle_ignore = ['text', 'tagbar', 'help']
-	" }}}
 	" rainbow_levels.vim {{{
 		nnoremap <leader>r :RainbowLevelsToggle<CR>
 		hi! RainbowLevel0 ctermbg=240 guibg=#585858
@@ -313,6 +235,8 @@
 	set background=dark
 	let g:gruvbox_italic=1
 	colorscheme gruvbox
-	highlight Normal ctermbg=NONE guibg=NONE
-	highlight Folded ctermbg=NONE guibg=NONE
+	if exists('$TMUX')
+		highlight Normal ctermbg=NONE guibg=NONE
+	endif
+	highlight Folded ctermbg=NONE guibg=NONE cterm=italic gui=italic
 " }}}
