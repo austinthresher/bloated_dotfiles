@@ -48,80 +48,135 @@ let g:fuzzyfinder = 'fzf'
 " keymap from scratch {{{
 source $HOME/.dotfiles/tabula.vim
 
+" NOTES ON KEYMAP CHOICES
+" =======================
 
-" Normal Mode Overview
-"	H, h, L, l		Move to {start,end} of {next,prev} word
-"	J, j, K, k		Move {down,up> a {paragraph,line}
-"	Alt+{h,j,k,l}		Scroll view (small)
-"	Alt+{J,K}		Scroll view (half page)
-"	Alt+{H,L}		{next,prev} buffer
-" 	C-h, C-l		Move to {start,end} of line
-" Not sure I like this one
-" 	C-j, C-k		New line {below,above} current line
-" What about insert / append before / after current word?
+" inclusive / exclusive operations should be a toggle or prefix
 
-" Insert Mode Overview
-" 	C-h, C-l		Move to {start,end} of line
-" 	Alt+{h,j,k,l}		Basic movement
-" 	Alt+{H,J,K,L}		Scroll view (small)
+" Operations that use 4 directions:
+"	insert / append before / after / above / below line
+"	navigating panes
+"
+" Operations that user 4 directions sometimes, but only 2 most times:
+"	character movement 
+"	view movement
 
-" Enter insert mode
-noremap <silent> <c-space> i
-noremap <silent> <esc> :
+" Operations that use 2 directions:
+"	start / end of line
+"	start / end of buffer
+"	start / end of screen
+"	indent / unindent
+"	next / previous tab or buffer
+"	start / end of next word
+"	end / start of prev word
+"	next / previous match
+"	insert / append before / after word (maybe exclusive / inclusive too?)
+"	jump to next / previous character
+"	increase / decrease value
 
-" Navigate to start of words
-noremap <silent> H B
-noremap <silent> l W
+" Keys that work well for 4 direction commands:
+"	h j k l
+"	w a s d
+"	up down left right
+"	pageup pagedown home end
 
-" Navigate to end of words
-noremap <silent> h gE
-noremap <silent> L E
+" Keys that work well for 2 direction commands:
+"	[ ]
+"	{ }
+"	( )
+"	< >
+"	- + (less / more)
+"	| _ (vert / horiz)
+"	n p ('next' 'prev')
+"	f b ('forward', 'backwards')
+"	a z (beginning / end of alphabet)
+"	, . (location, both punctuation)
+"	g ; (left and right of h and l)
+"	n m (location + almost alphabetic)
+"	q e (left and right of w in wasd)
+"	tab shift-tab
+"	- = (kind of awkward because of asymmetric shift key)
+"	c v (location)
 
-" Home / End 
-noremap <silent> <c-h> ^
-noremap <silent> <c-l> $
-inoremap <silent> <c-h> <c-o>^
-inoremap <silent> <c-l> <c-o>$
+" Using h j k l as 4 directions, with g and ; as extra side directions,
+" we can use Shift to increase the scope of a movement and Alt to combine
+" it with an append / insert operation.
 
-" Insert mode navigation
-inoremap <silent> <m-h> <c-o>h
-inoremap <silent> <m-l> <c-o>l
-inoremap <silent> <m-j> <c-o>j
-inoremap <silent> <m-k> <c-o>k
+"	G	start of prev word
+"	g	end of prev word
+"	;	start of next word
+"	:	end of next word
+"	h l	next / prev char
+"	j k	next / prev line
+"	J K	start / end of paragraph
+"	H L	start / end of line
+"	M-h	insert before char
+"	M-l	insert after char
+"	M-H	insert at start of line
+"	M-L	insert at end of line
+"	M-g	append at end of prev word
+"	M-G	insert at start of prev word
+"	M-;	insert at start of next word
+"	M-:	append at end of next word
+"	M-j	insert new line below current line
+"	M-k	insert new line above current line
+"	M-J	insert new line above current paragraph
+"	M-K	insert new line below current paragraph
 
-" Line navigation
-noremap <silent> j j
-noremap <silent> k k
+" In insert mode, alt + the above keys perform the cursor movement-related ops
 
-" Insert new blank line below / above
-noremap <silent> <c-j> o
-noremap <silent> <c-k> O
+" Esc to enter command mode
+noremap <silent><nowait>	<esc>	:
+inoremap <silent><nowait>	<esc>	<c-o>:
 
-" Next / prev blank line
-noremap <silent> J }
-noremap <silent> K {
+" Normal Mode cursor movement
+noremap <silent> <nowait>	n	B
+noremap <silent> <nowait>	N	gE
+noremap <silent> <nowait>	m	W
+noremap <silent> <nowait>	M	E
+noremap <silent> <nowait>	h	h
+noremap <silent> <nowait>	l	l
+noremap <silent> <nowait>	j	j
+noremap <silent> <nowait>	k	k
+noremap <silent> <nowait>	H	^
+noremap <silent> <nowait>	L	$
+noremap <silent> <nowait>	J	}
+noremap <silent> <nowait>	K	{
 
-" Switch buffer
-noremap <silent> <m-s-h> :bp<cr>
-noremap <silent> <m-s-l> :bn<cr>
+" Normal Mode cursor movement + switch to Insert Mode
+noremap <silent> <nowait>	<M-h>	i
+noremap <silent> <nowait>	<M-l>	a
+noremap <silent> <nowait>	<M-j>	o
+noremap <silent> <nowait>	<M-k>	O
+noremap <silent> <nowait>	<M-H>	I
+noremap <silent> <nowait>	<M-L>	A
+noremap <silent> <nowait>	<M-J>	}o
+noremap <silent> <nowait>	<M-K>	{O
+noremap <silent> <nowait>	<M-n>	Wi
+noremap <silent> <nowait>	<M-N>	Ea
+noremap <silent> <nowait>	<M-m>	gEa
+noremap <silent> <nowait>	<M-M>	Bi
 
-" Scroll view
-noremap <silent> <m-s-k> <c-u>
-noremap <silent> <m-s-j> <c-d>
-noremap <silent> <m-k> <c-y>
-noremap <silent> <m-j> <c-e>
-noremap <silent> <m-h> 10zh
-noremap <silent> <m-l> 10zl
+" Insert Mode cursor movement
+inoremap <silent> <nowait>	<M-n>	<C-o>B
+inoremap <silent> <nowait>	<M-N>	<C-o>gE
+inoremap <silent> <nowait>	<M-m>	<C-o>W
+inoremap <silent> <nowait>	<M-M>	<C-o>E
+inoremap <silent> <nowait>	<M-h>	<C-o>h
+inoremap <silent> <nowait>	<M-l>	<C-o>l
+inoremap <silent> <nowait>	<M-j>	<C-o>j
+inoremap <silent> <nowait>	<M-k>	<C-o>k
+inoremap <silent> <nowait>	<M-H>	<C-o>^
+inoremap <silent> <nowait>	<M-L>	<C-o>$
+inoremap <silent> <nowait>	<M-J>	<C-o>}
+inoremap <silent> <nowait>	<M-K>	<C-o>{
 
-inoremap <silent> <m-s-k> <c-o><c-y>
-inoremap <silent> <m-s-j> <c-o><c-e>
-inoremap <silent> <m-s-h> <c-o>10zh
-inoremap <silent> <m-s-l> <c-o>10zl
+" Leave insert mode (and perform pending ops) TODO: how to make these two different
+inoremap <silent> <nowait>	<c-d>	<esc>
 
-" Leave insert mode; pick one of these to use
-inoremap <silent> <c-space> <esc> 
-inoremap <silent> <c-c> <esc>
-inoremap <silent> <c-d> <esc>
+" Leave insert mode (cancel pending ops)
+inoremap <silent> <nowait>	<c-c>	<esc>
+
 
 " }}}
 

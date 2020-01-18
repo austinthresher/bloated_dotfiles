@@ -1,4 +1,5 @@
-" Clear all keymaps for all modes except printable chars in insert mode
+" Clear all keymaps for all modes except printable chars in insert mode.
+" This isn't exhaustive, but seems to cover everything I've tried
 let keys = [
 	\ '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
 	\ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
@@ -10,14 +11,20 @@ let keys = [
 	\ 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?'
 	\ ]
 
+let prefixes = [
+	\ '', 'g', '<c-w>', 'z', '<leader>'
+	\ ]
+
 let n = "<nop>"
 
 for k in keys
-	execute "noremap ".k." \<nop>" 
-	execute "noremap <c-".k."> \<nop>"
-	execute "noremap <m-".k."> \<nop>"
-	execute "inoremap <c-".k."> \<nop>"
-	execute "inoremap <m-".k."> \<nop>"
+	for p in prefixes
+		execute "noremap ".p.k." \<nop>" 
+		execute "noremap ".p."<c-".k."> \<nop>"
+		execute "noremap ".p."<m-".k."> \<nop>"
+		execute "inoremap ".p."<c-".k."> \<nop>"
+		execute "inoremap ".p."<m-".k."> \<nop>"
+	endfor
 endfor
 
 let special_keys = [
@@ -28,13 +35,15 @@ let special_keys = [
 	\ ]
 
 for k in special_keys
-	execute "noremap <".k."> \<nop>"
-	execute "noremap <c-".k."> \<nop>"
-	execute "noremap <m-".k."> \<nop>"
-	execute "noremap <s-".k."> \<nop>"
-	execute "inoremap <c-".k."> \<nop>"
-	execute "inoremap <m-".k."> \<nop>"
-	execute "inoremap <s-".k."> \<nop>"
+	for p in prefixes
+		execute "noremap ".p."<".k."> \<nop>"
+		execute "noremap ".p."<c-".k."> \<nop>"
+		execute "noremap ".p."<m-".k."> \<nop>"
+		execute "noremap ".p."<s-".k."> \<nop>"
+		execute "inoremap ".p."<c-".k."> \<nop>"
+		execute "inoremap ".p."<m-".k."> \<nop>"
+		execute "inoremap ".p."<s-".k."> \<nop>"
+	endfor
 endfor
 
 " Congrats- now you can't do anything!
