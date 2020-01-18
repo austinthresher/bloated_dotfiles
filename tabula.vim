@@ -1,116 +1,40 @@
-" Clear Normal Mode Keymaps {{{
-	" TODO: Ctrl and Alt versions
-	nnoremap <F1> <nul>
-	nnoremap <F2> <nul>
-	nnoremap <F3> <nul>
-	nnoremap <F4> <nul>
-	nnoremap <F5> <nul>
-	nnoremap <F6> <nul>
-	nnoremap <F7> <nul>
-	nnoremap <F8> <nul>
-	nnoremap <F9> <nul>
-	nnoremap <F10> <nul>
-	nnoremap <F11> <nul>
-	nnoremap <F12> <nul>
-	nnoremap 0 <nul>
-	nnoremap 1 <nul>
-	nnoremap 2 <nul>
-	nnoremap 3 <nul>
-	nnoremap 4 <nul>
-	nnoremap 5 <nul>
-	nnoremap 6 <nul>
-	nnoremap 7 <nul>
-	nnoremap 8 <nul>
-	nnoremap 9 <nul>
-	nnoremap ! <nul>
-	nnoremap @ <nul>
-	nnoremap # <nul>
-	nnoremap $ <nul>
-	nnoremap % <nul>
-	nnoremap ^ <nul>
-	nnoremap & <nul>
-	nnoremap * <nul>
-	nnoremap ( <nul>
-	nnoremap ) <nul>
-	nnoremap - <nul>
-	nnoremap _ <nul>
-	nnoremap + <nul>
-	nnoremap = <nul>
-	nnoremap \ <nul>
-	nnoremap \| <nul>
-	nnoremap ~ <nul>
-	nnoremap ` <nul>
-	nnoremap { <nul>
-	nnoremap } <nul>
-	nnoremap [ <nul>
-	nnoremap ] <nul>
-	nnoremap ; <nul>
-	nnoremap ; <nul>
-	nnoremap < <nul>
-	nnoremap > <nul>
-	nnoremap , <nul>
-	nnoremap . <nul>
-	nnoremap <Space> <nul>
-	nnoremap <CR> <nul>
-	nnoremap <Backspace> <nul>
-	nnoremap <Esc> <nul>
-	nnoremap <Tab> <nul>
-	nnoremap <Ins> <nul>
-	nnoremap <PageDown> <nul>
-	nnoremap <PageUp> <nul>
-	nnoremap <Del> <nul>
-	nnoremap a <nul>
-	nnoremap b <nul>
-	nnoremap c <nul>
-	nnoremap d <nul>
-	nnoremap e <nul>
-	nnoremap f <nul>
-	nnoremap g <nul>
-	nnoremap h <nul>
-	nnoremap i <nul>
-	nnoremap j <nul>
-	nnoremap k <nul>
-	nnoremap l <nul>
-	nnoremap m <nul>
-	nnoremap n <nul>
-	nnoremap o <nul>
-	nnoremap p <nul>
-	nnoremap q <nul>
-	nnoremap r <nul>
-	nnoremap s <nul>
-	nnoremap t <nul>
-	nnoremap u <nul>
-	nnoremap v <nul>
-	nnoremap w <nul>
-	nnoremap x <nul>
-	nnoremap y <nul>
-	nnoremap z <nul>
-	nnoremap A <nul>
-	nnoremap B <nul>
-	nnoremap C <nul>
-	nnoremap D <nul>
-	nnoremap E <nul>
-	nnoremap F <nul>
-	nnoremap G <nul>
-	nnoremap H <nul>
-	nnoremap I <nul>
-	nnoremap J <nul>
-	nnoremap K <nul>
-	nnoremap L <nul>
-	nnoremap M <nul>
-	nnoremap N <nul>
-	nnoremap O <nul>
-	nnoremap P <nul>
-	nnoremap Q <nul>
-	nnoremap R <nul>
-	nnoremap S <nul>
-	nnoremap T <nul>
-	nnoremap U <nul>
-	nnoremap V <nul>
-	nnoremap W <nul>
-	nnoremap X <nul>
-	nnoremap Y <nul>
-	nnoremap Z <nul>
-" }}}
+" Clear all keymaps for all modes except printable chars in insert mode
+let keys = [
+	\ '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
+	\ '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+',
+	\ 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '['. ']', '\\',
+	\ 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\|',
+	\ 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', "'",
+	\ 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"',
+	\ 'z', 'x', 'c', 'v', 'b', 'n', 'm', '.', ',', '/',
+	\ 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?'
+	\ ]
 
+let n = "<nop>"
 
+for k in keys
+	execute "noremap ".k." \<nop>" 
+	execute "noremap <c-".k."> \<nop>"
+	execute "noremap <m-".k."> \<nop>"
+	execute "inoremap <c-".k."> \<nop>"
+	execute "inoremap <m-".k."> \<nop>"
+endfor
+
+let special_keys = [
+	\ 'Esc', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7',
+	\ 'F8', 'F9', 'F10', 'F11', 'F12', 'insert', 'del',
+	\ 'home', 'end', 'pageup', 'pagedown', 'enter', 'tab',
+	\ 'up', 'down', 'left', 'right', 'nl'
+	\ ]
+
+for k in special_keys
+	execute "noremap <".k."> \<nop>"
+	execute "noremap <c-".k."> \<nop>"
+	execute "noremap <m-".k."> \<nop>"
+	execute "noremap <s-".k."> \<nop>"
+	execute "inoremap <c-".k."> \<nop>"
+	execute "inoremap <m-".k."> \<nop>"
+	execute "inoremap <s-".k."> \<nop>"
+endfor
+
+" Congrats- now you can't do anything!
