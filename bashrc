@@ -14,12 +14,13 @@ function launch_vim {
 }
 
 alias ls='ls -F'
-alias grep='grep -n'
+alias rgrep='grep -Iirn'
 alias more='less'
 alias nvim='launch_vim'
 alias vim='launch_vim'
 alias vi='launch_vim'
 alias gdb='gdb -q'
+alias preview='feh --scale -d . &'
 
 # Pass the platform and color support alongside TERM
 alias ssh='env TERM="$PLATFORM:$COLORS:$TERM" ssh -t'

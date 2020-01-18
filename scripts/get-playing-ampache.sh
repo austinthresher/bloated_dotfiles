@@ -7,9 +7,10 @@
 # string to the first quotation mark, leaving us with just the title and artist
 read -d '' awk_script << 'EOF'
 {
-	match(\$0, "^ *[0-9]x[0-9a-fA-F]* \\".* \\| ")
-	trim_from_start = index($0, "\\"")
-	print(substr($0, RSTART+trim_from_start, RLENGTH-3-trim_from_start))
+#	match(\$0, "^ *[0-9]x[0-9a-fA-F]* \\".* \\\| ")
+#	trim_from_start = index($0, "\\"")
+#	print(substr($0, RSTART+trim_from_start, RLENGTH-3-trim_from_start))
+	print("ampache")
 }
 EOF
 
