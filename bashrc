@@ -142,3 +142,5 @@ load ps1
 if require set_title; then
 	set_title $(whoami)@$(hostname)
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
