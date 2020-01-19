@@ -9,11 +9,20 @@ compton --daemon
 __RESOLUTION=$(xrandr | grep '*' | awk '{print $1}')
 __HEIGHT=${__RESOLUTION##*x}
 __WIDTH=${__RESOLUTION%%x*}
-cat "$HOME/.conkyrc" \
-    | sed \
-        -e "s@%WIDTH%@$__WIDTH@g" \
-        -e "s@%HEIGHT%@$__HEIGHT@g" \
-    > "$HOME/.generated/conky.conf"
+if [ -d "/sys/class/power_supply" ]; then
+    cat "$HOME/.conkyrc" \
+        | sed \
+            -e "s@%WIDTH%@$__WIDTH@g" \
+            -e "s@%HEIGHT%@$__HEIGHT@g" \
+            -e '33i${template1}    \\' \
+        > "$HOME/.generated/conky.conf"
+else
+    cat "$HOME/.conkyrc" \
+        | sed \
+            -e "s@%WIDTH%@$__WIDTH@g" \
+            -e "s@%HEIGHT%@$__HEIGHT@g" \
+        > "$HOME/.generated/conky.conf"
+fi
 
 if [ "$__HEIGHT" -gt 1080 -a "$__WIDTH" -gt 1920 ]; then
     conky -y 32 --config="$HOME/.generated/conky.conf" --daemonize
