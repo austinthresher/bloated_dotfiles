@@ -44,17 +44,37 @@ set mouse=a
 
 " }}}
 
-" Plugins {{{ 
+" Plugins {{{
 
 call plug#begin('~/.config/nvim/plugins')
 
 " Pretty colors
 Plug 'morhetz/gruvbox'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'noahfrederick/vim-hemisu'
+Plug 'connorholyday/vim-snazzy'
+Plug 'vim-scripts/phd'
+Plug 'vim-scripts/pyte'
+Plug 'vim-scripts/twilight'
+Plug 'haishanh/night-owl.vim'
+Plug 'liuchengxu/space-vim-theme'
+Plug 'jacoborus/tender'
+Plug 'colepeters/spacemacs-theme.vim'
+Plug 'nielsmadan/harlequin'
+Plug 'aonemd/kuroi.vim'
+Plug 'nequo/vim-allomancer'
+Plug 'zanglg/nova.vim'
+Plug 'sainnhe/vim-color-forest-night'
+Plug 'alessandroyorba/alduin'
+Plug 'srcery-colors/srcery-vim'
+Plug 'nightsense/snow'
+Plug 'shinchu-lightline-gruvbox.vim'
+Plug 'phanviet/vim-monokai-pro'
 
 " Fuzzy finder
-Plug 'junegunn/fzf', { 
+Plug 'junegunn/fzf', {
 	\ 'dir': '~/.fzf',
-	\ 'do': './install --all' 
+	\ 'do': './install --all'
 	\ }
 Plug 'junegunn/fzf.vim'
 " Simple autocomplete
@@ -103,6 +123,26 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'gcmt/wildfire.vim'
 " rainbow parenthesis
 Plug 'luochen1990/rainbow'
+" Open files at the same place they were left
+Plug 'farmergreg/vim-lastplace'
+" i3 config syntax
+Plug 'potatoesmaster/i3-vim-syntax'
+" Automatically handle annoying swapfile messages
+Plug 'gioele/vim-autoswap'
+" Look up documentation on the cursor word with gK
+Plug 'keith/investigate.vim'
+" Automatically mkdir if path doesn't exist
+Plug 'datawraith/auto_mkdir'
+" Adds :NextColorScheme and :PrevColorScheme
+Plug 'xolox/vim-colorscheme-switcher'
+" Octave syntax highlighting
+Plug 'jvirtanen/vim-octave'
+" Show <leader> map descriptions with <leader>fml
+Plug 'ktonga/vim-follow-my-lead'
+" Show errors in realtime
+Plug 'dense-analysis/ale'
+" Open a visual selection in a split or resize split to selection \gr \gss
+Plug 'wellle/visual-split.vim'
 
 call plug#end()
 
@@ -112,7 +152,7 @@ let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
 function! FloatingFZF()
 	let width = float2nr(&columns * 0.9)
 	let height = float2nr(&lines * 0.6)
-	let opts = { 
+	let opts = {
 		\ 'relative': 'editor',
 		\ 'row': (&lines - height) / 2,
 		\ 'col': (&columns - width) / 2,
@@ -138,6 +178,20 @@ let g:qs_lazy_highlight = 1
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
+let g:neodark#terminal_transparent = 1
+let g:SnazzyTransparent = 1
+
+
+let g:lightline = {
+	\ 'colorscheme': 'gruvbox'
+	"\ 'colorscheme': 'snow_light'
+	"\ 'colorscheme': 'snow_dark'
+	"\ 'colorscheme': 'srcery'
+	"\ 'colorscheme': 'forest_night'
+	"\ 'colorscheme': 'tender'
+	"\ 'colorscheme': 'neodark'
+	"\ 'colorscheme': 'snazzy'
+	\ }
 
 " Tag List
 nnoremap <leader>T :TlistToggle<cr>
