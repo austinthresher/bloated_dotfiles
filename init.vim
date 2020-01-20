@@ -68,7 +68,7 @@ Plug 'sainnhe/vim-color-forest-night'
 Plug 'alessandroyorba/alduin'
 Plug 'srcery-colors/srcery-vim'
 Plug 'nightsense/snow'
-Plug 'shinchu-lightline-gruvbox.vim'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'phanviet/vim-monokai-pro'
 
 " Fuzzy finder
@@ -77,10 +77,14 @@ Plug 'junegunn/fzf', {
 	\ 'do': './install --all'
 	\ }
 Plug 'junegunn/fzf.vim'
+" lightline statusline
+Plug 'itchyny/lightline.vim'
 " Simple autocomplete
 Plug 'ajh17/vimcompletesme'
 " Adds a lot of useful next / prev maps
 Plug 'tpope/vim-unimpaired'
+" Adds cs and ds commands to change / delete surrounding chars
+Plug 'tpope/vim-surround'
 " Repeat plugin commands with .
 Plug 'tpope/vim-repeat'
 " Language megapack
@@ -94,7 +98,7 @@ Plug 'tpope/vim-sleuth'
 " Unix filesystem tools like :Rename and :SudoWrite
 Plug 'tpope/vim-eunuch'
 " Split or join a block with gS and gJ
-Plug 'andrewadev/splitjoin.vim'
+Plug 'andrewradev/splitjoin.vim'
 " Automatic tag management
 Plug 'ludovicchabant/vim-gutentags'
 " Navigate through indented areas with [- [+ [= ]- ]+ ]=
@@ -133,8 +137,6 @@ Plug 'gioele/vim-autoswap'
 Plug 'keith/investigate.vim'
 " Automatically mkdir if path doesn't exist
 Plug 'datawraith/auto_mkdir'
-" Adds :NextColorScheme and :PrevColorScheme
-Plug 'xolox/vim-colorscheme-switcher'
 " Octave syntax highlighting
 Plug 'jvirtanen/vim-octave'
 " Show <leader> map descriptions with <leader>fml
@@ -236,3 +238,8 @@ else
 endif
 
 " }}}
+
+" Experimental
+
+set spelllang=en_us
+nnoremap <leader>s :set spell!<cr>
