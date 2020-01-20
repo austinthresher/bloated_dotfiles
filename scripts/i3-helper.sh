@@ -6,10 +6,11 @@ killall -q compton -9
 killall -q conky -9
 
 compton --daemon
-__RESOLUTION=$(xrandr | grep '*' | awk '{print $1}')
+__RESOLUTION=$(xrandr | head -n 1 | sed 's/.*current \([0-9]*\) x \([0-9]*\).*$/\1x\2/')
 __HEIGHT=${__RESOLUTION##*x}
 __WIDTH=${__RESOLUTION%%x*}
-if [ -d "/sys/class/power_supply" ]; then
+echo "$__RESOLUTION"
+if [ -d "/sys/class/power_supply/BAT*" ]; then
     cat "$HOME/.conkyrc" \
         | sed \
             -e "s@%WIDTH%@$__WIDTH@g" \

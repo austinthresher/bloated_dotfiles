@@ -12,5 +12,4 @@ read -d '' awk_script << 'EOF'
 	print(substr($0, RSTART+trim_from_start, RLENGTH-10-trim_from_start))
 }
 EOF
-
-xwininfo -tree -root | grep " | Ampache" | tail -n 1 | gawk "$awk_script"
+xwininfo -tree -root | grep " | Ampache" | tail -n 1 | awk "$awk_script"
