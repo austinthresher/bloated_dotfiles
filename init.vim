@@ -139,12 +139,12 @@ Plug 'keith/investigate.vim'
 Plug 'datawraith/auto_mkdir'
 " Octave syntax highlighting
 Plug 'jvirtanen/vim-octave'
-" Show <leader> map descriptions with <leader>fml
-Plug 'ktonga/vim-follow-my-lead'
 " Show errors in realtime
 Plug 'dense-analysis/ale'
 " Open a visual selection in a split or resize split to selection \gr \gss
 Plug 'wellle/visual-split.vim'
+" Autocorrect common typos (this probably slows down loading a lot)
+Plug 'panozzaj/vim-autocorrect'
 
 call plug#end()
 
@@ -203,14 +203,10 @@ nnoremap <leader>g :Ag<cr>
 nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>w :Lines<cr>
 nnoremap <leader>t :Tags<cr>
+nnoremap <leader>C :Colors<cr>
 
 " Quick reload of vimrc
 nnoremap <leader>R :source $MYVIMRC<cr>
-" Makes testing plugins faster
-nnoremap <leader>+Pi :PlugInstall<cr>
-nnoremap <leader>+Pu :PlugUpdate<cr>
-nnoremap <leader>+Pc :PlugClean<cr>
-
 
 
 " Theme {{{
@@ -243,3 +239,42 @@ endif
 
 set spelllang=en_us
 nnoremap <leader>s :set spell!<cr>
+
+" Keymap Summary
+" ==============
+"	ds      Delete Surround
+"	cs      Change Surround
+"	ys      surround text object ('you surround')
+"	S       surround (visual mode)
+"	\R      :source $MYVIMRC
+"	\T      :TlistToggle
+"	\f      :Files
+"	\g      :Ag
+"	\b      :Buffers
+"	\w      :Lines
+"	\t      :Tags
+"	\C      :Colors
+"	[a      :previous
+"	]a      :next
+"	[A      :first
+"	]A      :last
+"	[b      :bprevious
+"	]b      :bnext
+"	[B      :bfirst
+"	]B      :blast
+"	[l      :lprevious
+"	]l      :lnext
+"	[L      :lfirst
+"	]L      :llast
+"	[<C-L>* :lpfile
+"	]<C-L>* :lnfile
+"	[q      :cprevious
+"	]q      :cnext
+"	[Q      :cfirst
+"	]Q      :clast
+"	[t      :tprevious
+"	]t      :tnext
+"	[T      :tfirst
+"	]T      :tlast
+"	[<C-T>  :ptprevious
+"	]<C-T>  :ptnext
