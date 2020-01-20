@@ -101,8 +101,6 @@ Plug 'justinmk/vim-syntax-extra'
 Plug 'unblevable/quick-scope'
 " Visualize the region of text copied
 Plug 'machakann/vim-highlightedyank'
-" Automatically show completions
-Plug 'vim-scripts/AutoComplPop'
 " Show open buffers in statusline
 Plug 'bling/vim-bufferline'
 " Better lookups for K
@@ -129,6 +127,14 @@ Plug 'jvirtanen/vim-octave'
 Plug 'wellle/visual-split.vim'
 " Autocorrect common typos (this probably slows down loading a lot)
 Plug 'panozzaj/vim-autocorrect'
+" More typo help, see if one of these is better than the other
+Plug 'chip/vim-fat-finger'
+" Call gofmt on save of .go files
+Plug 'tweekmonster/gofmt.vim'
+" Show a visual indicator of window position in Buffers
+Plug 'gcavallanti/vim-noscrollbar'
+" Quick drop-down terminal
+Plug 'Lenovsky/nuake'
 
 call plug#end()
 
@@ -158,21 +164,32 @@ command! -bang -nargs=? -complete=dir Files
 
 autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
+" Gutentags
 set statusline+=%{gutentags#statusline()}
 let g:gutentags_ctags_tagfile='.tags'
+" Nuake
+let g:nuake_position = 'top'
+" QuickShot
 let g:qs_highlight_on_keys = ['f', 'F']
 let g:qs_lazy_highlight = 1
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
+" Theme flags
 let g:srcery_italic = 1
-let g:srcery_transparent_background = 1
 let g:gruvbox_italic=1
+if exists('$TMUX')
+	let g:srcery_transparent_background = 1
+endif
 
-let g:lightline = {
-	"\ 'colorscheme': 'gruvbox'
-	\ 'colorscheme': 'srcery'
-	\ }
+
+" Nuake quick-terminal toggle with Ctrl+Enter
+nnoremap <c-j> :Nuake<cr>
+inoremap <c-j> <c-\><c-n>:Nuake<cr>
+tnoremap <c-j> <c-\><c-n>:Nuake<cr>
+" Navigate out of terminal mode more easily
+tnoremap <esc> <c-\><c-n>
+tnoremap <c-w> <c-\><c-n><c-w>
 
 " Tag List
 nnoremap <leader>T :TlistToggle<cr>
@@ -183,15 +200,19 @@ nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>w :Lines<cr>
 nnoremap <leader>t :Tags<cr>
 nnoremap <leader>C :Colors<cr>
-
 " Quick reload of vimrc
 nnoremap <leader>R :source $MYVIMRC<cr>
 " Toggle spellcheck
 nnoremap <leader>s :set spell!<cr>
-
+" Quickly close a window
+nnoremap <leader>q :q<cr>
 " Theme {{{
 
 try
+	let g:lightline = {
+		"\ 'colorscheme': 'gruvbox'
+		\ 'colorscheme': 'srcery'
+		\ }
 	set termguicolors
 	colorscheme srcery
 
@@ -218,6 +239,8 @@ endif
 " ==============
 "	\R              :source $MYVIMRC
 " 	\s              toggle spellcheck
+" Nuake Terminal
+" 	Ctrl-Enter      Toggle terminal
 " Surround
 "	ds              Delete Surround
 "	cs              Change Surround
