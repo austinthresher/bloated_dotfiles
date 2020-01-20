@@ -41,6 +41,8 @@ set backspace=indent,eol,start
 set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 " Enable the mouse
 set mouse=a
+" Set US English for spellcheck
+set spelllang=en_us
 
 " }}}
 
@@ -50,26 +52,12 @@ call plug#begin('~/.config/nvim/plugins')
 
 " Pretty colors
 Plug 'morhetz/gruvbox'
-Plug 'KeitaNakamura/neodark.vim'
-Plug 'noahfrederick/vim-hemisu'
-Plug 'connorholyday/vim-snazzy'
-Plug 'vim-scripts/phd'
+Plug 'shinchu/lightline-gruvbox.vim'
 Plug 'vim-scripts/pyte'
-Plug 'vim-scripts/twilight'
 Plug 'haishanh/night-owl.vim'
 Plug 'liuchengxu/space-vim-theme'
-Plug 'jacoborus/tender'
-Plug 'colepeters/spacemacs-theme.vim'
-Plug 'nielsmadan/harlequin'
-Plug 'aonemd/kuroi.vim'
-Plug 'nequo/vim-allomancer'
-Plug 'zanglg/nova.vim'
-Plug 'sainnhe/vim-color-forest-night'
 Plug 'alessandroyorba/alduin'
 Plug 'srcery-colors/srcery-vim'
-Plug 'nightsense/snow'
-Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'phanviet/vim-monokai-pro'
 
 " Fuzzy finder
 Plug 'junegunn/fzf', {
@@ -97,8 +85,6 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'tpope/vim-sleuth'
 " Unix filesystem tools like :Rename and :SudoWrite
 Plug 'tpope/vim-eunuch'
-" Split or join a block with gS and gJ
-Plug 'andrewradev/splitjoin.vim'
 " Automatic tag management
 Plug 'ludovicchabant/vim-gutentags'
 " Navigate through indented areas with [- [+ [= ]- ]+ ]=
@@ -139,8 +125,6 @@ Plug 'keith/investigate.vim'
 Plug 'datawraith/auto_mkdir'
 " Octave syntax highlighting
 Plug 'jvirtanen/vim-octave'
-" Show errors in realtime
-Plug 'dense-analysis/ale'
 " Open a visual selection in a split or resize split to selection \gr \gss
 Plug 'wellle/visual-split.vim'
 " Autocorrect common typos (this probably slows down loading a lot)
@@ -150,6 +134,7 @@ call plug#end()
 
 " }}}
 
+" From FZF example configs, opens FZF in floating window
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
 function! FloatingFZF()
 	let width = float2nr(&columns * 0.9)
@@ -180,19 +165,13 @@ let g:qs_lazy_highlight = 1
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
-let g:neodark#terminal_transparent = 1
-let g:SnazzyTransparent = 1
-
+let g:srcery_italic = 1
+let g:srcery_transparent_background = 1
+let g:gruvbox_italic=1
 
 let g:lightline = {
-	\ 'colorscheme': 'gruvbox'
-	"\ 'colorscheme': 'snow_light'
-	"\ 'colorscheme': 'snow_dark'
-	"\ 'colorscheme': 'srcery'
-	"\ 'colorscheme': 'forest_night'
-	"\ 'colorscheme': 'tender'
-	"\ 'colorscheme': 'neodark'
-	"\ 'colorscheme': 'snazzy'
+	"\ 'colorscheme': 'gruvbox'
+	\ 'colorscheme': 'srcery'
 	\ }
 
 " Tag List
@@ -207,74 +186,89 @@ nnoremap <leader>C :Colors<cr>
 
 " Quick reload of vimrc
 nnoremap <leader>R :source $MYVIMRC<cr>
-
+" Toggle spellcheck
+nnoremap <leader>s :set spell!<cr>
 
 " Theme {{{
 
-let g:gruvbox_italic=1
 try
 	set termguicolors
-	colorscheme gruvbox
+	colorscheme srcery
 
 catch /.*/
 	try
-		colorscheme gruvbox
+		colorscheme srcery
 	catch /.*/
 		colorscheme blue
 	endtry
 endtry
+
 " Use a transparent background for tmux, and make folds blend in so
-" that the status bar and splits are easiser to identify
+" that the status bar and splits are easier to identify
 if exists('$TMUX')
 	hi Normal ctermbg=None guibg=None
 	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 else
 	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
-	"hi Folded ctermbg=237 guibg='#3c3836' cterm=italic gui=italic
 endif
 
 " }}}
 
-" Experimental
-
-set spelllang=en_us
-nnoremap <leader>s :set spell!<cr>
-
 " Keymap Summary
 " ==============
-"	ds      Delete Surround
-"	cs      Change Surround
-"	ys      surround text object ('you surround')
-"	S       surround (visual mode)
-"	\R      :source $MYVIMRC
-"	\T      :TlistToggle
-"	\f      :Files
-"	\g      :Ag
-"	\b      :Buffers
-"	\w      :Lines
-"	\t      :Tags
-"	\C      :Colors
-"	[a      :previous
-"	]a      :next
-"	[A      :first
-"	]A      :last
-"	[b      :bprevious
-"	]b      :bnext
-"	[B      :bfirst
-"	]B      :blast
-"	[l      :lprevious
-"	]l      :lnext
-"	[L      :lfirst
-"	]L      :llast
-"	[<C-L>* :lpfile
-"	]<C-L>* :lnfile
-"	[q      :cprevious
-"	]q      :cnext
-"	[Q      :cfirst
-"	]Q      :clast
-"	[t      :tprevious
-"	]t      :tnext
-"	[T      :tfirst
-"	]T      :tlast
-"	[<C-T>  :ptprevious
-"	]<C-T>  :ptnext
+"	\R              :source $MYVIMRC
+" 	\s              toggle spellcheck
+" Surround
+"	ds              Delete Surround
+"	cs              Change Surround
+"	ys              Surround text object ('you surround')
+"	S               Surround (visual mode)
+" TagList
+"	\T              Toggle taglist
+" FZF
+"	\f              Find file
+"	\g              Grep
+"	\b              Select buffer
+"	\w              Find in open buffers
+"	\t              Find in tags
+"	\C              List of colorschemes
+" Wildfire
+"	Enter           Increase selection area
+"	Bksp            Decrease selection area
+" Visual Split
+"	<C-w>gr         Resize split to visual selection
+"	<C-w>gss        Split out visual selection
+"	<C-w>gsa        Split out visual selection above
+"	<C-w>gsb        Split out visual selection below
+" IndentWise
+"	[-              Previous block with less indentation
+"	[+              Previous block with more indentation
+"	[=              Previous block with same indentation
+"	]-              Next block with less indentation
+"	]+              Next block with more indentation
+"	]=              Next block with same indentation
+" Unimpaired
+"	[a              Previous file in arglist
+"	]a              Next file in arglist
+"	[A              First file in arglist
+"	]A              Last file in arglist
+"	[b              Previous buffer
+"	]b              Next buffer
+"	[B              First buffer
+"	]B              Last buffer
+"	[l              Previous location list entry
+"	]l              Next location list entry
+"	[L              First location list entry
+"	]L              Last location list entry
+"	[<C-L>*         Previous file in location list
+"	]<C-L>*         Next file in location list
+"	[q              Previous quickfix list entry
+"	]q              Next quickfix list entry
+"	[Q              First quickfix list entry
+"	]Q              Last quickfix list entry
+"	[t              Previous tag match
+"	]t              Next tag match
+"	[T              First tag match
+"	]T              Last tag match
+"	[<C-T>          Previous preview tag match
+"	]<C-T>          Next preview tag match
