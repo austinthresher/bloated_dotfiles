@@ -1,242 +1,280 @@
-" compatibility / system settings {{{
-	set foldenable
-	set foldmethod=marker
-	set nocompatible
-	set encoding=utf-8
-	scriptencoding utf-8
-" }}}
-" vanilla autocommands {{{
-	autocmd!
-	au bufnewfile,bufread *.cpp,*.tpp,*.hpp,*.c,*.h set cindent
-	au bufnewfile,bufread conkyrc set filetype=lua
-" }}}
-" general configuration {{{
-	syntax on
-	set showcmd
-	set noerrorbells
-	set ruler
-	set laststatus=2
-	set confirm
-	set modeline
-	set listchars=eol:$
-	set showbreak=↪\
-	set listchars+=tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
-	set shiftround
-	set autoindent
-	set matchtime=1
-	set hidden
-	set history=100
-	set equalalways
-	set eadirection=both
-	set tabpagemax=50
-	set showmode
-	set more
-	set ignorecase
-	set smartcase
-	set hlsearch
-	set incsearch
-	set showmatch
-	set nowrap
-	set textwidth=0
-	set undolevels=16000
-	set backspace=indent,eol,start
-	set nostartofline
-	set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
-	set mouse=a
-" }}}
-" mappings {{{
-	" quick buffer list and selection
-	nnoremap <leader>b :ls<cr>:b
+" Basic Configuration {{{
 
-	" cycle through buffer
-	nnoremap <leader>[ :bp<cr>
-	nnoremap <leader>] :bn<cr>
-
-	" vim ctrl+space for esc
-	inoremap <nul> <esc>:noh<cr>
-	" same for neovim
-	inoremap <c-space> <esc>:noh<cr>
-
-	" neovim terminal mode
-	tnoremap <esc> <c-\><c-n>
-	tnoremap <c-space> <c-\><c-n>
-
-	" quick quit
-	nnoremap <leader>q :bd<cr>
+" Disable vi-compatible defaults
+set nocompatible
+" Allow folding in files using {{{ and }}}
+set foldenable
+set foldmethod=marker
+" Always use UTF-8
+set encoding=utf-8
+scriptencoding utf-8
+" No annoying sounds / flashes
+set noerrorbells
+" Show position in file
+set ruler
+" Allow files to customize settings on open
+set modeline
+" Characters used when list=on
+set listchars=eol:$,tab:»\ ,extends:›,precedes:‹,nbsp:·,trail:·
+" Character used to mark wrapped lines
+set showbreak=↪\
+" Copy the indentation from the previous line
+set autoindent
+" Short blink when typing matching parens
+set showmatch
+set matchtime=1
+" Allow leaving modified buffers without saving
+set hidden
+" Try to keep windows similarly sized
+set equalalways
+set eadirection=both
+" Show the active mode
+set showmode
+" Ignore case for lowercase searches
+set ignorecase
+set smartcase
+" Search as you're typing
+set incsearch
+" Allow backspacing over everything
+set backspace=indent,eol,start
+" Spaces for status line and fold
+set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
+" Enable the mouse
+set mouse=a
 
 " }}}
-" list of plugins {{{
-	call plug#begin('~/.config/nvim/plugins')
 
-	Plug 'haishanh/night-owl.vim'
-	Plug 'sainnhe/vim-color-forest-night'
-	Plug 'sickill/vim-monokai'
-	Plug 'sonph/onehalf'
-	Plug 'altercation/vim-colors-solarized'
-	Plug 'dracula/vim'
-	Plug 'morhetz/gruvbox'
-	Plug 'luochen1990/rainbow'
-	Plug 'ryanoasis/vim-devicons'
-	Plug 'itchyny/lightline.vim'
-	Plug 'mengelbrecht/lightline-bufferline'
-	Plug 'machakann/vim-highlightedyank'
-	Plug 'thinca/vim-ref'
-	Plug 'keith/investigate.vim'
-	Plug 'sheerun/vim-polyglot'
-	Plug 'pbrisbin/vim-mkdir'
-	Plug 'tpope/vim-sleuth'
-	Plug 'tpope/vim-apathy'
-	Plug 'tpope/vim-vinegar'
-	Plug 'tpope/vim-endwise'
-	Plug 'jeetsukumaran/vim-indentwise'
-	Plug 'sgur/vim-editorconfig'
-	Plug 'tpope/vim-fugitive'
-	Plug 'ajh17/vimcompletesme'
-	Plug 'vim-scripts/taglist.vim'
-	Plug 'wvffle/vimterm'
-	Plug 'mattboehm/vim-unstack'
-	Plug 'justincampbell/vim-eighties'
-	Plug 'bfrg/vim-cpp-modern'
-	Plug 'tbastos/vim-lua'
-	Plug 'vim-scripts/ScrollColors'
-	Plug 'vitalk/vim-shebang'
-	Plug 'lfv89/vim-interestingwords'
+" Plugins {{{
 
-	call plug#end()
+call plug#begin('~/.config/nvim/plugins')
+
+" Pretty colors
+Plug 'morhetz/gruvbox'
+Plug 'KeitaNakamura/neodark.vim'
+Plug 'noahfrederick/vim-hemisu'
+Plug 'connorholyday/vim-snazzy'
+Plug 'vim-scripts/phd'
+Plug 'vim-scripts/pyte'
+Plug 'vim-scripts/twilight'
+Plug 'haishanh/night-owl.vim'
+Plug 'liuchengxu/space-vim-theme'
+Plug 'jacoborus/tender'
+Plug 'colepeters/spacemacs-theme.vim'
+Plug 'nielsmadan/harlequin'
+Plug 'aonemd/kuroi.vim'
+Plug 'nequo/vim-allomancer'
+Plug 'zanglg/nova.vim'
+Plug 'sainnhe/vim-color-forest-night'
+Plug 'alessandroyorba/alduin'
+Plug 'srcery-colors/srcery-vim'
+Plug 'nightsense/snow'
+Plug 'shinchu/lightline-gruvbox.vim'
+Plug 'phanviet/vim-monokai-pro'
+
+" Fuzzy finder
+Plug 'junegunn/fzf', {
+	\ 'dir': '~/.fzf',
+	\ 'do': './install --all'
+	\ }
+Plug 'junegunn/fzf.vim'
+" lightline statusline
+Plug 'itchyny/lightline.vim'
+" Simple autocomplete
+Plug 'ajh17/vimcompletesme'
+" Adds a lot of useful next / prev maps
+Plug 'tpope/vim-unimpaired'
+" Adds cs and ds commands to change / delete surrounding chars
+Plug 'tpope/vim-surround'
+" Repeat plugin commands with .
+Plug 'tpope/vim-repeat'
+" Language megapack
+Plug 'sheerun/vim-polyglot'
+" Tag browser
+Plug 'vim-scripts/taglist.vim'
+" Filetype icons
+Plug 'ryanoasis/vim-devicons'
+" Auto detect project format settings
+Plug 'tpope/vim-sleuth'
+" Unix filesystem tools like :Rename and :SudoWrite
+Plug 'tpope/vim-eunuch'
+" Split or join a block with gS and gJ
+Plug 'andrewradev/splitjoin.vim'
+" Automatic tag management
+Plug 'ludovicchabant/vim-gutentags'
+" Navigate through indented areas with [- [+ [= ]- ]+ ]=
+Plug 'jeetsukumaran/vim-indentwise'
+" Protobuf syntax highlighting
+Plug 'uarun/vim-protobuf'
+" Updated syntax for C++11
+Plug 'vim-jp/vim-cpp'
+" requirements.txt highlighting
+Plug 'raimon49/requirements.txt.vim'
+" bison, flex, and better c syntax
+Plug 'justinmk/vim-syntax-extra'
+" View targets of f F t T commands with color
+Plug 'unblevable/quick-scope'
+" Visualize the region of text copied
+Plug 'machakann/vim-highlightedyank'
+" Automatically show completions
+Plug 'vim-scripts/AutoComplPop'
+" Show open buffers in statusline
+Plug 'bling/vim-bufferline'
+" Better lookups for K
+Plug 'thinca/vim-ref'
+" strip whitespace on save
+Plug 'ntpeters/vim-better-whitespace'
+" Select increasing region with Enter
+Plug 'gcmt/wildfire.vim'
+" rainbow parenthesis
+Plug 'luochen1990/rainbow'
+" Open files at the same place they were left
+Plug 'farmergreg/vim-lastplace'
+" i3 config syntax
+Plug 'potatoesmaster/i3-vim-syntax'
+" Automatically handle annoying swapfile messages
+Plug 'gioele/vim-autoswap'
+" Look up documentation on the cursor word with gK
+Plug 'keith/investigate.vim'
+" Automatically mkdir if path doesn't exist
+Plug 'datawraith/auto_mkdir'
+" Octave syntax highlighting
+Plug 'jvirtanen/vim-octave'
+" Show errors in realtime
+Plug 'dense-analysis/ale'
+" Open a visual selection in a split or resize split to selection \gr \gss
+Plug 'wellle/visual-split.vim'
+" Autocorrect common typos (this probably slows down loading a lot)
+Plug 'panozzaj/vim-autocorrect'
+
+call plug#end()
+
 " }}}
-" Plugin Configuration {{{
-	" highlightedyank {{{
-		let g:highlightedyank_highlight_duration = 100
-	" }}}
-	" vimcompletesme {{{
-		autocmd FileType vim let b:vcm_tab_complete = 'vim'
-	" }}}
-	" rainbow {{{
-		let g:rainbow_active = 1
-	" }}}
-	" vimterm {{{
-		nnoremap <leader>T :call vimterm#toggle() <CR>
-		tnoremap <leader>T <C-\><C-n>:call vimterm#toggle() <CR>
-	" }}}
-	" taglist {{{
-		nmap <leader>t :TlistToggle<CR>
-	" }}}
-	" vim-eighties {{{
-		let g:eighties_enabled = 1
-		let g:eighties_minimum_width = 80
-		let g:eighties_extra_width = 0
-		let g:eighties_compute = 1
-		let g:eighties_bufname_additional_patterns = []
-	" }}}
-	" lightline-vim {{{
-		function! LightlineGit()
-			return fugitive#head() !=# '' ? $GIT_ICON . ' ' . fugitive#head() : ''
-		endfunction
 
-		function! LightlineFilename()
-			let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-			let modified = &modified ? '+' : ''
-			return filename . modified
-		endfunction
+let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
+function! FloatingFZF()
+	let width = float2nr(&columns * 0.9)
+	let height = float2nr(&lines * 0.6)
+	let opts = {
+		\ 'relative': 'editor',
+		\ 'row': (&lines - height) / 2,
+		\ 'col': (&columns - width) / 2,
+		\ 'width': width,
+		\ 'height': height
+		\ }
+	let win = nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+	call setwinvar(win, '&winhighlight', 'NormalFloat:Normal')
+endfunction
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+command! -bang -nargs=? -complete=dir Files
+	\ call fzf#vim#files(
+		\ <q-args>,
+		\ {'options': ['--info=inline', '--preview', 'cat {}']}
+		\)
 
-		function! LightlineFormat()
-			let format = &ff
-			return (format !=# '' && format !=# 'unix') ? format : ''
-		endfunction
+autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
-		function! LightlineEncoding()
-			let encoding = (&fenc !=# "") ? &fenc : &enc
-			return (encoding !=# '' && encoding !=# 'utf-8') ? encoding : ''
-		endfunction
+set statusline+=%{gutentags#statusline()}
+let g:gutentags_ctags_tagfile='.tags'
+let g:qs_highlight_on_keys = ['f', 'F']
+let g:qs_lazy_highlight = 1
+let g:highlightedyank_highlight_duration = 100
+let g:strip_whitespace_on_save = 1
+let g:rainbow_active = 1
+let g:neodark#terminal_transparent = 1
+let g:SnazzyTransparent = 1
 
-		let g:lightline = { 'colorscheme': 'jellybeans' }
-		let g:lightline.active = { 'left': [], 'right': [] }
-		let g:lightline.inactive = { 'left': [], 'right': [] }
-		let g:lightline.active.left = [
-			\ [ 'mode', 'paste' ],
-			\ [ 'readonly', 'filename' ],
-			\ [ 'gitbranch' ],
-			\ ]
-		let g:lightline.active.right = [
-			\ [ 'lineinfo' ],
-			\ [ 'percent' ],
-			\ [ 'charvaluehex', 'fileformat', 'fileencoding', 'filetype' ]
-			\ ]
-		let g:lightline.inactive.left = [
-			\ [], [ 'readonly', 'filename' ]
-			\ ]
-		let g:lightline.inactive.right = [
-			\ [ 'lineinfo' ],
-			\ [ 'percent' ],
-			\ [ 'filetype' ]
-			\ ]
-		let g:lightline.tabline = { 'left': [['buffers']], 'right': [['tabs']] }
-		let g:lightline.component_expand = {
-			\ 'buffers': 'lightline#bufferline#buffers'
-			\ }
-		let g:lightline.component_type = { 'buffers': 'tabsel' }
-		let g:lightline.component_function = {
-			\ 'gitbranch': 'LightlineGit',
-			\ 'filename': 'LightlineFilename',
-			\ 'fileformat': 'LightlineFormat',
-			\ 'fileencoding': 'LightlineEncoding'
-			\ }
-		let g:lightline.tab = {
-			\ 'active': [ 'active_l', 'tabnum', 'active_r' ],
-			\ 'inactive': [ 'inactive', 'tabnum', 'inactive' ]
-			\ }
-		let g:lightline.tab_component = {
-			\ 'active_l': '<',
-			\ 'active_r': '>',
-			\ 'inactive': ' '
-			\ }
-		autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
-	" }}}
-	" lightline-bufferline {{{
-		if !empty($UNICODE_FONT)
-			let g:lightline#bufferline#enable_devicons = 1
-			let g:lightline#bufferline#unicode_symbols = 1
-		endif
-		let g:lightline#bufferline#show_number=2
-		let g:lightline#bufferline#unnamed="[No Name]"
-		nmap <Leader>1 <Plug>lightline#bufferline#go(1)
-		nmap <Leader>2 <Plug>lightline#bufferline#go(2)
-		nmap <Leader>3 <Plug>lightline#bufferline#go(3)
-		nmap <Leader>4 <Plug>lightline#bufferline#go(4)
-		nmap <Leader>5 <Plug>lightline#bufferline#go(5)
-		nmap <Leader>6 <Plug>lightline#bufferline#go(6)
-		nmap <Leader>7 <Plug>lightline#bufferline#go(7)
-		nmap <Leader>8 <Plug>lightline#bufferline#go(8)
-		nmap <Leader>9 <Plug>lightline#bufferline#go(9)
-		nmap <Leader>0 <Plug>lightline#bufferline#go(10)
-		set laststatus=2
-		set showtabline=2
-		set noshowmode
-	" }}}
-	" rainbow_levels.vim {{{
-		nnoremap <leader>r :RainbowLevelsToggle<CR>
-		hi! RainbowLevel0 ctermbg=240 guibg=#585858
-		hi! RainbowLevel1 ctermbg=239 guibg=#4e4e4e
-		hi! RainbowLevel2 ctermbg=238 guibg=#444444
-		hi! RainbowLevel3 ctermbg=237 guibg=#3a3a3a
-		hi! RainbowLevel4 ctermbg=236 guibg=#303030
-		hi! RainbowLevel5 ctermbg=235 guibg=#262626
-		hi! RainbowLevel6 ctermbg=234 guibg=#1c1c1c
-		hi! RainbowLevel7 ctermbg=233 guibg=#121212
-		hi! RainbowLevel8 ctermbg=232 guibg=#080808
-	" }}}
-	" interestingwords {{{
-		" let g:interestingWordsGUIColors = ['#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
-		" let g:interestingWordsTermColors = ['154', '121', '211', '137', '214', '222']
-	" }}}
-" }}}
+
+let g:lightline = {
+	\ 'colorscheme': 'gruvbox'
+	"\ 'colorscheme': 'snow_light'
+	"\ 'colorscheme': 'snow_dark'
+	"\ 'colorscheme': 'srcery'
+	"\ 'colorscheme': 'forest_night'
+	"\ 'colorscheme': 'tender'
+	"\ 'colorscheme': 'neodark'
+	"\ 'colorscheme': 'snazzy'
+	\ }
+
+" Tag List
+nnoremap <leader>T :TlistToggle<cr>
+" normal mode fzf
+nnoremap <leader>f :Files<cr>
+nnoremap <leader>g :Ag<cr>
+nnoremap <leader>b :Buffers<cr>
+nnoremap <leader>w :Lines<cr>
+nnoremap <leader>t :Tags<cr>
+nnoremap <leader>C :Colors<cr>
+
+" Quick reload of vimrc
+nnoremap <leader>R :source $MYVIMRC<cr>
+
+
 " Theme {{{
+
+let g:gruvbox_italic=1
+try
 	set termguicolors
-	set background=dark
-	let g:gruvbox_italic=1
 	colorscheme gruvbox
-	if exists('$TMUX')
-		highlight Normal ctermbg=NONE guibg=NONE
-	endif
-	highlight Folded ctermbg=NONE guibg=NONE cterm=italic gui=italic
+
+catch /.*/
+	try
+		colorscheme gruvbox
+	catch /.*/
+		colorscheme blue
+	endtry
+endtry
+" Use a transparent background for tmux, and make folds blend in so
+" that the status bar and splits are easiser to identify
+if exists('$TMUX')
+	hi Normal ctermbg=None guibg=None
+	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
+else
+	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
+	"hi Folded ctermbg=237 guibg='#3c3836' cterm=italic gui=italic
+endif
+
 " }}}
+
+" Experimental
+
+set spelllang=en_us
+nnoremap <leader>s :set spell!<cr>
+
+" Keymap Summary
+" ==============
+"	ds      Delete Surround
+"	cs      Change Surround
+"	ys      surround text object ('you surround')
+"	S       surround (visual mode)
+"	\R      :source $MYVIMRC
+"	\T      :TlistToggle
+"	\f      :Files
+"	\g      :Ag
+"	\b      :Buffers
+"	\w      :Lines
+"	\t      :Tags
+"	\C      :Colors
+"	[a      :previous
+"	]a      :next
+"	[A      :first
+"	]A      :last
+"	[b      :bprevious
+"	]b      :bnext
+"	[B      :bfirst
+"	]B      :blast
+"	[l      :lprevious
+"	]l      :lnext
+"	[L      :lfirst
+"	]L      :llast
+"	[<C-L>* :lpfile
+"	]<C-L>* :lnfile
+"	[q      :cprevious
+"	]q      :cnext
+"	[Q      :cfirst
+"	]Q      :clast
+"	[t      :tprevious
+"	]t      :tnext
+"	[T      :tfirst
+"	]T      :tlast
+"	[<C-T>  :ptprevious
+"	]<C-T>  :ptnext
