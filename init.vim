@@ -164,24 +164,42 @@ command! -bang -nargs=? -complete=dir Files
 
 autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
+augroup qs_colors
+	autocmd!
+	autocmd ColorScheme * highlight QuickScopePrimary
+		\ guibg='#00ff00' guifg='#000000' gui=underline,bold,reverse
+		\ ctermfg=2 ctermbg=0 cterm=underline,bold,reverse
+	autocmd ColorScheme * highlight QuickScopeSecondary
+		\ guibg='#00ffff' guifg='#000000' gui=underline,bold,reverse
+		\ ctermfg=6 ctermbg=0 cterm=underline,bold,reverse
+augroup END
+
 " Gutentags
 set statusline+=%{gutentags#statusline()}
 let g:gutentags_ctags_tagfile='.tags'
 " Nuake
 let g:nuake_position = 'top'
 " QuickShot
-let g:qs_highlight_on_keys = ['f', 'F']
-let g:qs_lazy_highlight = 1
+let g:qs_accepted_chars = [
+	\'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+	\'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+	\'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+	\'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	\'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', '+',
+	\'!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=',
+	\'{', '}', '[', ']', ':', ';', '<', '>', ',', '.', '/', '?',
+	\'\\', '\|'
+	\]
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
 " Theme flags
 let g:srcery_italic = 1
 let g:gruvbox_italic=1
-if exists('$TMUX')
-	let g:srcery_transparent_background = 1
-endif
+"let g:srcery_transparent_background = 1
 
+" TODO: set statusline for terminal
 
 " Nuake quick-terminal toggle with Ctrl+Enter
 nnoremap <c-j> :Nuake<cr>
@@ -206,6 +224,11 @@ nnoremap <leader>R :source $MYVIMRC<cr>
 nnoremap <leader>s :set spell!<cr>
 " Quickly close a window
 nnoremap <leader>q :q<cr>
+
+" , . make more sense for navigating back / forward with last movement
+nnoremap . ;
+nnoremap ; .
+
 " Theme {{{
 
 try
