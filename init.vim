@@ -43,6 +43,8 @@ set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 set mouse=a
 " Set US English for spellcheck
 set spelllang=en_us
+" Always show statusbar
+set laststatus=2
 
 " }}}
 
@@ -58,6 +60,12 @@ Plug 'haishanh/night-owl.vim'
 Plug 'liuchengxu/space-vim-theme'
 Plug 'alessandroyorba/alduin'
 Plug 'srcery-colors/srcery-vim'
+Plug 'danilo-augusto/vim-afterglow'
+Plug 'sonph/onehalf'
+Plug 'raphamorim/lucario'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'nanotech/jellybeans.vim'
 
 " Fuzzy finder
 Plug 'junegunn/fzf', {
@@ -66,7 +74,7 @@ Plug 'junegunn/fzf', {
 	\ }
 Plug 'junegunn/fzf.vim'
 " lightline statusline
-Plug 'itchyny/lightline.vim'
+"Plug 'itchyny/lightline.vim'
 " Simple autocomplete
 Plug 'ajh17/vimcompletesme'
 " Adds a lot of useful next / prev maps
@@ -75,6 +83,8 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-surround'
 " Repeat plugin commands with .
 Plug 'tpope/vim-repeat'
+" Gives :S that does search and replace maintaining case, and more
+Plug 'tpope/vim-abolish'
 " Language megapack
 Plug 'sheerun/vim-polyglot'
 " Tag browser
@@ -106,7 +116,7 @@ Plug 'bling/vim-bufferline'
 " Better lookups for K
 Plug 'thinca/vim-ref'
 " strip whitespace on save
-Plug 'ntpeters/vim-better-whitespace'
+"Plug 'ntpeters/vim-better-whitespace'
 " Select increasing region with Enter
 "Plug 'gcmt/wildfire.vim'
 " rainbow parenthesis
@@ -135,12 +145,48 @@ Plug 'tweekmonster/gofmt.vim'
 Plug 'gcavallanti/vim-noscrollbar'
 " Quick drop-down terminal
 Plug 'Lenovsky/nuake'
-" Recent files in startup menu
-Plug 'mhinz/vim-startify'
+" Smooth scrolling
+"Plug 'yuttie/comfortable-motion.vim'
+" Extend % to work with language specific keywords. Adds [% ]%
+Plug 'andymass/vim-matchup'
+" Show match count in search
+Plug 'skwp/vim-indexed-search'
+" Automatically open files in splits when passed as cli args
+Plug 'auxiliary/vim-layout'
+" Persistent auto-loading workspaces
+Plug 'thaerkh/vim-workspace'
+" Lightweight auto-correct
+Plug 'reedes/vim-litecorrect'
+" Don't move cursor when leaving insert mode
+Plug 'dbestevez/keepcursor.vim'
+" wrap / unwrap argument lists with a command
+Plug 'FooSoft/vim-argwrap'
+" Manipulate argument lists with g< g>, interactively with gs
+Plug 'machakann/vim-swap'
+" Adds common words to autocorrect
+Plug 'jdelkins/vim-correction'
+" File Browser
+"Plug 'preservim/nerdtree'
+Plug 'tpope/vim-vinegar'
 
 call plug#end()
 
 " }}}
+
+"let g:matchup_matchparen_deferred = 1
+"let g:matchup_matchparen_hi_surround_always = 1
+let g:matchup_matchparen_offscreen = {}
+
+" Smooth scrolling, approximately the same distances as vanilla mappings
+" let g:comfortable_motion_interval = 1000.0 / 120.0
+" let g:comfortable_motion_friction = 300.0
+" let g:comfortable_motion_air_drag = 7.0
+" let g:comfortable_motion_no_default_key_mappings = 1
+" let g:comfortable_motion_impulse_multiplier = 2
+" nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
+" nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
+" nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
+" nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
 
 " From FZF example configs, opens FZF in floating window
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
@@ -149,7 +195,7 @@ function! FloatingFZF()
 	let height = float2nr(&lines * 0.6)
 	let opts = {
 		\ 'relative': 'editor',
-		\ 'row': (&lines - height) / 2,
+		\ 'row': (&lines - height) / ns2,
 		\ 'col': (&columns - width) / 2,
 		\ 'width': width,
 		\ 'height': height
@@ -178,8 +224,9 @@ augroup qs_colors
 		\ ctermfg=6 ctermbg=0 cterm=underline,bold,reverse
 augroup END
 
+let g:workspace_autosave = 0
 " Gutentags
-set statusline+=%{gutentags#statusline()}
+"set statusline+=%{gutentags#statusline()}
 let g:gutentags_ctags_tagfile='.tags'
 " Nuake
 let g:nuake_position = 'top'
@@ -198,9 +245,65 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
+
 " Theme flags
 let g:srcery_italic = 1
-let g:gruvbox_italic=1
+let g:gruvbox_italic = 1
+let g:palenight_terminal_italics = 1
+let g:onedark_terminal_italics = 1
+let g:jellybeans_use_term_italics = 1
+
+" Lightline
+
+function ScrollBarWrapper()
+	return noscrollbar#statusline(20, '━', '▓')
+endfunc
+
+function StatusFocusedLeft()
+	let result = ''
+	let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+	let modified = &modified ? '+' : ''
+	let result = result.filename.modified
+	return result
+endfunc
+
+function StatusFocusedRight()
+	let result = ''
+	let lchars = strlen(col('$'))
+	if lchars < 2
+		let lchars = 2
+	endif
+	let result = result.printf('C %'.lchars.'d / %'.lchars.'d', col('.'), col('$'))
+	let lchars = strlen(line('$'))
+	let result = result.'    '.printf('L %'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
+	return result
+endfunc
+
+function StatusUnfocusedLeft()
+	let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
+	let modified = &modified ? '+' : ''
+	return filename.modified
+endfunc
+
+function StatusUnfocusedRight()
+	return 'right'
+endfunc
+
+function SetStatusFocused()
+	setlocal statusline=%{StatusFocusedLeft()}
+	setlocal statusline+=%=
+	setlocal statusline+=%{StatusFocusedRight()}
+endfunction
+
+function SetStatusUnfocused()
+	setlocal statusline=%{StatusUnfocusedLeft()}
+	setlocal statusline+=%=
+	setlocal statusline+=%{StatusUnfocusedRight()}
+endfunction
+
+au WinEnter * call SetStatusFocused()
+au WinLeave * call SetStatusUnfocused()
+
 " TODO: find a terminal that can combine transparency with bg colors
 "let g:srcery_transparent_background = 1
 
@@ -229,18 +332,16 @@ nnoremap <leader>R :source $MYVIMRC<cr>
 nnoremap <leader>s :set spell!<cr>
 " Quickly close a window
 nnoremap <leader>q :q<cr>
-
+" Set the current working directory as a workspace
+nnoremap <leader>W :ToggleWorkspace<cr>
 " , . make more sense for navigating back / forward with last movement
 nnoremap . ;
 nnoremap ; .
+nnoremap <leader>a :ArgWrap<cr>
 
 " Theme {{{
 
 try
-	let g:lightline = {
-		"\ 'colorscheme': 'gruvbox'
-		\ 'colorscheme': 'srcery'
-		\ }
 	set termguicolors
 	colorscheme srcery
 
@@ -267,8 +368,14 @@ endif
 " ==============
 "	\R              :source $MYVIMRC
 " 	\s              toggle spellcheck
+" argwrap
+" 	\a              Toggles wrap for current block
+" swap
+" 	gs              Enter interactive swap
+" 	g<              Move comma separated item left
+" 	g>              Move comma separated item right
 " Nuake Terminal
-" 	Ctrl-Enter      Toggle terminal
+" 	Ctrl-Enter      terminal Toggle
 " Surround
 "	ds              Delete Surround
 "	cs              Change Surround
