@@ -108,7 +108,7 @@ Plug 'thinca/vim-ref'
 " strip whitespace on save
 Plug 'ntpeters/vim-better-whitespace'
 " Select increasing region with Enter
-Plug 'gcmt/wildfire.vim'
+"Plug 'gcmt/wildfire.vim'
 " rainbow parenthesis
 Plug 'luochen1990/rainbow'
 " Open files at the same place they were left
@@ -135,6 +135,8 @@ Plug 'tweekmonster/gofmt.vim'
 Plug 'gcavallanti/vim-noscrollbar'
 " Quick drop-down terminal
 Plug 'Lenovsky/nuake'
+" Recent files in startup menu
+Plug 'mhinz/vim-startify'
 
 call plug#end()
 
@@ -178,9 +180,7 @@ let g:rainbow_active = 1
 " Theme flags
 let g:srcery_italic = 1
 let g:gruvbox_italic=1
-if exists('$TMUX')
-	let g:srcery_transparent_background = 1
-endif
+let g:srcery_transparent_background = 1
 
 
 " Nuake quick-terminal toggle with Ctrl+Enter
