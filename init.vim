@@ -333,7 +333,12 @@ tnoremap <c-j> <c-\><c-n>:Nuake<cr>
 " Navigate out of terminal mode more easily
 tnoremap <esc> <c-\><c-n>
 tnoremap <c-w> <c-\><c-n><c-w>
-
+" Pin visual selection at top of screen in new split
+vnoremap <pageup> :VSSplitAbove<cr>
+" Pin visual selection at bottom of screen in new split
+vnoremap <pagedown> :VSSplitBelow<cr>
+" Resize split to selection
+vnoremap <return> :VSResize<cr>
 " Tag List
 nnoremap <leader>T :TlistToggle<cr>
 " normal mode fzf
@@ -343,6 +348,8 @@ nnoremap <leader>b :Buffers<cr>
 nnoremap <leader>w :Lines<cr>
 nnoremap <leader>t :Tags<cr>
 nnoremap <leader>C :Colors<cr>
+" Reset layout
+nnoremap <leader>r <C-W>=
 " Quick reload of vimrc
 nnoremap <leader>R :source $MYVIMRC<cr>
 " Toggle spellcheck
@@ -370,14 +377,8 @@ catch /.*/
 	endtry
 endtry
 
-" Use a transparent background for tmux, and make folds blend in so
-" that the status bar and splits are easier to identify
-if exists('$TMUX')
-	hi Normal ctermbg=None guibg=None
-	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
-else
-	hi Folded ctermbg=None guibg=None cterm=italic gui=italic
-endif
+" Make folds blend in so that the status bar and splits are easier to identify
+hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 
 " }}}
 
