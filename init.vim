@@ -141,16 +141,14 @@ Plug 'panozzaj/vim-autocorrect'
 Plug 'chip/vim-fat-finger'
 " Call gofmt on save of .go files
 Plug 'tweekmonster/gofmt.vim'
-" Show a visual indicator of window position in Buffers
-Plug 'gcavallanti/vim-noscrollbar'
 " Quick drop-down terminal
 Plug 'Lenovsky/nuake'
 " Smooth scrolling
 "Plug 'yuttie/comfortable-motion.vim'
 " Extend % to work with language specific keywords. Adds [% ]%
 Plug 'andymass/vim-matchup'
-" Show match count in search
-Plug 'skwp/vim-indexed-search'
+" Show match count in search " TODO: find a better version of this
+"Plug 'skwp/vim-indexed-search'
 " Automatically open files in splits when passed as cli args
 Plug 'auxiliary/vim-layout'
 " Persistent auto-loading workspaces
@@ -166,7 +164,6 @@ Plug 'machakann/vim-swap'
 " Adds common words to autocorrect
 Plug 'jdelkins/vim-correction'
 " File Browser
-"Plug 'preservim/nerdtree'
 Plug 'tpope/vim-vinegar'
 
 call plug#end()
@@ -177,17 +174,6 @@ call plug#end()
 "let g:matchup_matchparen_hi_surround_always = 1
 let g:matchup_matchparen_offscreen = {}
 
-" Smooth scrolling, approximately the same distances as vanilla mappings
-" let g:comfortable_motion_interval = 1000.0 / 120.0
-" let g:comfortable_motion_friction = 300.0
-" let g:comfortable_motion_air_drag = 7.0
-" let g:comfortable_motion_no_default_key_mappings = 1
-" let g:comfortable_motion_impulse_multiplier = 2
-" nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
-" nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
-" nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
-" nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
-
 " From FZF example configs, opens FZF in floating window
 let $FZF_DEFAULT_OPTS .= ' --border --margin=0,2'
 function! FloatingFZF()
@@ -195,7 +181,7 @@ function! FloatingFZF()
 	let height = float2nr(&lines * 0.6)
 	let opts = {
 		\ 'relative': 'editor',
-		\ 'row': (&lines - height) / ns2,
+		\ 'row': (&lines - height) / 2,
 		\ 'col': (&columns - width) / 2,
 		\ 'width': width,
 		\ 'height': height
@@ -253,61 +239,92 @@ let g:palenight_terminal_italics = 1
 let g:onedark_terminal_italics = 1
 let g:jellybeans_use_term_italics = 1
 
-" Lightline
-
-function ScrollBarWrapper()
-	return noscrollbar#statusline(20, '━', '▓')
-endfunc
-
-function StatusFocusedLeft()
-	let result = ''
-	let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-	let modified = &modified ? '+' : ''
-	let result = result.filename.modified
-	return result
-endfunc
-
-function StatusFocusedRight()
-	let result = ''
-	let lchars = strlen(col('$'))
-	if lchars < 2
-		let lchars = 2
+function StatusMode(modestr)
+	let result = ' '
+	if a:modestr ==# 'i'
+		hi link StatusLine InsertMode
+		let result = ' INSERT '
+	elseif a:modestr ==# 'r'
+		hi link StatusLine ReplaceMode
+		let result = ' REPLACE '
+	elseif a:modestr ==# 't'
+		hi link StatusLine TerminalMode
+		let result = ' TERMINAL '
+	elseif a:modestr ==# 'n'
+		hi link StatusLine NormalMode
+		let result = ' NORMAL '
+	elseif a:modestr ==# 'v'
+		hi link StatusLine VisualMode
+		let result = ' VISUAL '
+	elseif a:modestr ==# 'c'
+		hi link StatusLine CommandMode
+		let result = ' COMMAND '
+	elseif a:modestr ==# '!'
+		let result = ' SHELL '
+		hi link StatusLine ShellMode
+	else
+		hi link StatusLine OtherMode
 	endif
-	let result = result.printf('C %'.lchars.'d / %'.lchars.'d', col('.'), col('$'))
+	return ' '.result
+endfunc
+
+function StatusLeft()
+	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
+	let modified = &modified ? '+' : ''
+	let ro = &readonly ? '[RO]' : ''
+	return '  '.filename.modified.ro
+endfunc
+
+function StatusRight()
 	let lchars = strlen(line('$'))
-	let result = result.'    '.printf('L %'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
+	return virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
 	return result
 endfunc
 
-function StatusUnfocusedLeft()
-	let filename = expand('%:t') !=# '' ? expand('%:t') : '[No Name]'
-	let modified = &modified ? '+' : ''
-	return filename.modified
+function SetColors()
+	hi NormalMode guifg='#000000' guibg='#D0BFA1' gui=bold
+	hi VisualMode guifg='#000000' guibg='#2C78BF' gui=bold
+	hi InsertMode guifg='#000000' guibg='#FBB829' gui=bold
+	hi ReplaceMode guifg='#000000' guibg='#FF5F00' gui=bold
+	hi TerminalMode guifg='#000000' guibg='#519F50' gui=bold
+	hi CommandMode guifg='#000000' guibg='#E02C6D' gui=bold
+	hi ShellMode guifg='#000000' guibg='#53FDE9' gui=bold
+	hi OtherMode guifg='#000000' guibg='#EF2F27' gui=bold
+	return ''
 endfunc
 
-function StatusUnfocusedRight()
-	return 'right'
+function SetFocusedStatus()
+	setlocal statusline=%{SetColors()}
+	setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
+	setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
+	setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
+	setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
+	setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
+	setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
+	setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
+	setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
+	setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
+	setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
+	setlocal statusline+=%*
+	setlocal statusline+=%{StatusLeft()}
+	setlocal statusline+=%=
+	setlocal statusline+=%{StatusRight()}
 endfunc
 
-function SetStatusFocused()
-	setlocal statusline=%{StatusFocusedLeft()}
+function SetUnfocusedStatus()
+	setlocal statusline=%{SetColors()}
+	setlocal statusline+=%{StatusLeft()}
 	setlocal statusline+=%=
-	setlocal statusline+=%{StatusFocusedRight()}
-endfunction
+	setlocal statusline+=%{StatusRight()}
+endfunc
 
-function SetStatusUnfocused()
-	setlocal statusline=%{StatusUnfocusedLeft()}
-	setlocal statusline+=%=
-	setlocal statusline+=%{StatusUnfocusedRight()}
-endfunction
+augroup StatusStuff
+	au!
+	au WinEnter,BufEnter * call SetFocusedStatus()
+	au WinLeave,BufLeave * call SetUnfocusedStatus()
+augroup END
 
-au WinEnter * call SetStatusFocused()
-au WinLeave * call SetStatusUnfocused()
-
-" TODO: find a terminal that can combine transparency with bg colors
-"let g:srcery_transparent_background = 1
-
-" TODO: set statusline for terminal
+" TODO: set statusline contents for terminal
 
 " Nuake quick-terminal toggle with Ctrl+Enter
 nnoremap <c-j> :Nuake<cr>
