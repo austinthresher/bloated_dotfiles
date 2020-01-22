@@ -1,4 +1,3 @@
-" Basic Configuration {{{
 
 " Disable vi-compatible defaults
 set nocompatible
@@ -116,7 +115,7 @@ Plug 'bling/vim-bufferline'
 " Better lookups for K
 Plug 'thinca/vim-ref'
 " strip whitespace on save
-"Plug 'ntpeters/vim-better-whitespace'
+Plug 'ntpeters/vim-better-whitespace'
 " Select increasing region with Enter
 "Plug 'gcmt/wildfire.vim'
 " rainbow parenthesis
