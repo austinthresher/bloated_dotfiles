@@ -11,8 +11,8 @@ function prepare_tmux() {
 		export TMUX_WINDOW_NAME=" #{window_name}"
 	fi
 	
-	export TMUX_LEFT_CHARS=1
-	export TMUX_RIGHT_CHARS=$( expr $SCREEN_WIDTH \* 2 / 3 )
+	export TMUX_LEFT_CHARS=16
+	export TMUX_RIGHT_CHARS=$( expr "$SCREEN_WIDTH" '*' '2' '/' '3' )
 	
 	if loaded trap ; then
 		export TMUX_PANE_TITLE="#{pane_title}"
