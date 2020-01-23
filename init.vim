@@ -1,4 +1,5 @@
 
+" {{{
 " Disable vi-compatible defaults
 set nocompatible
 " Allow folding in files using {{{ and }}}
@@ -27,8 +28,8 @@ set hidden
 " Try to keep windows similarly sized
 set equalalways
 set eadirection=both
-" Show the active mode
-set showmode
+" Don't show the active mode
+set noshowmode
 " Ignore case for lowercase searches
 set ignorecase
 set smartcase
@@ -44,133 +45,61 @@ set mouse=a
 set spelllang=en_us
 " Always show statusbar
 set laststatus=2
-
+" Don't wrap lines by default
+set nowrap
+" Don't page output
+set nomore
 " }}}
 
 " Plugins {{{
-
 call plug#begin('~/.config/nvim/plugins')
 
-" Pretty colors
-Plug 'morhetz/gruvbox'
-Plug 'shinchu/lightline-gruvbox.vim'
-Plug 'vim-scripts/pyte'
-Plug 'haishanh/night-owl.vim'
-Plug 'liuchengxu/space-vim-theme'
-Plug 'alessandroyorba/alduin'
-Plug 'srcery-colors/srcery-vim'
-Plug 'danilo-augusto/vim-afterglow'
-Plug 'sonph/onehalf'
-Plug 'raphamorim/lucario'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'joshdick/onedark.vim'
-Plug 'nanotech/jellybeans.vim'
-
-" Fuzzy finder
 Plug 'junegunn/fzf', {
-	\ 'dir': '~/.fzf',
-	\ 'do': './install --all'
-	\ }
-Plug 'junegunn/fzf.vim'
-" lightline statusline
-"Plug 'itchyny/lightline.vim'
-" Simple autocomplete
-Plug 'ajh17/vimcompletesme'
-" Adds a lot of useful next / prev maps
-Plug 'tpope/vim-unimpaired'
-" Adds cs and ds commands to change / delete surrounding chars
-Plug 'tpope/vim-surround'
-" Repeat plugin commands with .
-Plug 'tpope/vim-repeat'
-" Gives :S that does search and replace maintaining case, and more
-Plug 'tpope/vim-abolish'
-" Language megapack
-Plug 'sheerun/vim-polyglot'
-" Tag browser
-Plug 'vim-scripts/taglist.vim'
-" Filetype icons
-Plug 'ryanoasis/vim-devicons'
-" Auto detect project format settings
-Plug 'tpope/vim-sleuth'
-" Unix filesystem tools like :Rename and :SudoWrite
-Plug 'tpope/vim-eunuch'
-" Automatic tag management
-Plug 'ludovicchabant/vim-gutentags'
-" Navigate through indented areas with [- [+ [= ]- ]+ ]=
-Plug 'jeetsukumaran/vim-indentwise'
-" Protobuf syntax highlighting
-Plug 'uarun/vim-protobuf'
-" Updated syntax for C++11
-Plug 'vim-jp/vim-cpp'
-" requirements.txt highlighting
-Plug 'raimon49/requirements.txt.vim'
-" bison, flex, and better c syntax
-Plug 'justinmk/vim-syntax-extra'
-" View targets of f F t T commands with color
-Plug 'unblevable/quick-scope'
-" Visualize the region of text copied
-Plug 'machakann/vim-highlightedyank'
-" Show open buffers in statusline
-Plug 'bling/vim-bufferline'
-" Better lookups for K
-Plug 'thinca/vim-ref'
-" strip whitespace on save
-Plug 'ntpeters/vim-better-whitespace'
-" Select increasing region with Enter
-"Plug 'gcmt/wildfire.vim'
-" rainbow parenthesis
-Plug 'luochen1990/rainbow'
-" Open files at the same place they were left
-Plug 'farmergreg/vim-lastplace'
-" i3 config syntax
-Plug 'potatoesmaster/i3-vim-syntax'
-" Automatically handle annoying swapfile messages
-Plug 'gioele/vim-autoswap'
-" Look up documentation on the cursor word with gK
-Plug 'keith/investigate.vim'
-" Automatically mkdir if path doesn't exist
-Plug 'datawraith/auto_mkdir'
-" Octave syntax highlighting
-Plug 'jvirtanen/vim-octave'
-" Open a visual selection in a split or resize split to selection \gr \gss
-Plug 'wellle/visual-split.vim'
-" Autocorrect common typos (this probably slows down loading a lot)
-Plug 'panozzaj/vim-autocorrect'
-" More typo help, see if one of these is better than the other
-Plug 'chip/vim-fat-finger'
-" Call gofmt on save of .go files
-Plug 'tweekmonster/gofmt.vim'
-" Quick drop-down terminal
-Plug 'Lenovsky/nuake'
-" Smooth scrolling
-"Plug 'yuttie/comfortable-motion.vim'
-" Extend % to work with language specific keywords. Adds [% ]%
-Plug 'andymass/vim-matchup'
-" Show match count in search " TODO: find a better version of this
-"Plug 'skwp/vim-indexed-search'
-" Automatically open files in splits when passed as cli args
-Plug 'auxiliary/vim-layout'
-" Persistent auto-loading workspaces
-Plug 'thaerkh/vim-workspace'
-" Lightweight auto-correct
-Plug 'reedes/vim-litecorrect'
-" Don't move cursor when leaving insert mode
-Plug 'dbestevez/keepcursor.vim'
-" wrap / unwrap argument lists with a command
-Plug 'FooSoft/vim-argwrap'
-" Manipulate argument lists with g< g>, interactively with gs
-Plug 'machakann/vim-swap'
-" Adds common words to autocorrect
-Plug 'jdelkins/vim-correction'
-" File Browser
-Plug 'tpope/vim-vinegar'
+	\'dir': '~/.fzf',
+	\'do': './install --all' }    " Fuzzy finder
+Plug 'junegunn/fzf.vim'               " FZF helpful functions
+Plug 'srcery-colors/srcery-vim'       " Pretty colors
+Plug 'ajh17/vimcompletesme'           " Simple autocomplete
+Plug 'tpope/vim-unimpaired'           " Adds a lot of useful next / prev maps
+Plug 'machakann/vim-sandwich'         " Adds sa, sc, and sd commands to change / delete surrounding chars
+Plug 'tpope/vim-repeat'               " Repeat plugin commands with .
+Plug 'tpope/vim-abolish'              " Gives :S that does search and replace maintaining case, and more
+Plug 'sheerun/vim-polyglot'           " Language megapack
+Plug 'vim-scripts/taglist.vim'        " Tag browser
+Plug 'tpope/vim-sleuth'               " Auto detect project format settings
+Plug 'tpope/vim-eunuch'               " Unix filesystem tools like :Rename and :SudoWrite
+Plug 'ludovicchabant/vim-gutentags'   " Automatic tag management
+Plug 'jeetsukumaran/vim-indentwise'   " Navigate through indented areas with [- [+ [= ]- ]+ ]=
+Plug 'uarun/vim-protobuf'             " Protobuf syntax highlighting
+Plug 'vim-jp/vim-cpp'                 " Updated syntax for C++11
+Plug 'raimon49/requirements.txt.vim'  " requirements.txt highlighting
+Plug 'justinmk/vim-syntax-extra'      " bison, flex, and better c syntax
+Plug 'unblevable/quick-scope'         " View targets of f F t T commands with color
+Plug 'machakann/vim-highlightedyank'  " Visualize the region of text copied
+Plug 'bling/vim-bufferline'           " Show open buffers in statusline
+Plug 'thinca/vim-ref'                 " Better lookups for K
+Plug 'luochen1990/rainbow'            " rainbow parenthesis
+Plug 'potatoesmaster/i3-vim-syntax'   " i3 config syntax
+Plug 'gioele/vim-autoswap'            " Automatically handle annoying swapfile messages
+Plug 'keith/investigate.vim'          " Look up documentation on the cursor word with gK
+Plug 'datawraith/auto_mkdir'          " Automatically mkdir if path doesn't exist
+Plug 'jvirtanen/vim-octave'           " Octave syntax highlighting
+Plug 'wellle/visual-split.vim'        " Open a visual selection in a split or resize split to selection \gr \gss
+Plug 'tweekmonster/gofmt.vim'         " Call gofmt on save of .go files
+Plug 'Lenovsky/nuake'                 " Quick drop-down terminal
+Plug 'andymass/vim-matchup'           " Extend % to work with language specific keywords. Adds [% ]%
+Plug 'auxiliary/vim-layout'           " Automatically open files in splits when passed as cli args
+Plug 'thaerkh/vim-workspace'          " Persistent auto-loading workspaces
+Plug 'reedes/vim-litecorrect'         " Lightweight auto-correct
+Plug 'dbestevez/keepcursor.vim'       " Don't move cursor when leaving insert mode
+Plug 'FooSoft/vim-argwrap'            " wrap / unwrap argument lists with a command
+Plug 'machakann/vim-swap'             " Manipulate argument lists with g< g>, interactively with gs
+Plug 'tpope/vim-vinegar'              " File Browser
+Plug 'junegunn/vim-easy-align'        " Adds operator to align text
 
 call plug#end()
-
 " }}}
 
-"let g:matchup_matchparen_deferred = 1
-"let g:matchup_matchparen_hi_surround_always = 1
 let g:matchup_matchparen_offscreen = {}
 
 " From FZF example configs, opens FZF in floating window
@@ -210,22 +139,9 @@ augroup qs_colors
 augroup END
 
 let g:workspace_autosave = 0
-" Gutentags
-"set statusline+=%{gutentags#statusline()}
 let g:gutentags_ctags_tagfile='.tags'
 " Nuake
 let g:nuake_position = 'top'
-" QuickShot
-let g:qs_accepted_chars = [
-	\'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-	\'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-	\'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-	\'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-	\'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_', '+',
-	\'!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '=',
-	\'{', '}', '[', ']', ':', ';', '<', '>', ',', '.', '/', '?',
-	\'\\', '\|'
-	\]
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
@@ -267,10 +183,18 @@ function StatusMode(modestr)
 	return ' '.result
 endfunc
 
+function HelpStatus()
+	return 'Help: '.expand('%:t')
+endfunc
+
+function TagListStatus()
+	return 'Tag List'
+endfunc
+
 function StatusLeft()
 	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
 	let modified = &modified ? '+' : ''
-	let ro = &readonly ? '[RO]' : ''
+	let ro = &readonly ? ' [RO]' : ''
 	return '  '.filename.modified.ro
 endfunc
 
@@ -281,40 +205,53 @@ function StatusRight()
 endfunc
 
 function SetColors()
-	hi NormalMode guifg='#000000' guibg='#D0BFA1' gui=bold
-	hi VisualMode guifg='#000000' guibg='#2C78BF' gui=bold
-	hi InsertMode guifg='#000000' guibg='#FBB829' gui=bold
-	hi ReplaceMode guifg='#000000' guibg='#FF5F00' gui=bold
+	hi NormalMode   guifg='#000000' guibg='#D0BFA1' gui=bold
+	hi VisualMode   guifg='#000000' guibg='#2C78BF' gui=bold
+	hi InsertMode   guifg='#000000' guibg='#FBB829' gui=bold
+	hi ReplaceMode  guifg='#000000' guibg='#FF5F00' gui=bold
 	hi TerminalMode guifg='#000000' guibg='#519F50' gui=bold
-	hi CommandMode guifg='#000000' guibg='#E02C6D' gui=bold
-	hi ShellMode guifg='#000000' guibg='#53FDE9' gui=bold
-	hi OtherMode guifg='#000000' guibg='#EF2F27' gui=bold
+	hi CommandMode  guifg='#000000' guibg='#E02C6D' gui=bold
+	hi ShellMode    guifg='#000000' guibg='#53FDE9' gui=bold
+	hi OtherMode    guifg='#000000' guibg='#EF2F27' gui=bold
 	return ''
 endfunc
 
 function SetFocusedStatus()
-	setlocal statusline=%{SetColors()}
-	setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
-	setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
-	setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
-	setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
-	setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
-	setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
-	setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
-	setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
-	setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
-	setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
-	setlocal statusline+=%*
-	setlocal statusline+=%{StatusLeft()}
-	setlocal statusline+=%=
-	setlocal statusline+=%{StatusRight()}
+	if &ft ==# 'help'
+		setlocal statusline=%{HelpStatus()}
+	elseif &ft ==# 'taglist'
+		setlocal statusline=%{TagListStatus()}
+	else
+		setlocal statusline=%{SetColors()}
+		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
+		setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
+		setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
+		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
+		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
+		setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
+		setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
+		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
+		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
+		setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
+		setlocal statusline+=%*
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
+	endif
 endfunc
 
+
 function SetUnfocusedStatus()
-	setlocal statusline=%{SetColors()}
-	setlocal statusline+=%{StatusLeft()}
-	setlocal statusline+=%=
-	setlocal statusline+=%{StatusRight()}
+	if &ft ==# 'help'
+		setlocal statusline=%{HelpStatus()}
+	elseif &ft ==# 'taglist'
+		setlocal statusline=%{TagListStatus()}
+	else
+		setlocal statusline=%{SetColors()}
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
+	endif
 endfunc
 
 augroup StatusStuff
@@ -323,7 +260,10 @@ augroup StatusStuff
 	au WinLeave,BufLeave * call SetUnfocusedStatus()
 augroup END
 
-" TODO: set statusline contents for terminal
+" TODO: set statusline contents for terminal and help
+
+xmap <leader>a <Plug>(EasyAlign)
+nmap <leader>a <Plug>(EasyAlign)
 
 " Nuake quick-terminal toggle with Ctrl+Enter
 nnoremap <c-j> :Nuake<cr>
@@ -352,7 +292,7 @@ nnoremap <leader>r <C-W>=
 " Quick reload of vimrc
 nnoremap <leader>R :source $MYVIMRC<cr>
 " Toggle spellcheck
-nnoremap <leader>s :set spell!<cr>
+nnoremap <leader>S :set spell!<cr>
 " Quickly close a window
 nnoremap <leader>q :q<cr>
 " Set the current working directory as a workspace
@@ -360,7 +300,8 @@ nnoremap <leader>W :ToggleWorkspace<cr>
 " , . make more sense for navigating back / forward with last movement
 nnoremap . ;
 nnoremap ; .
-nnoremap <leader>a :ArgWrap<cr>
+" Split / join toggle
+nnoremap <leader>s :ArgWrap<cr> "
 
 " Theme {{{
 
@@ -385,6 +326,7 @@ hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 " ==============
 "	\R              :source $MYVIMRC
 " 	\s              toggle spellcheck
+" 	\r              reset window sizes
 " argwrap
 " 	\a              Toggles wrap for current block
 " swap
@@ -392,7 +334,9 @@ hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 " 	g<              Move comma separated item left
 " 	g>              Move comma separated item right
 " Nuake Terminal
-" 	Ctrl-Enter      terminal Toggle
+" 	Ctrl-j          terminal Toggle
+" Easy Indent
+" 	ga<align-char>  Align section by align-char (normal or visual)
 " Surround
 "	ds              Delete Surround
 "	cs              Change Surround
@@ -407,14 +351,10 @@ hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 "	\w              Find in open buffers
 "	\t              Find in tags
 "	\C              List of colorschemes
-" Wildfire
-"	Enter           Increase selection area
-"	Bksp            Decrease selection area
-" Visual Split
-"	<C-w>gr         Resize split to visual selection
-"	<C-w>gss        Split out visual selection
-"	<C-w>gsa        Split out visual selection above
-"	<C-w>gsb        Split out visual selection below
+" Visual Split (all in visual mode)
+"	<Enter>         Resize split to visual selection
+"	<PageUp>        Split out visual selection above
+"	<PageDown>      Split out visual selection below
 " IndentWise
 "	[-              Previous block with less indentation
 "	[+              Previous block with more indentation
