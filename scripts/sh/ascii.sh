@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SEP="| "
+export PROMPT_PREFIX=">>"
 export PROMPT_TEXT=" $ "
 export CLOCK_ICON="$SEP"
 export TIMER_ICON="$SEP"

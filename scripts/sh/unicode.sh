@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export UNICODE_FONT=true
-export PROMPT_TEXT="  "
+export PROMPT_TEXT="  " #"  "  #  " ##"ᐉ "
+export PROMPT_PREFIX="  "
 export CLOCK_ICON=""
 export CALENDAR_ICON=" "
 export FOLDER_ICON="  "
@@ -21,5 +22,5 @@ export LINE_ICON=""
 export COLUMN_ICON=""
 export POWERLINE_FILLED_LEFT=""
 export POWERLINE_FILLED_RIGHT=""
-export POWERLINE_LEFT="<" #TODO: get the actual characters
-export POWERLINE_RIGHT=">"
+export POWERLINE_LEFT=""
+export POWERLINE_RIGHT=""

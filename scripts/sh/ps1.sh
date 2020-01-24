@@ -1,14 +1,16 @@
 #!/bin/bash
 
 if loaded attributes; then
-	export PS1="\[$(bold)$PROMPT_COLOR\]$PROMPT_TEXT\[$(norm)\]"
+	if loaded unicode; then
+		export PS1="\[$(reverse)$PROMPT_COLOR\]$POWERLINE_FILLED_RIGHT \w \[$(norm)$PROMPT_COLOR\]$POWERLINE_FILLED_RIGHT\[$(norm)\] "
+	else
+		export PS1="\[$(reverse)$PROMPT_COLOR\] \w \[$(norm)\] "
+	fi
 else
 	[ -z "$SSH_CLIENT" ] \
-		&& export PS1="[tty]$PROMPT_TEXT" \
-		|| export PS1="[ssh]$PROMPT_TEXT"
+		&& export PS1="[tty] \w \$ " \
+		|| export PS1="[ssh] \w \$ "
 fi
-
-export PS1="\w$PS1"
 
 loaded prompt_command || return
 
