@@ -183,12 +183,12 @@ function StatusMode(modestr)
 	return ' '.result
 endfunc
 
-function HelpStatus()
-	return 'Help: '.expand('%:t')
+function LabeledStatusWithFile()
+	return b:status_label.' '.expand('%:t')
 endfunc
 
-function TagListStatus()
-	return 'Tag List'
+function LabeledStatus()
+	return b:status_label
 endfunc
 
 function StatusLeft()
@@ -218,9 +218,14 @@ endfunc
 
 function SetFocusedStatus()
 	if &ft ==# 'help'
-		setlocal statusline=%{HelpStatus()}
+		let b:status_label = 'help:'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &ft =~ 'man'
+		let b:status_label = 'man'
+		setlocal statusline=%{LabeledStatusWithFile()}
 	elseif &ft ==# 'taglist'
-		setlocal statusline=%{TagListStatus()}
+		let b:status_label = 'taglist'
+		setlocal statusline=%{LabeledStatus()}
 	else
 		setlocal statusline=%{SetColors()}
 		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
@@ -240,12 +245,16 @@ function SetFocusedStatus()
 	endif
 endfunc
 
-
 function SetUnfocusedStatus()
 	if &ft ==# 'help'
-		setlocal statusline=%{HelpStatus()}
+		let b:status_label = 'help:'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &ft =~ 'man'
+		let b:status_label = 'man'
+		setlocal statusline=%{LabeledStatusWithFile()}
 	elseif &ft ==# 'taglist'
-		setlocal statusline=%{TagListStatus()}
+		let b:status_label = 'taglist'
+		setlocal statusline=%{LabeledStatus()}
 	else
 		setlocal statusline=%{SetColors()}
 		setlocal statusline+=%{StatusLeft()}
