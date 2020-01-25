@@ -121,14 +121,18 @@ case "$PLATFORM" in
 	linux)
 		load unicode
 		load set_title
-		load trap
-		load git
+		if [ ! -z "$TMUX" ]; then
+			load trap
+			load git
+		fi
 		;;
 	wsl)
 		load ascii
 		load set_title
-		load trap
-		load git
+		if [ ! -z "$TMUX" ]; then
+			load trap
+			load git
+		fi
 		;;
 	unknown)
 		load ascii

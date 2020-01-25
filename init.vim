@@ -49,6 +49,9 @@ set laststatus=2
 set nowrap
 " Don't page output
 set nomore
+" Use relative line numbers
+set relativenumber
+set number
 " }}}
 
 " Plugins {{{
@@ -128,7 +131,7 @@ command! -bang -nargs=? -complete=dir Files
 
 autocmd FileType vim let b:vcm_tab_complete = 'vim'
 
-augroup qs_colors
+augroup ColorModifications
 	autocmd!
 	autocmd ColorScheme * highlight QuickScopePrimary
 		\ guibg='#00ff00' guifg='#000000' gui=underline,bold,reverse
@@ -136,6 +139,11 @@ augroup qs_colors
 	autocmd ColorScheme * highlight QuickScopeSecondary
 		\ guibg='#00ffff' guifg='#000000' gui=underline,bold,reverse
 		\ ctermfg=6 ctermbg=0 cterm=underline,bold,reverse
+	" Make folds blend in so that the status bar and splits are easier to identify
+	autocmd ColorScheme * hi Folded ctermbg=None guibg=None cterm=italic gui=italic
+	autocmd ColorScheme * hi LineNr ctermbg=7 ctermfg=16 guifg='#D0BFA1' guibg='#262626'
+	autocmd ColorScheme * hi CursorLineNr ctermbg=7 ctermfg=16 guifg='#D0BFA1' guibg='#918175'
+	autocmd ColorScheme * hi StatusLineNC guibg='#121212' gui=none ctermbg=0 cterm=none
 augroup END
 
 let g:workspace_autosave = 0
@@ -146,13 +154,7 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
-
-" Theme flags
 let g:srcery_italic = 1
-let g:gruvbox_italic = 1
-let g:palenight_terminal_italics = 1
-let g:onedark_terminal_italics = 1
-let g:jellybeans_use_term_italics = 1
 
 function StatusMode(modestr)
 	let result = ' '
@@ -178,7 +180,8 @@ function StatusMode(modestr)
 		let result = ' SHELL '
 		hi link StatusLine ShellMode
 	else
-		hi link StatusLine OtherMode
+		let result = ' NORMAL '
+		hi link StatusLine InactiveMode
 	endif
 	return ' '.result
 endfunc
@@ -213,6 +216,7 @@ function SetColors()
 	hi CommandMode  guifg='#000000' guibg='#E02C6D' gui=bold
 	hi ShellMode    guifg='#000000' guibg='#53FDE9' gui=bold
 	hi OtherMode    guifg='#000000' guibg='#EF2F27' gui=bold
+	hi InactiveMode guifg='#000000' guibg='#3A3A3A'
 	return ''
 endfunc
 
@@ -257,6 +261,8 @@ function SetUnfocusedStatus()
 		setlocal statusline=%{LabeledStatus()}
 	else
 		setlocal statusline=%{SetColors()}
+		setlocal statusline+=%#InactiveMode#%{StatusMode('')}
+		setlocal statusline+=%*
 		setlocal statusline+=%{StatusLeft()}
 		setlocal statusline+=%=
 		setlocal statusline+=%{StatusRight()}
@@ -326,8 +332,6 @@ catch /.*/
 	endtry
 endtry
 
-" Make folds blend in so that the status bar and splits are easier to identify
-hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 
 " }}}
 
