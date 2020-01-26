@@ -30,9 +30,6 @@ set equalalways
 set eadirection=both
 " Don't show the active mode
 set noshowmode
-" Ignore case for lowercase searches
-set ignorecase
-set smartcase
 " Search as you're typing
 set incsearch
 " Allow backspacing over everything
@@ -134,15 +131,15 @@ autocmd FileType vim let b:vcm_tab_complete = 'vim'
 augroup ColorModifications
 	autocmd!
 	autocmd ColorScheme * highlight QuickScopePrimary
-		\ guibg='#00ff00' guifg='#000000' gui=underline,bold,reverse
+		\ guibg='#FF8700' guifg='#121212' gui=underline,bold,reverse
 		\ ctermfg=2 ctermbg=0 cterm=underline,bold,reverse
 	autocmd ColorScheme * highlight QuickScopeSecondary
-		\ guibg='#00ffff' guifg='#000000' gui=underline,bold,reverse
+		\ guibg='#FF5C8F' guifg='#121212' gui=underline,bold,reverse
 		\ ctermfg=6 ctermbg=0 cterm=underline,bold,reverse
 	" Make folds blend in so that the status bar and splits are easier to identify
 	autocmd ColorScheme * hi Folded ctermbg=None guibg=None cterm=italic gui=italic
 	autocmd ColorScheme * hi LineNr ctermbg=7 ctermfg=16 guifg='#D0BFA1' guibg='#262626'
-	autocmd ColorScheme * hi CursorLineNr ctermbg=7 ctermfg=16 guifg='#D0BFA1' guibg='#918175'
+	autocmd ColorScheme * hi CursorLineNr ctermbg=7 ctermfg=16 guifg='#262626' guibg='#918175'
 	autocmd ColorScheme * hi StatusLineNC guibg='#121212' gui=none ctermbg=0 cterm=none
 augroup END
 
@@ -314,7 +311,7 @@ nnoremap <leader>q :q<cr>
 nnoremap <leader>W :ToggleWorkspace<cr>
 " , . make more sense for navigating back / forward with last movement
 nnoremap . ;
-nnoremap ; .
+nnoremap <space> .
 " Split / join toggle
 nnoremap <leader>s :ArgWrap<cr> "
 

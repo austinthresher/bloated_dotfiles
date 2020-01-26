@@ -1,6 +1,5 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 [ -e "$HOME/.bpinit" ] && source "$HOME/.bpinit"
-
 unset -f command_not_found_handle
 
 function launch_vim {
@@ -26,7 +25,7 @@ alias preview='feh --scale -d . &'
 alias ssh='env TERM="$PLATFORM:$COLORS:$TERM" ssh -t'
 alias _ssh='$(which ssh)'
 
-export PATH=$HOME/.dotfiles/scripts/sh:$PATH
+export PATH=$HOME/.dotfiles/scripts/sh:$HOME/go/bin:$PATH
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less

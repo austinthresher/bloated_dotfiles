@@ -10,7 +10,7 @@ __RESOLUTION=$(xrandr | head -n 1 | sed 's/.*current \([0-9]*\) x \([0-9]*\).*$/
 __HEIGHT=${__RESOLUTION##*x}
 __WIDTH=${__RESOLUTION%%x*}
 echo "$__RESOLUTION"
-if [ -d "/sys/class/power_supply/BAT*" ]; then
+if [ -d "/sys/class/power_supply/BAT0" ]; then
     cat "$HOME/.conkyrc" \
         | sed \
             -e "s@%WIDTH%@$__WIDTH@g" \
