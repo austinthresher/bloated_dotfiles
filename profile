@@ -26,6 +26,3 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [ -e "$HOME/.fehbg" ]; then
-	source "$HOME/.fehbg"
-fi

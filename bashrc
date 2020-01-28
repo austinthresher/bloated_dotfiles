@@ -118,9 +118,13 @@ case "$PLATFORM" in
 		load ascii
 		;;
 	linux)
-		load unicode
-		load set_title
+		if [ "$TERM" == linux ]; then
+			load ascii
+		else
+			load unicode
+		fi
 		if [ ! -z "$TMUX" ]; then
+			load set_title
 			load trap
 			load git
 		fi

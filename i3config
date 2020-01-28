@@ -9,6 +9,7 @@
 #
 
 # i3-helper uses i3-msg to set gaps based on res and launches conky and compton
+exec_always ~/.fehbg
 exec_always ~/.dotfiles/scripts/i3-helper.sh
 focus_follows_mouse no
 for_window [class=".*"] border pixel 1
