@@ -47,16 +47,15 @@ function dl_if_missing {
 
 mkdir -p "$HOME/.config/vis"
 mkdir -p "$HOME/.config/vis/plugins"
-
 dl_if_missing "$HOME/.config/vis/plugins/vis-filetype-settings.lua" \
 	https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua
 
 mkdir -p "$HOME/.config/nvim"
-mkdir -p "$HOME/.config/nvim/colors"
-mkdir -p "$HOME/.config/nvim/autoload"
-mkdir -p "$HOME/.config/nvim/plugins"
-dl_if_missing "$HOME/.config/nvim/autoload/plug.vim" \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+#mkdir -p "$HOME/.config/nvim/colors"
+#mkdir -p "$HOME/.config/nvim/autoload"
+#mkdir -p "$HOME/.config/nvim/plugins"
+#dl_if_missing "$HOME/.config/nvim/autoload/plug.vim" \
+#	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p "$HOME/.config/i3"
 
@@ -64,11 +63,11 @@ prompt_to_replace profile       "$HOME/.profile"
 prompt_to_replace bashrc        "$HOME/.bashrc"
 prompt_to_replace inputrc       "$HOME/.inputrc"
 prompt_to_replace tmux.conf     "$HOME/.tmux.conf"
-prompt_to_replace tmux.local    "$HOME/.tmux.local"
 prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 prompt_to_replace visrc.lua     "$HOME/.config/vis/visrc.lua"
-prompt_to_replace init.vim      "$HOME/.config/nvim/init.vim"
+prompt_to_replace vimrc         "$HOME/.config/nvim/init.vim"
+prompt_to_replace vimrc         "$HOME/.vimrc"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
 prompt_to_replace ctags         "$HOME/.ctags"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
