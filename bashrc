@@ -29,7 +29,7 @@ alias vi='launch_vi'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 
-export PATH=$HOME/.dotfiles/scripts/sh:$HOME/go/bin:$PATH
+export PATH=$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
