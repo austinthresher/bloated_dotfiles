@@ -1,9 +1,12 @@
 #!/bin/bash
 set -x
 # Launches compton and conky with resolution-dependant settings
-
-killall -q compton -9
-killall -q conky -9
+if ps -aux | grep compton | grep -vq grep; then
+    killall -q compton -9
+fi
+if ps -aux | grep conky | grep -vq grep; then
+    killall -q conky -9
+fi
 
 compton --daemon
 __RESOLUTION=$(xrandr | head -n 1 | sed 's/.*current \([0-9]*\) x \([0-9]*\).*$/\1x\2/')

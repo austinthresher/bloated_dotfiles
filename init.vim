@@ -1,4 +1,6 @@
 
+" TODO: Better tabline theming
+
 " {{{
 " Disable vi-compatible defaults
 set nocompatible
@@ -61,7 +63,8 @@ Plug 'junegunn/fzf.vim'               " FZF helpful functions
 Plug 'srcery-colors/srcery-vim'       " Pretty colors
 Plug 'ajh17/vimcompletesme'           " Simple autocomplete
 Plug 'tpope/vim-unimpaired'           " Adds a lot of useful next / prev maps
-Plug 'machakann/vim-sandwich'         " Adds sa, sc, and sd commands to change / delete surrounding chars
+Plug 'machakann/vim-sandwich'         " Adds sa, sr, and sd commands to change / delete surrounding chars
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'               " Repeat plugin commands with .
 Plug 'tpope/vim-abolish'              " Gives :S that does search and replace maintaining case, and more
 Plug 'sheerun/vim-polyglot'           " Language megapack
@@ -126,7 +129,11 @@ command! -bang -nargs=? -complete=dir Files
 		\ {'options': ['--info=inline', '--preview', 'cat {}']}
 		\)
 
-autocmd FileType vim let b:vcm_tab_complete = 'vim'
+augroup FileTypes
+	autocmd!
+	autocmd FileType vim let b:vcm_tab_complete = 'vim'
+	autocmd FileType taglist set norelativenumber
+augroup END
 
 augroup ColorModifications
 	autocmd!
@@ -152,6 +159,11 @@ let g:highlightedyank_highlight_duration = 100
 let g:strip_whitespace_on_save = 1
 let g:rainbow_active = 1
 let g:srcery_italic = 1
+
+let g:Tlist_Enable_Fold_Column = 0
+let g:Tlist_Exit_OnlyWindow = 1
+let g:Tlist_Show_One_File = 1
+let g:Tlist_Use_Right_Window = 1
 
 function StatusMode(modestr)
 	let result = ' '
@@ -272,8 +284,6 @@ augroup StatusStuff
 	au WinLeave,BufLeave * call SetUnfocusedStatus()
 augroup END
 
-" TODO: set statusline contents for terminal and help
-
 xmap <leader>a <Plug>(EasyAlign)
 nmap <leader>a <Plug>(EasyAlign)
 
@@ -310,10 +320,13 @@ nnoremap <leader>q :q<cr>
 " Set the current working directory as a workspace
 nnoremap <leader>W :ToggleWorkspace<cr>
 " , . make more sense for navigating back / forward with last movement
-nnoremap . ;
-nnoremap <space> .
+"nnoremap . ;
+"nnoremap <space> .
 " Split / join toggle
 nnoremap <leader>s :ArgWrap<cr> "
+
+nnoremap ` <c-w>
+nnoremap <c-w>` `
 
 " Theme {{{
 

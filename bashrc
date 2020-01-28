@@ -124,16 +124,16 @@ case "$PLATFORM" in
 			load unicode
 		fi
 		if [ ! -z "$TMUX" ]; then
-			load set_title
-			load trap
+#			load set_title
+			#load trap
 			load git
 		fi
 		;;
 	wsl)
 		load ascii
-		load set_title
+#		load set_title
 		if [ ! -z "$TMUX" ]; then
-			load trap
+			#load trap
 			load git
 		fi
 		;;
@@ -143,7 +143,7 @@ case "$PLATFORM" in
 esac
 
 load ip
-load tmux
+#load tmux
 load ps1
 
 if require set_title; then
