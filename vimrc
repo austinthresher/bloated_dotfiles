@@ -1,3 +1,4 @@
+" Options {{{
 " Disable vi-compatible defaults
 set nocompatible
 " Allow folding in files using {{{ and }}}
@@ -45,141 +46,13 @@ set nomore
 " Use relative line numbers
 set relativenumber
 set number
+filetype plugin indent on
+packadd! matchit
+packadd! editexisting
+packadd! justify
+" }}}
 
-
-function StatusMode(modestr)
-	let result = ' '
-	if a:modestr ==# 'i'
-		hi link StatusLine InsertMode
-		let result = ' INSERT '
-	elseif a:modestr ==# 'r'
-		hi link StatusLine ReplaceMode
-		let result = ' REPLACE '
-	elseif a:modestr ==# 't'
-		hi link StatusLine TerminalMode
-		let result = ' TERMINAL '
-	elseif a:modestr ==# 'n'
-		hi link StatusLine NormalMode
-		let result = ' NORMAL '
-	elseif a:modestr ==# 'v'
-		hi link StatusLine VisualMode
-		let result = ' VISUAL '
-	elseif a:modestr ==# 'c'
-		hi link StatusLine CommandMode
-		let result = ' COMMAND '
-	elseif a:modestr ==# '!'
-		let result = ' SHELL '
-		hi link StatusLine ShellMode
-	else
-		let result = ' NORMAL '
-		hi link StatusLine InactiveMode
-	endif
-	return ' '.result
-endfunc
-
-function LabeledStatusWithFile()
-	return b:status_label.' '.expand('%:t')
-endfunc
-
-function LabeledStatus()
-	return b:status_label
-endfunc
-
-function StatusLeft()
-	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
-	let modified = &modified ? '+' : ''
-	let ro = &readonly ? ' [RO]' : ''
-	return '  '.filename.modified.ro
-endfunc
-
-function StatusRight()
-	let lchars = strlen(line('$'))
-	return virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
-	return result
-endfunc
-
-function SetColors()
-	hi NormalMode   guifg='#000000' guibg='#D0BFA1' gui=bold
-	hi VisualMode   guifg='#000000' guibg='#2C78BF' gui=bold
-	hi InsertMode   guifg='#000000' guibg='#FBB829' gui=bold
-	hi ReplaceMode  guifg='#000000' guibg='#FF5F00' gui=bold
-	hi TerminalMode guifg='#000000' guibg='#519F50' gui=bold
-	hi CommandMode  guifg='#000000' guibg='#E02C6D' gui=bold
-	hi ShellMode    guifg='#000000' guibg='#53FDE9' gui=bold
-	hi OtherMode    guifg='#000000' guibg='#EF2F27' gui=bold
-	hi InactiveMode guifg='#000000' guibg='#3A3A3A'
-	return ''
-endfunc
-
-function SetFocusedStatus()
-	if &ft ==# 'help'
-		let b:status_label = 'help:'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &ft =~ 'man'
-		let b:status_label = 'man'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	else
-		setlocal statusline=%{SetColors()}
-		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
-		setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
-		setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
-		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
-		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
-		setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
-		setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
-		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
-		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
-		setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
-		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
-		setlocal statusline+=%=
-		setlocal statusline+=%{StatusRight()}
-	endif
-endfunc
-
-function SetUnfocusedStatus()
-	if &ft ==# 'help'
-		let b:status_label = 'help:'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &ft =~ 'man'
-		let b:status_label = 'man'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	else
-		setlocal statusline=%{SetColors()}
-		setlocal statusline+=%#InactiveMode#%{StatusMode('')}
-		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
-		setlocal statusline+=%=
-		setlocal statusline+=%{StatusRight()}
-	endif
-endfunc
-
-augroup StatusStuff
-	au!
-	au WinEnter,BufEnter * call SetFocusedStatus()
-	au WinLeave,BufLeave * call SetUnfocusedStatus()
-augroup END
-
-if has("nvim")
-	" Navigate out of terminal mode more easily
-	tnoremap <esc> <c-\><c-n>
-	tnoremap <c-w> <c-\><c-n><c-w>
-endif
-" Reset layout
-nnoremap <leader>r <C-W>=
-" Quick reload of vimrc
-nnoremap <leader>R :source $MYVIMRC<cr>
-" Toggle spellcheck
-nnoremap <leader>S :set spell!<cr>
-" Quickly close a window
-nnoremap <leader>q :q<cr>
-
-nnoremap ` <c-w>
-nnoremap <c-w>` `
-
-
-" Color Theme
-
+" Color Palette {{{
 " srcery color palette
 let s:black          = ['#1C1B19', 0]
 let s:red            = ['#EF2F27', 1]
@@ -210,7 +83,9 @@ let s:xgray5        = ['#4E4E4E', 239]
 let s:xgray6        = ['#585858', 240]
 
 let s:none = ['NONE', 'NONE']
-
+" }}}
+" Highlights {{{
+" Wrapper for setting highlights
 function! s:hi(group, fg, bg, attr)
 	let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
 		\ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
@@ -295,5 +170,146 @@ if has('terminal')
 	call s:hi('Terminal', s:bright_white, s:hard_black, 'NONE')
 endif
 
+call s:hi('NormalMode',   s:hard_black, s:white, 'bold')
+call s:hi('VisualMode',   s:hard_black, s:blue, 'bold')
+call s:hi('InsertMode',   s:hard_black, s:yellow, 'bold')
+call s:hi('ReplaceMode',  s:hard_black, s:orange, 'bold')
+call s:hi('TerminalMode', s:hard_black, s:green, 'bold')
+call s:hi('CommandMode',  s:hard_black, s:magenta, 'bold')
+call s:hi('ShellMode',    s:hard_black, s:cyan, 'bold')
+call s:hi('OtherMode',    s:hard_black, s:red, 'bold')
+call s:hi('InactiveMode', s:hard_black, s:xgray3, 'NONE')
+" }}}
+" Statusline {{{
+function! StatusMode(modestr)
+	let result = ' '
+	if a:modestr ==# 'i'
+		hi link StatusLine InsertMode
+		let result = ' INSERT '
+	elseif a:modestr ==# 'r'
+		hi link StatusLine ReplaceMode
+		let result = ' REPLACE '
+	elseif a:modestr ==# 't'
+		hi link StatusLine TerminalMode
+		let result = ' TERMINAL '
+	elseif a:modestr ==# 'n'
+		hi link StatusLine NormalMode
+		let result = ' NORMAL '
+	elseif a:modestr ==# 'v'
+		hi link StatusLine VisualMode
+		let result = ' VISUAL '
+	elseif a:modestr ==# 'c'
+		hi link StatusLine CommandMode
+		let result = ' COMMAND '
+	elseif a:modestr ==# '!'
+		let result = ' SHELL '
+		hi link StatusLine ShellMode
+	else
+		let result = ' NORMAL '
+		hi link StatusLine InactiveMode
+	endif
+	return ' '.result
+endfunc
 
-set termguicolors
+function! LabeledStatusWithFile()
+	return b:status_label.' '.expand('%:t')
+endfunc
+
+function! LabeledStatus()
+	return b:status_label
+endfunc
+
+function! StatusLeft()
+	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
+	let modified = &modified ? '+' : ''
+	let ro = &readonly ? ' [RO]' : ''
+	return '  '.filename.modified.ro
+endfunc
+
+function! StatusRight()
+	let lchars = strlen(line('$'))
+	return virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
+	return result
+endfunc
+
+function! SetFocusedStatus()
+	if &ft ==# 'help'
+		let b:status_label = 'help:'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &ft =~ 'man'
+		let b:status_label = 'man'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	else
+		setlocal statusline=
+		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
+		setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
+		setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
+		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
+		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
+		setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
+		setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
+		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
+		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
+		setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
+		setlocal statusline+=%*
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
+	endif
+endfunc
+
+function! SetUnfocusedStatus()
+	if &ft ==# 'help'
+		let b:status_label = 'help:'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &ft =~ 'man'
+		let b:status_label = 'man'
+		setlocal statusline=%{LabeledStatusWithFile()}
+	else
+		setlocal statusline=
+		setlocal statusline+=%#InactiveMode#%{StatusMode('')}
+		setlocal statusline+=%*
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
+	endif
+endfunc
+
+augroup StatusStuff
+	au!
+	au WinEnter,BufEnter * call SetFocusedStatus()
+	au WinLeave,BufLeave * call SetUnfocusedStatus()
+augroup END
+" }}}
+" Maps {{{
+if has("terminal")
+	" Navigate out of terminal mode more easily
+	tnoremap <esc> <c-\><c-n>
+	tnoremap <c-w> <c-\><c-n><c-w>
+endif
+" Reset layout
+nnoremap <leader>r <C-W>=
+" Quick reload of vimrc
+nnoremap <leader>R :source $MYVIMRC<cr>
+" Toggle spellcheck
+nnoremap <leader>S :set spell!<cr>
+" Quickly close a window
+nnoremap <leader>q :q<cr>
+
+nnoremap ` <c-w>
+nnoremap <c-w>` `
+nnoremap [b :bprev<cr>
+nnoremap ]b :bnext<cr>
+nnoremap [B :bfirst<cr>
+nnoremap ]B :blast<cr>
+" }}}
+
+" Filetype autocmds {{{
+augroup python
+	au!
+	au FileType python setlocal tabstop=4
+	au FileType python setlocal shiftwidth=4
+	au FileType python setlocal expandtab
+augroup END
+" }}}
+"set termguicolors
