@@ -47,9 +47,6 @@ set nomore
 set relativenumber
 set number
 filetype plugin indent on
-packadd! matchit
-packadd! editexisting
-packadd! justify
 " }}}
 
 " Color Palette {{{
@@ -295,6 +292,8 @@ nnoremap <leader>R :source $MYVIMRC<cr>
 nnoremap <leader>S :set spell!<cr>
 " Quickly close a window
 nnoremap <leader>q :q<cr>
+" Clear search with <C-L>
+nnoremap <c-l> :noh<cr><c-l>
 
 nnoremap ` <c-w>
 nnoremap <c-w>` `
