@@ -1,3 +1,23 @@
+call plug#begin('~/.vim/plugs')
+
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-fugitive'
+Plug 'ajh17/VimCompletesMe'
+"Plug 'bling/vim-bufferline'
+
+call plug#end()
+
+function! s:is_loaded(name)
+	if empty(filter(split(execute('scriptnames'), "\n"),
+		\ 'v:val =~? "'.a:name.'"'))
+		return 0
+	endif
+	return 1
+endfunc
+
+let g:preview_line = ''
+
 " Options {{{
 " Disable vi-compatible defaults
 set nocompatible
@@ -47,6 +67,8 @@ set nomore
 set relativenumber
 set number
 filetype plugin indent on
+" Default to new windows appearing below current
+set splitbelow
 " }}}
 
 " Color Palette {{{
@@ -81,6 +103,7 @@ let s:xgray6        = ['#585858', 240]
 
 let s:none = ['NONE', 'NONE']
 " }}}
+
 " Highlights {{{
 " Wrapper for setting highlights
 function! s:hi(group, fg, bg, attr)
@@ -177,6 +200,7 @@ call s:hi('ShellMode',    s:hard_black, s:cyan, 'bold')
 call s:hi('OtherMode',    s:hard_black, s:red, 'bold')
 call s:hi('InactiveMode', s:hard_black, s:xgray3, 'NONE')
 " }}}
+
 " Statusline {{{
 function! StatusMode(modestr)
 	let result = ' '
@@ -201,6 +225,9 @@ function! StatusMode(modestr)
 	elseif a:modestr ==# '!'
 		let result = ' SHELL '
 		hi link StatusLine ShellMode
+	elseif a:modestr ==# 'p'
+		let result = ' PREVIEW '
+		hi link StatusLine InactiveMode
 	else
 		let result = ' NORMAL '
 		hi link StatusLine InactiveMode
@@ -236,6 +263,12 @@ function! SetFocusedStatus()
 	elseif &ft =~ 'man'
 		let b:status_label = 'man'
 		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &previewwindow
+		setlocal statusline=%#NormalMode#%{StatusMode('p')}
+		setlocal statusline+=%*
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
 	else
 		setlocal statusline=
 		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
@@ -262,6 +295,12 @@ function! SetUnfocusedStatus()
 	elseif &ft =~ 'man'
 		let b:status_label = 'man'
 		setlocal statusline=%{LabeledStatusWithFile()}
+	elseif &previewwindow
+		setlocal statusline=%#InactiveMode#%{StatusMode('p')}
+		setlocal statusline+=%*
+		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=%=
+		setlocal statusline+=%{StatusRight()}
 	else
 		setlocal statusline=
 		setlocal statusline+=%#InactiveMode#%{StatusMode('')}
@@ -278,6 +317,7 @@ augroup StatusStuff
 	au WinLeave,BufLeave * call SetUnfocusedStatus()
 augroup END
 " }}}
+
 " Maps {{{
 if has("terminal")
 	" Navigate out of terminal mode more easily
@@ -303,12 +343,90 @@ nnoremap [B :bfirst<cr>
 nnoremap ]B :blast<cr>
 " }}}
 
-" Filetype autocmds {{{
-augroup python
+func! GetInnermostFunction()
+	let [l:bufnum, l:lnum, l:col, l:off, l:curswant] = getcurpos()
+	let l:str = strpart(getline("."), 0, l:col)
+	let l:scope = 0
+	let l:name = ""
+	let l:stack = [""]
+	for c in split(l:str, '\zs')
+		if c ==# '('
+			while len(l:stack) <= l:scope
+				let l:stack = l:stack + [""]
+			endwhile
+			let l:stack[l:scope] = l:name
+			let l:scope += 1
+			let l:name = ""
+		elseif c ==# ')'
+			let l:scope -= 1
+			if l:scope < 0
+				let l:scope = 0
+			endif
+			let l:name = l:stack[l:scope]
+			if len(l:stack) > 1
+				let l:stack = l:stack[:-2]
+			else
+				let l:stack = [""]
+			endif
+		elseif c =~ "[A-Za-z_0-9]"
+			let l:name = l:name.c
+		elseif c =~ "[ \t]"
+			continue
+		else
+			let l:name = ""
+		endif
+	endfor
+	return l:stack[-1]
+endfunc
+
+func! EchoSig()
+	let l:func = ""
+	try
+		let l:func = GetInnermostFunction()
+	catch
+		return
+	endtry
+	try
+		let l:sig = ""
+		redir => l:sig
+		silent exec "norm :is ".l:func."\<cr>"
+		redir END
+		echo substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')
+	catch
+		if len(l:func) > 0
+			echo "undefined function '".l:func."'"
+		endif
+		return
+	endtry
+endfunc
+
+nnoremap <silent> <leader>f :call EchoSig()<cr>
+
+" Autocmds {{{
+set previewheight=1
+set updatetime=500
+"au! CursorHold *.[ch] nested call s:preview_tag()
+augroup Vim
+	au!
+	au FileType vim let b:vcm_tab_complete = 'vim'
+augroup END
+augroup C
+	au!
+	au FileType c let b:vcm_tab_complete = 'tag'
+augroup END
+augroup Python
 	au!
 	au FileType python setlocal tabstop=4
 	au FileType python setlocal shiftwidth=4
 	au FileType python setlocal expandtab
 augroup END
+" }}}
+
+" Plugin Configuration {{{
+if s:is_loaded("vim-bufferline")
+	let g:bufferline_rotate = 2
+	let g:bufferline_show_bufnr = 0
+	let g:bufferline_echo = 0
+endif
 " }}}
 "set termguicolors
