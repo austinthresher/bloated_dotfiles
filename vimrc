@@ -1,23 +1,21 @@
-call plug#begin('~/.vim/plugs')
 
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-fugitive'
-Plug 'ajh17/VimCompletesMe'
-"Plug 'bling/vim-bufferline'
+" Plugins {{{
 
-call plug#end()
+try
+	call plug#begin('~/.vim/plugs')
 
-function! s:is_loaded(name)
-	if empty(filter(split(execute('scriptnames'), "\n"),
-		\ 'v:val =~? "'.a:name.'"'))
-		return 0
-	endif
-	return 1
-endfunc
+	Plug 'tpope/vim-sensible'
+	Plug 'tpope/vim-unimpaired'
+	Plug 'tpope/vim-fugitive'
+	Plug 'bling/vim-bufferline'
+	Plug 'ludovicchabant/vim-gutentags'
 
-let g:status_func_info = ''
-let g:status_func_error = ''
+	call plug#end()
+catch
+	echo "vim-plug is missing or broken"
+endtry
+
+" }}}
 
 " Options {{{
 " Disable vi-compatible defaults
@@ -55,7 +53,7 @@ set backspace=indent,eol,start
 " Spaces for status line and fold
 "set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 " Enable the mouse
-set mouse=a
+" set mouse=a " Disabled, having some issues with Konsole
 " Set US English for spellcheck
 set spelllang=en_us
 " Always show statusbar
@@ -70,14 +68,28 @@ set number
 filetype plugin indent on
 " Default to new windows appearing below current
 set splitbelow
+" Don't try to set the cursor
 set guicursor=
+" Preview window is 1 line tall
+set previewheight=1
+" CursorHold kicks in after half a second
+set updatetime=500
+
 " }}}
 
 " Functions {{{
 
+function! s:is_loaded(name)
+	if empty(filter(split(execute('scriptnames'), "\n"),
+		\ 'v:val =~? "'.a:name.'"'))
+		return 0
+	endif
+	return 1
+endfunc
+
 " Scans the current line from start to cursor position, tracking any
 " identifiers followed by open parens it finds. When it reaches the
-" cursor, the last unclosed paren is attached to the function name
+" cursor, the last unclosed paren attached to a name is the function
 " whose arguments are being entered
 func! GetUnclosedFunc()
 	let l:col = getcurpos()[2]
@@ -170,13 +182,24 @@ func! SafeGetCurFuncSig()
 	return ["", ""]
 endfunc
 
+let g:status_func_info = ''
+let g:status_func_error = ''
 func! SetStatusFuncInfo()
 	let [g:status_func_info, g:status_func_error] = SafeGetCurFuncSig()
+endfunc
+
+" Wrapper for setting highlights
+function! s:hi(group, fg, bg, attr)
+	let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
+		\ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
+		\ 'cterm='.a:attr ]
+	execute join(l:cmd, ' ')
 endfunc
 
 " }}}
 
 " Color Palette {{{
+
 " srcery color palette
 let s:black          = ['#1C1B19', 0]
 let s:red            = ['#EF2F27', 1]
@@ -207,16 +230,10 @@ let s:xgray5        = ['#4E4E4E', 239]
 let s:xgray6        = ['#585858', 240]
 
 let s:none = ['NONE', 'NONE']
+
 " }}}
 
 " Highlights {{{
-" Wrapper for setting highlights
-function! s:hi(group, fg, bg, attr)
-	let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
-		\ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
-		\ 'cterm='.a:attr ]
-	execute join(l:cmd, ' ')
-endfunc
 
 call s:hi('Normal', s:bright_white, s:black, 'NONE')
 
@@ -306,11 +323,14 @@ call s:hi('OtherMode',    s:hard_black, s:red, 'bold')
 call s:hi('InactiveMode', s:hard_black, s:xgray3, 'NONE')
 
 call s:hi('FileName',     s:bright_white,  s:xgray3, 'NONE')
-call s:hi('FuncSig',      s:bright_orange, s:xgray1, 'bold')
+call s:hi('FuncSig',      s:bright_orange, s:xgray1, 'NONE')
+call s:hi('FuncSigError', s:bright_red,    s:xgray1, 'bold')
 
 " }}}
 
 " Statusline {{{
+
+" TODO: I think this function is useless outside of the modestr
 function! StatusMode(modestr)
 	let result = ' '
 	if a:modestr ==# 'i'
@@ -393,7 +413,9 @@ function! SetFocusedStatus()
 		setlocal statusline+=%#FileName#%{StatusLeft()}
 		setlocal statusline+=%*
 		setlocal statusline+=\ %#FuncSig#%{(g:status_func_info==#'')?'':g:status_func_info}%*
+		setlocal statusline+=\ %#FuncSigError#%{(g:status_func_error==#'')?'':g:status_func_error}%*
 		setlocal statusline+=%=
+		setlocal statusline+=%{gutentags#statusline()}
 		setlocal statusline+=\ %{StatusRight()}
 	endif
 endfunc
@@ -426,9 +448,11 @@ augroup StatusStuff
 	au WinEnter,BufEnter * call SetFocusedStatus()
 	au WinLeave,BufLeave * call SetUnfocusedStatus()
 augroup END
+
 " }}}
 
 " Maps {{{
+
 if has("terminal")
 	" Navigate out of terminal mode more easily
 	tnoremap <esc> <c-\><c-n>
@@ -450,15 +474,11 @@ nnoremap <c-w>` `
 
 " }}}
 
-
 " Autocmds {{{
-set previewheight=1
-set updatetime=500
 
 au! CursorMoved * call SetStatusFuncInfo()
 au! CursorMovedI * call SetStatusFuncInfo() | startinsert
 
-"au! CursorHold *.[ch] nested call s:preview_tag()
 augroup Vim
 	au!
 	au FileType vim let b:vcm_tab_complete = 'vim'
@@ -473,13 +493,19 @@ augroup Python
 	au FileType python setlocal shiftwidth=4
 	au FileType python setlocal expandtab
 augroup END
+
 " }}}
 
 " Plugin Configuration {{{
-if s:is_loaded("vim-bufferline")
-	let g:bufferline_rotate = 2
-	let g:bufferline_show_bufnr = 0
-	let g:bufferline_echo = 0
-endif
+
+let g:bufferline_rotate = 1
+let g:bufferline_show_bufnr = 0
+let g:bufferline_active_buffer_left = '[ '
+let g:bufferline_fname_mod = ':.'
+
+let g:gutentags_generate_on_empty_buffer = 1
+let g:gutentags_cache_dir = '/tmp/'
+let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
+let g:gutentags_ctags_exclude_wildignore = 1
+
 " }}}
-"set termguicolors
