@@ -16,7 +16,8 @@ function! s:is_loaded(name)
 	return 1
 endfunc
 
-let g:preview_line = ''
+let g:status_func_info = ''
+let g:status_func_error = ''
 
 " Options {{{
 " Disable vi-compatible defaults
@@ -69,6 +70,110 @@ set number
 filetype plugin indent on
 " Default to new windows appearing below current
 set splitbelow
+set guicursor=
+" }}}
+
+" Functions {{{
+
+" Scans the current line from start to cursor position, tracking any
+" identifiers followed by open parens it finds. When it reaches the
+" cursor, the last unclosed paren is attached to the function name
+" whose arguments are being entered
+func! GetUnclosedFunc()
+	let l:col = getcurpos()[2]
+	let l:str = strpart(getline("."), 0, l:col)
+	let l:scope = 0 " Track the depth of our stack
+	let l:name = "" " Accumulates the name-in-progress between parens
+	let l:stack = [""] " Stack of names with parens we've seen 
+	let l:space = 0 " Flag to clear l:name if a space was encountered
+	for c in split(l:str, '\zs')
+		let l:col -= 1
+		if c ==# '('
+			if l:space
+				return ''
+			endif
+			while len(l:stack) <= l:scope
+				let l:stack = l:stack + [""]
+			endwhile
+			let l:stack[l:scope] = l:name
+			let l:scope += 1
+			let l:name = ""
+		elseif c ==# ')'
+			if l:col > 0
+				let l:scope -= 1
+				if l:scope < 0
+					let l:scope = 0
+				endif
+				let l:name = l:stack[l:scope]
+				if len(l:stack) > 1
+					let l:stack = l:stack[:-2]
+				else
+					let l:stack = [""]
+				endif
+			endif
+		elseif c =~ "[A-Za-z_0-9:]"
+			if l:space
+				let l:name = ""
+				let l:space = 0
+			endif
+			let l:name = l:name.c
+		elseif c =~ "[ \t]"
+			let l:space = 1
+			continue
+		else
+			let l:name = ""
+		endif
+	endfor
+	return l:stack[-1]
+endfunc
+
+func! GetCurFuncSig()
+	let l:func = ""
+	try
+		let l:func = GetUnclosedFunc()
+	catch
+	endtry
+	if len(l:func) > 0
+		let l:tags = taglist(l:func)
+		if !empty(l:tags)
+			silent exe 'keepalt hide tag '.(l:tags[0].name)
+			let l:line = getline(".")
+			silent exe 'keepalt hide pop'
+			return [1, l:line]
+		endif
+		try
+			let l:sig = ""
+			redir => l:sig
+			silent exec "norm :is ".l:func."\<cr>"
+			redir END
+			return [1, substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')]
+		catch
+		endtry
+		return [0, l:func]
+	endif
+	return [1, ""]
+endfunc
+
+func! SafeGetCurFuncSig()
+	if mode() =~ "[niR]"
+		let l:win = winsaveview()
+		let l:pos = getpos(".")
+		let [l:flag, l:sig] = GetCurFuncSig()
+		if l:flag
+			call setpos('.', l:pos)
+			call winrestview(l:win)
+			return [l:sig, ""]
+		else
+			return ["", "unknown function '".l:sig."'"]
+		endif
+	endif
+	return ["", ""]
+endfunc
+
+func! SetStatusFuncInfo()
+	let [g:status_func_info, g:status_func_error] = SafeGetCurFuncSig()
+endfunc
+
 " }}}
 
 " Color Palette {{{
@@ -125,7 +230,7 @@ endfor
 
 call s:hi('MatchParen', s:bright_magenta, s:none, 'bold')
 call s:hi('Conceal', s:blue, s:none, 'NONE')
-call s:hi('StatusLine', s:bright_white, s:xgray2, 'NONE')
+call s:hi('StatusLine', s:bright_white, s:xgray1, 'NONE')
 call s:hi('VertSplit', s:bright_white, s:none, 'NONE')
 call s:hi('WildMenu', s:blue, s:black, 'bold')
 call s:hi('ErrorMsg', s:bright_white, s:red, 'NONE')
@@ -199,6 +304,10 @@ call s:hi('CommandMode',  s:hard_black, s:magenta, 'bold')
 call s:hi('ShellMode',    s:hard_black, s:cyan, 'bold')
 call s:hi('OtherMode',    s:hard_black, s:red, 'bold')
 call s:hi('InactiveMode', s:hard_black, s:xgray3, 'NONE')
+
+call s:hi('FileName',     s:bright_white,  s:xgray3, 'NONE')
+call s:hi('FuncSig',      s:bright_orange, s:xgray1, 'bold')
+
 " }}}
 
 " Statusline {{{
@@ -247,7 +356,7 @@ function! StatusLeft()
 	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
 	let modified = &modified ? '+' : ''
 	let ro = &readonly ? ' [RO]' : ''
-	return '  '.filename.modified.ro
+	return '  '.filename.modified.ro.' '
 endfunc
 
 function! StatusRight()
@@ -267,7 +376,7 @@ function! SetFocusedStatus()
 		setlocal statusline=%#NormalMode#%{StatusMode('p')}
 		setlocal statusline+=%*
 		setlocal statusline+=%{StatusLeft()}
-		setlocal statusline+=%=
+		setlocal statusline+=%=%{
 		setlocal statusline+=%{StatusRight()}
 	else
 		setlocal statusline=
@@ -281,10 +390,11 @@ function! SetFocusedStatus()
 		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
 		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
 		setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
+		setlocal statusline+=%#FileName#%{StatusLeft()}
 		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
+		setlocal statusline+=\ %#FuncSig#%{(g:status_func_info==#'')?'':g:status_func_info}%*
 		setlocal statusline+=%=
-		setlocal statusline+=%{StatusRight()}
+		setlocal statusline+=\ %{StatusRight()}
 	endif
 endfunc
 
@@ -297,8 +407,8 @@ function! SetUnfocusedStatus()
 		setlocal statusline=%{LabeledStatusWithFile()}
 	elseif &previewwindow
 		setlocal statusline=%#InactiveMode#%{StatusMode('p')}
+		setlocal statusline+=%#FileName#%{StatusLeft()}
 		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
 		setlocal statusline+=%=
 		setlocal statusline+=%{StatusRight()}
 	else
@@ -337,74 +447,17 @@ nnoremap <c-l> :noh<cr><c-l>
 
 nnoremap ` <c-w>
 nnoremap <c-w>` `
-nnoremap [b :bprev<cr>
-nnoremap ]b :bnext<cr>
-nnoremap [B :bfirst<cr>
-nnoremap ]B :blast<cr>
+
 " }}}
 
-func! GetInnermostFunction()
-	let [l:bufnum, l:lnum, l:col, l:off, l:curswant] = getcurpos()
-	let l:str = strpart(getline("."), 0, l:col)
-	let l:scope = 0
-	let l:name = ""
-	let l:stack = [""]
-	for c in split(l:str, '\zs')
-		if c ==# '('
-			while len(l:stack) <= l:scope
-				let l:stack = l:stack + [""]
-			endwhile
-			let l:stack[l:scope] = l:name
-			let l:scope += 1
-			let l:name = ""
-		elseif c ==# ')'
-			let l:scope -= 1
-			if l:scope < 0
-				let l:scope = 0
-			endif
-			let l:name = l:stack[l:scope]
-			if len(l:stack) > 1
-				let l:stack = l:stack[:-2]
-			else
-				let l:stack = [""]
-			endif
-		elseif c =~ "[A-Za-z_0-9]"
-			let l:name = l:name.c
-		elseif c =~ "[ \t]"
-			continue
-		else
-			let l:name = ""
-		endif
-	endfor
-	return l:stack[-1]
-endfunc
-
-func! EchoSig()
-	let l:func = ""
-	try
-		let l:func = GetInnermostFunction()
-	catch
-		return
-	endtry
-	try
-		let l:sig = ""
-		redir => l:sig
-		silent exec "norm :is ".l:func."\<cr>"
-		redir END
-		echo substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')
-	catch
-		if len(l:func) > 0
-			echo "undefined function '".l:func."'"
-		endif
-		return
-	endtry
-endfunc
-
-nnoremap <silent> <leader>f :call EchoSig()<cr>
 
 " Autocmds {{{
 set previewheight=1
 set updatetime=500
+
+au! CursorMoved * call SetStatusFuncInfo()
+au! CursorMovedI * call SetStatusFuncInfo() | startinsert
+
 "au! CursorHold *.[ch] nested call s:preview_tag()
 augroup Vim
 	au!
