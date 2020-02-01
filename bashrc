@@ -9,10 +9,10 @@ function colorfg { printf "\e[3$1m"; }
 function colorbg { printf "\e[4$1m"; }
 
 function launch_vi {
-	if [ -f "$(which nvim)" ]; then
-		$(which nvim) "$@"
-	elif [ -f "$(which vim)" ]; then
+	if [ -f "$(which vim)" ]; then
 		$(which vim) "$@"
+	elif [ -f "$(which nvim)" ]; then
+		$(which nvim) "$@"
 	elif [ -f "$(which vis)" ]; then
 		$(which vis) "$@"
 	else
@@ -29,7 +29,7 @@ alias vi='launch_vi'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-	alias st='DISPLAY=:0.0 stterm -f Terminus'
+	alias st='DISPLAY=:0.0 stterm -f Terminus:size=16'
 	source "$HOME/.dotfiles/scripts/set-colors.sh"
 fi
 export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"

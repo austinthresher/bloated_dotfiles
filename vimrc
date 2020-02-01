@@ -171,9 +171,9 @@ func! SafeGetCurFuncSig()
 		let l:win = winsaveview()
 		let l:pos = getpos(".")
 		let [l:flag, l:sig] = GetCurFuncSig()
+		call setpos('.', l:pos)
+		call winrestview(l:win)
 		if l:flag
-			call setpos('.', l:pos)
-			call winrestview(l:win)
 			return [l:sig, ""]
 		else
 			return ["", "unknown function '".l:sig."'"]
@@ -184,8 +184,14 @@ endfunc
 
 let g:status_func_info = ''
 let g:status_func_error = ''
+let g:status_func_fts = [ 'c', 'cpp', 'python', 'vim', 'java' ]
 func! SetStatusFuncInfo()
-	let [g:status_func_info, g:status_func_error] = SafeGetCurFuncSig()
+	for f in g:status_func_fts
+		if &ft is? f
+			let [g:status_func_info, g:status_func_error] = SafeGetCurFuncSig()
+			return
+		endif
+	endfor
 endfunc
 
 " Wrapper for setting highlights
