@@ -28,8 +28,11 @@ alias vim='launch_vi'
 alias vi='launch_vi'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
-
-export PATH=$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH
+if [ ! -z "$WSL_DISTRO_NAME" ]; then
+	alias st='DISPLAY=:0.0 stterm -f Terminus'
+	source "$HOME/.dotfiles/scripts/set-colors.sh"
+fi
+export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less

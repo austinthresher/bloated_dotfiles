@@ -415,7 +415,11 @@ function! SetFocusedStatus()
 		setlocal statusline+=\ %#FuncSig#%{(g:status_func_info==#'')?'':g:status_func_info}%*
 		setlocal statusline+=\ %#FuncSigError#%{(g:status_func_error==#'')?'':g:status_func_error}%*
 		setlocal statusline+=%=
-		setlocal statusline+=%{gutentags#statusline()}
+		try
+			call gutentags#statusline()
+			setlocal statusline+=%{gutentags#statusline()}
+		catch
+		endtry
 		setlocal statusline+=\ %{StatusRight()}
 	endif
 endfunc
@@ -504,7 +508,6 @@ let g:bufferline_active_buffer_left = '[ '
 let g:bufferline_fname_mod = ':.'
 
 let g:gutentags_generate_on_empty_buffer = 1
-let g:gutentags_cache_dir = '/tmp/'
 let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
 let g:gutentags_ctags_exclude_wildignore = 1
 
