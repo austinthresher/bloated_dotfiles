@@ -51,11 +51,6 @@ dl_if_missing "$HOME/.config/vis/plugins/vis-filetype-settings.lua" \
 	https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua
 
 mkdir -p "$HOME/.vim"
-mkdir -p "$HOME/.vim/colors"
-mkdir -p "$HOME/.vim/autoload"
-mkdir -p "$HOME/.vim/plugins"
-dl_if_missing "$HOME/.vim/autoload/plug.vim" \
-	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p "$HOME/.config/i3"
 
@@ -66,8 +61,9 @@ prompt_to_replace tmux.conf     "$HOME/.tmux.conf"
 prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 prompt_to_replace visrc.lua     "$HOME/.config/vis/visrc.lua"
-prompt_to_replace vimrc         "$HOME/.config/nvim/init.vim"
-prompt_to_replace vimrc         "$HOME/.vimrc"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
 prompt_to_replace ctags         "$HOME/.ctags"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
+for f in vim/*; do
+	prompt_to_replace "$f" "$HOME/.$f"
+done

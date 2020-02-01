@@ -7,8 +7,11 @@ try
 	Plug 'tpope/vim-sensible'
 	Plug 'tpope/vim-unimpaired'
 	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-sleuth'
 	Plug 'bling/vim-bufferline'
-	Plug 'ludovicchabant/vim-gutentags'
+	if executable('ctags')
+		Plug 'ludovicchabant/vim-gutentags'
+	endif
 
 	call plug#end()
 catch
