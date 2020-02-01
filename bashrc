@@ -29,7 +29,7 @@ alias vi='launch_vi'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-	alias st='DISPLAY=:0.0 stterm -f Terminus:size=16'
+	alias st='env -i DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME stterm -f Terminus:size=16 -e bash -l'
 	source "$HOME/.dotfiles/scripts/set-colors.sh"
 fi
 export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
