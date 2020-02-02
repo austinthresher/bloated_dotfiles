@@ -90,113 +90,6 @@ function! s:is_loaded(name)
 	return 1
 endfunc
 
-" Scans the current line from start to cursor position, tracking any
-" identifiers followed by open parens it finds. When it reaches the
-" cursor, the last unclosed paren attached to a name is the function
-" whose arguments are being entered
-func! GetUnclosedFunc()
-	let l:col = getcurpos()[2]
-	let l:str = strpart(getline("."), 0, l:col)
-	let l:scope = 0 " Track the depth of our stack
-	let l:name = "" " Accumulates the name-in-progress between parens
-	let l:stack = [""] " Stack of names with parens we've seen 
-	let l:space = 0 " Flag to clear l:name if a space was encountered
-	for c in split(l:str, '\zs')
-		let l:col -= 1
-		if c ==# '('
-			if l:space
-				return ''
-			endif
-			while len(l:stack) <= l:scope
-				let l:stack = l:stack + [""]
-			endwhile
-			let l:stack[l:scope] = l:name
-			let l:scope += 1
-			let l:name = ""
-		elseif c ==# ')'
-			if l:col > 0
-				let l:scope -= 1
-				if l:scope < 0
-					let l:scope = 0
-				endif
-				let l:name = l:stack[l:scope]
-				if len(l:stack) > 1
-					let l:stack = l:stack[:-2]
-				else
-					let l:stack = [""]
-				endif
-			endif
-		elseif c =~ "[A-Za-z_0-9:]"
-			if l:space
-				let l:name = ""
-				let l:space = 0
-			endif
-			let l:name = l:name.c
-		elseif c =~ "[ \t]"
-			let l:space = 1
-			continue
-		else
-			let l:name = ""
-		endif
-	endfor
-	return l:stack[-1]
-endfunc
-
-func! GetCurFuncSig()
-	let l:func = ""
-	try
-		let l:func = GetUnclosedFunc()
-	catch
-	endtry
-	if len(l:func) > 0
-		let l:tags = taglist(l:func)
-		if !empty(l:tags)
-			silent exe 'keepalt hide tag '.(l:tags[0].name)
-			let l:line = getline(".")
-			silent exe 'keepalt hide pop'
-			return [1, l:line]
-		endif
-		try
-			let l:sig = ""
-			redir => l:sig
-			silent exec "norm :is ".l:func."\<cr>"
-			redir END
-			return [1, substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')]
-		catch
-		endtry
-		return [0, l:func]
-	endif
-	return [1, ""]
-endfunc
-
-func! SafeGetCurFuncSig()
-	if mode() =~ "[niR]"
-		let l:win = winsaveview()
-		let l:pos = getpos(".")
-		let [l:flag, l:sig] = GetCurFuncSig()
-		call setpos('.', l:pos)
-		call winrestview(l:win)
-		if l:flag
-			return [l:sig, ""]
-		else
-			return ["", "unknown function '".l:sig."'"]
-		endif
-	endif
-	return ["", ""]
-endfunc
-
-let g:status_func_info = ''
-let g:status_func_error = ''
-let g:status_func_fts = [ 'c', 'cpp', 'python', 'vim', 'java' ]
-func! SetStatusFuncInfo()
-	for f in g:status_func_fts
-		if &ft is? f
-			let [g:status_func_info, g:status_func_error] = SafeGetCurFuncSig()
-			return
-		endif
-	endfor
-endfunc
-
 " Wrapper for setting highlights
 function! s:hi(group, fg, bg, attr)
 	let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
@@ -321,146 +214,23 @@ if has('terminal')
 	call s:hi('Terminal', s:bright_white, s:hard_black, 'NONE')
 endif
 
-call s:hi('NormalMode',   s:hard_black, s:white, 'bold')
-call s:hi('VisualMode',   s:hard_black, s:blue, 'bold')
-call s:hi('InsertMode',   s:hard_black, s:yellow, 'bold')
-call s:hi('ReplaceMode',  s:hard_black, s:orange, 'bold')
-call s:hi('TerminalMode', s:hard_black, s:green, 'bold')
-call s:hi('CommandMode',  s:hard_black, s:magenta, 'bold')
-call s:hi('ShellMode',    s:hard_black, s:cyan, 'bold')
-call s:hi('OtherMode',    s:hard_black, s:red, 'bold')
-call s:hi('InactiveMode', s:hard_black, s:xgray3, 'NONE')
-
-call s:hi('FileName',     s:bright_white,  s:xgray3, 'NONE')
-call s:hi('FuncSig',      s:bright_orange, s:xgray1, 'NONE')
-call s:hi('FuncSigError', s:bright_red,    s:xgray1, 'bold')
+" Used by statuslime
+call s:hi('LimeNormal',   s:hard_black,    s:white,   'bold')
+call s:hi('LimeVisual',   s:hard_black,    s:blue,    'bold')
+call s:hi('LimeInsert',   s:hard_black,    s:yellow,  'bold')
+call s:hi('LimeReplace',  s:hard_black,    s:orange,  'bold')
+call s:hi('LimeTerminal', s:hard_black,    s:green,   'bold')
+call s:hi('LimeCommand',  s:hard_black,    s:magenta, 'bold')
+call s:hi('LimeShell',    s:hard_black,    s:cyan,    'bold')
+call s:hi('LimeOther',    s:hard_black,    s:red,     'bold')
+call s:hi('LimeInactive', s:hard_black,    s:xgray3,  'NONE')
+call s:hi('LimeFile',     s:bright_white,  s:xgray3,  'NONE')
+call s:hi('LimeFunc',     s:bright_orange, s:xgray1,  'NONE')
+call s:hi('LimeError',    s:bright_red,    s:xgray1,  'bold')
+call s:hi('LimeRuler',    s:bright_white,  s:xgray2,  'NONE')
 
 " }}}
 
-" Statusline {{{
-
-" TODO: I think this function is useless outside of the modestr
-function! StatusMode(modestr)
-	let result = ' '
-	if a:modestr ==# 'i'
-		hi link StatusLine InsertMode
-		let result = ' INSERT '
-	elseif a:modestr ==# 'r'
-		hi link StatusLine ReplaceMode
-		let result = ' REPLACE '
-	elseif a:modestr ==# 't'
-		hi link StatusLine TerminalMode
-		let result = ' TERMINAL '
-	elseif a:modestr ==# 'n'
-		hi link StatusLine NormalMode
-		let result = ' NORMAL '
-	elseif a:modestr ==# 'v'
-		hi link StatusLine VisualMode
-		let result = ' VISUAL '
-	elseif a:modestr ==# 'c'
-		hi link StatusLine CommandMode
-		let result = ' COMMAND '
-	elseif a:modestr ==# '!'
-		let result = ' SHELL '
-		hi link StatusLine ShellMode
-	elseif a:modestr ==# 'p'
-		let result = ' PREVIEW '
-		hi link StatusLine InactiveMode
-	else
-		let result = ' NORMAL '
-		hi link StatusLine InactiveMode
-	endif
-	return ' '.result
-endfunc
-
-function! LabeledStatusWithFile()
-	return b:status_label.' '.expand('%:t')
-endfunc
-
-function! LabeledStatus()
-	return b:status_label
-endfunc
-
-function! StatusLeft()
-	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
-	let modified = &modified ? '+' : ''
-	let ro = &readonly ? ' [RO]' : ''
-	return '  '.filename.modified.ro.' '
-endfunc
-
-function! StatusRight()
-	let lchars = strlen(line('$'))
-	return virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d', line('.'), line('$'))
-	return result
-endfunc
-
-function! SetFocusedStatus()
-	if &ft ==# 'help'
-		let b:status_label = 'help:'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &ft =~ 'man'
-		let b:status_label = 'man'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &previewwindow
-		setlocal statusline=%#NormalMode#%{StatusMode('p')}
-		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
-		setlocal statusline+=%=%{
-		setlocal statusline+=%{StatusRight()}
-	else
-		setlocal statusline=
-		setlocal statusline+=%#InsertMode#%{(mode()[0]==#'i')?StatusMode('i'):''}
-		setlocal statusline+=%#ReplaceMode#%{(mode()[0]==#'R')?StatusMode('r'):''}
-		setlocal statusline+=%#TerminalMode#%{(mode()[0]==#'t')?StatusMode('t'):''}
-		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'v')?StatusMode('v'):''}
-		setlocal statusline+=%#VisualMode#%{(mode()[0]==#'V')?StatusMode('v'):''}
-		setlocal statusline+=%#VisualMode#%{(char2nr(mode()[0])==0x16)?StatusMode('v'):''}
-		setlocal statusline+=%#CommandMode#%{(mode()[0]==#'c')?StatusMode('c'):''}
-		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'r')?StatusMode('r'):''}
-		setlocal statusline+=%#OtherMode#%{(mode()[0]==#'!')?StatusMode('!'):''}
-		setlocal statusline+=%#NormalMode#%{(mode()[0]==#'n')?StatusMode('n'):''}
-		setlocal statusline+=%#FileName#%{StatusLeft()}
-		setlocal statusline+=%*
-		setlocal statusline+=\ %#FuncSig#%{(g:status_func_info==#'')?'':g:status_func_info}%*
-		setlocal statusline+=\ %#FuncSigError#%{(g:status_func_error==#'')?'':g:status_func_error}%*
-		setlocal statusline+=%=
-		try
-			call gutentags#statusline()
-			setlocal statusline+=%{gutentags#statusline()}
-		catch
-		endtry
-		setlocal statusline+=\ %{StatusRight()}
-	endif
-endfunc
-
-function! SetUnfocusedStatus()
-	if &ft ==# 'help'
-		let b:status_label = 'help:'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &ft =~ 'man'
-		let b:status_label = 'man'
-		setlocal statusline=%{LabeledStatusWithFile()}
-	elseif &previewwindow
-		setlocal statusline=%#InactiveMode#%{StatusMode('p')}
-		setlocal statusline+=%#FileName#%{StatusLeft()}
-		setlocal statusline+=%*
-		setlocal statusline+=%=
-		setlocal statusline+=%{StatusRight()}
-	else
-		setlocal statusline=
-		setlocal statusline+=%#InactiveMode#%{StatusMode('')}
-		setlocal statusline+=%*
-		setlocal statusline+=%{StatusLeft()}
-		setlocal statusline+=%=
-		setlocal statusline+=%{StatusRight()}
-	endif
-endfunc
-
-augroup StatusStuff
-	au!
-	au WinEnter,BufEnter * call SetFocusedStatus()
-	au WinLeave,BufLeave * call SetUnfocusedStatus()
-augroup END
 
 " }}}
 
@@ -477,8 +247,6 @@ nnoremap <leader>r <C-W>=
 nnoremap <leader>R :source $MYVIMRC<cr>
 " Toggle spellcheck
 nnoremap <leader>S :set spell!<cr>
-" Quickly close a window
-nnoremap <leader>q :q<cr>
 " Clear search with <C-L>
 nnoremap <c-l> :noh<cr><c-l>
 
@@ -488,25 +256,6 @@ nnoremap <c-w>` `
 " }}}
 
 " Autocmds {{{
-
-au! CursorMoved * call SetStatusFuncInfo()
-au! CursorMovedI * call SetStatusFuncInfo() | startinsert
-
-augroup Vim
-	au!
-	au FileType vim let b:vcm_tab_complete = 'vim'
-augroup END
-augroup C
-	au!
-	au FileType c let b:vcm_tab_complete = 'tag'
-augroup END
-augroup Python
-	au!
-	au FileType python setlocal tabstop=4
-	au FileType python setlocal shiftwidth=4
-	au FileType python setlocal expandtab
-augroup END
-
 " }}}
 
 " Plugin Configuration {{{
