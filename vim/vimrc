@@ -9,10 +9,16 @@ try
     Plug 'tpope/vim-unimpaired'
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-sleuth'
+    Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-eunuch'
     Plug 'bling/vim-bufferline'
-    if executable('ctags')
+    Plug 'yggdroot/indentline'
+    Plug 'sheerun/vim-polyglot'
+
+    if executable('ctags') " TODO: check for exuberant ctags
         Plug 'ludovicchabant/vim-gutentags'
     endif
+
     call plug#end()
 catch
     echo "vim-plug is missing or broken"
@@ -153,7 +159,7 @@ for group in ['NonText', 'SpecialKey']
 endfor
 
 call s:hi('MatchParen', s:bright_magenta, s:none, 'bold')
-call s:hi('Conceal', s:blue, s:none, 'NONE')
+call s:hi('Conceal', s:xgray2, s:none, 'NONE')
 call s:hi('StatusLine', s:bright_white, s:xgray1, 'NONE')
 call s:hi('VertSplit', s:bright_white, s:none, 'NONE')
 call s:hi('WildMenu', s:blue, s:black, 'bold')
@@ -173,7 +179,7 @@ call s:hi('Special', s:orange, s:none, 'NONE')
 call s:hi('Comment', s:bright_black, s:none, 'italic')
 call s:hi('Todo', s:bright_white, s:black, 'bold,italic')
 call s:hi('Error', s:bright_white, s:red, 'bold')
-call s:hi('String', s:bright_green, s:none, 'italic')
+call s:hi('String', s:bright_green, s:none, 'NONE')
 
 for group in ['Statement', 'Conditional', 'Repeat', 'Label', 'Exception', 'Keyword']
     call s:hi(group, s:red, s:none, 'NONE')
@@ -199,7 +205,7 @@ call s:hi('Delimiter', s:bright_black, s:none, 'NONE')
 call s:hi('Folded', s:none, s:none, 'italic')
 call s:hi('LineNr', s:white, s:xgray1, 'NONE')
 call s:hi('CursorLineNr', s:xgray1, s:bright_black, 'NONE')
-call s:hi('StatusLineNC', s:xgray1, s:hard_black, 'NONE')
+call s:hi('StatusLineNC', s:xgray3, s:xgray1, 'NONE')
 
 call s:hi('Pmenu', s:bright_white, s:xgray2, 'NONE')
 call s:hi('PmenuSel', s:bright_white, s:magenta, 'bold')
@@ -231,10 +237,11 @@ call s:hi('LimeOther',        s:hard_black,    s:red,     'bold')
 call s:hi('LimeFile',         s:bright_white,  s:xgray3,  'NONE')
 call s:hi('LimeError',        s:bright_red,    s:xgray1,  'bold')
 call s:hi('LimeRuler',        s:bright_white,  s:xgray2,  'NONE')
-call s:hi('LimeInactiveBar',  s:hard_black,    s:xgray1,  'NONE')
-call s:hi('LimeInactiveMode', s:hard_black,    s:xgray2,  'NONE')
+call s:hi('LimeInactiveBar',  s:hard_black,    s:xgray2,  'NONE')
+call s:hi('LimeInactiveMode', s:hard_black,    s:xgray3,  'NONE')
 call s:hi('LimeLeft',         s:bright_orange, s:xgray1,  'NONE')
 call s:hi('LimeRight',        s:bright_yellow, s:xgray1,  'NONE')
+
 
 " }}}
 
@@ -261,10 +268,13 @@ nnoremap <c-w>` `
 
 " Plugin Configuration {{{
 
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_setColors = 0
+
 let g:bufferline_rotate = 1
 let g:bufferline_show_bufnr = 0
 let g:bufferline_active_buffer_left = '[ '
-let g:bufferline_fname_mod = ':.'
+let g:bufferline_fname_mod = ':t'
 
 let g:gutentags_generate_on_empty_buffer = 1
 let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
