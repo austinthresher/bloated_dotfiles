@@ -1,21 +1,19 @@
 
 " Plugins {{{
 
+let g:plugin_path = '~/.vim/plugs'
 try
-	call plug#begin('~/.vim/plugs')
+    call plug#begin(g:plugin_path)
 
-	Plug 'tpope/vim-sensible'
-	Plug 'tpope/vim-unimpaired'
-	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-sleuth'
-	Plug 'bling/vim-bufferline'
-	if executable('ctags')
-		Plug 'ludovicchabant/vim-gutentags'
-	endif
+    Plug 'tpope/vim-sensible'
+    Plug 'tpope/vim-unimpaired'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-sleuth'
+    Plug 'bling/vim-bufferline'
 
-	call plug#end()
+    call plug#end()
 catch
-	echo "vim-plug is missing or broken"
+    echo "vim-plug is missing or broken"
 endtry
 
 " }}}
@@ -82,20 +80,32 @@ set updatetime=500
 
 " Functions {{{
 
+function! EnableGutentags()
+    if executable('ctags')
+    try
+        call plug#begin(g:plugin_path)
+        Plug 'ludovicchabant/vim-gutentags'
+        call plug#end()
+    catch
+        echo "failed to load gutentags"
+    endtry
+    endif
+endfunc
+
 function! s:is_loaded(name)
-	if empty(filter(split(execute('scriptnames'), "\n"),
-		\ 'v:val =~? "'.a:name.'"'))
-		return 0
-	endif
-	return 1
+    if empty(filter(split(execute('scriptnames'), "\n"),
+        \ 'v:val =~? "'.a:name.'"'))
+        return 0
+    endif
+    return 1
 endfunc
 
 " Wrapper for setting highlights
 function! s:hi(group, fg, bg, attr)
-	let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
-		\ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
-		\ 'cterm='.a:attr ]
-	execute join(l:cmd, ' ')
+    let l:cmd = [ 'hi', a:group, 'guifg='.a:fg[0], 'guibg='.a:bg[0],
+        \ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
+        \ 'cterm='.a:attr ]
+    execute join(l:cmd, ' ')
 endfunc
 
 " }}}
@@ -140,11 +150,11 @@ let s:none = ['NONE', 'NONE']
 call s:hi('Normal', s:bright_white, s:black, 'NONE')
 
 for group in ['Visual', 'VisualNOS', 'Search', 'IncSearch']
-	call s:hi(group, s:none, s:none, 'inverse')
+    call s:hi(group, s:none, s:none, 'inverse')
 endfor
 
 for group in ['NonText', 'SpecialKey']
-	call s:hi(group, s:xgray4, s:none, 'NONE')
+    call s:hi(group, s:xgray4, s:none, 'NONE')
 endfor
 
 call s:hi('MatchParen', s:bright_magenta, s:none, 'bold')
@@ -171,18 +181,18 @@ call s:hi('Error', s:bright_white, s:red, 'bold')
 call s:hi('String', s:bright_green, s:none, 'italic')
 
 for group in ['Statement', 'Conditional', 'Repeat', 'Label', 'Exception', 'Keyword']
-	call s:hi(group, s:red, s:none, 'NONE')
+    call s:hi(group, s:red, s:none, 'NONE')
 endfor
 
 for group in ['Identifier', 'PreProc', 'Include', 'Define', 'PreCondit', 'Structure']
-	call s:hi(group, s:cyan, s:none, 'NONE')
+    call s:hi(group, s:cyan, s:none, 'NONE')
 endfor
 
 call s:hi('Function', s:yellow, s:none, 'NONE')
 call s:hi('Macro', s:orange, s:none, 'NONE')
 
 for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float']
-	call s:hi(group, s:bright_magenta, s:none, 'NONE')
+    call s:hi(group, s:bright_magenta, s:none, 'NONE')
 endfor
 
 call s:hi('Type', s:bright_blue, s:none, 'NONE')
@@ -205,41 +215,39 @@ call s:hi('DiffChange', s:cyan, s:black, 'none')
 call s:hi('DiffText', s:yellow, s:black, 'none')
 
 if has('spell')
-	call s:hi('SpellCap', s:none, s:magenta, 'underline')
-	call s:hi('SpellBad', s:none, s:red, 'underline')
-	call s:hi('SpellLocal', s:none, s:yellow, 'underline')
-	call s:hi('SpellRare', s:none, s:cyan, 'underline')
+    call s:hi('SpellCap', s:none, s:magenta, 'underline')
+    call s:hi('SpellBad', s:none, s:red, 'underline')
+    call s:hi('SpellLocal', s:none, s:yellow, 'underline')
+    call s:hi('SpellRare', s:none, s:cyan, 'underline')
 endif
 if has('terminal')
-	call s:hi('Terminal', s:bright_white, s:hard_black, 'NONE')
+    call s:hi('Terminal', s:bright_white, s:hard_black, 'NONE')
 endif
 
 " Used by statuslime
-call s:hi('LimeNormal',   s:hard_black,    s:white,   'bold')
-call s:hi('LimeVisual',   s:hard_black,    s:blue,    'bold')
-call s:hi('LimeInsert',   s:hard_black,    s:yellow,  'bold')
-call s:hi('LimeReplace',  s:hard_black,    s:orange,  'bold')
-call s:hi('LimeTerminal', s:hard_black,    s:green,   'bold')
-call s:hi('LimeCommand',  s:hard_black,    s:magenta, 'bold')
-call s:hi('LimeShell',    s:hard_black,    s:cyan,    'bold')
-call s:hi('LimeOther',    s:hard_black,    s:red,     'bold')
-call s:hi('LimeInactive', s:hard_black,    s:xgray3,  'NONE')
-call s:hi('LimeFile',     s:bright_white,  s:xgray3,  'NONE')
-call s:hi('LimeFunc',     s:bright_orange, s:xgray1,  'NONE')
-call s:hi('LimeError',    s:bright_red,    s:xgray1,  'bold')
-call s:hi('LimeRuler',    s:bright_white,  s:xgray2,  'NONE')
-
-" }}}
-
+call s:hi('LimeNormal',       s:hard_black,    s:white,   'bold')
+call s:hi('LimeVisual',       s:hard_black,    s:blue,    'bold')
+call s:hi('LimeInsert',       s:hard_black,    s:yellow,  'bold')
+call s:hi('LimeReplace',      s:hard_black,    s:orange,  'bold')
+call s:hi('LimeTerminal',     s:hard_black,    s:green,   'bold')
+call s:hi('LimeCommand',      s:hard_black,    s:magenta, 'bold')
+call s:hi('LimeShell',        s:hard_black,    s:cyan,    'bold')
+call s:hi('LimeOther',        s:hard_black,    s:red,     'bold')
+call s:hi('LimeFile',         s:bright_white,  s:xgray3,  'NONE')
+call s:hi('LimeFunc',         s:bright_orange, s:xgray1,  'NONE')
+call s:hi('LimeError',        s:bright_red,    s:xgray1,  'bold')
+call s:hi('LimeRuler',        s:bright_white,  s:xgray2,  'NONE')
+call s:hi('LimeInactiveBar',  s:hard_black,    s:xgray1,  'NONE')
+call s:hi('LimeInactiveMode', s:hard_black,    s:xgray2,  'NONE')
 
 " }}}
 
 " Maps {{{
 
 if has("terminal")
-	" Navigate out of terminal mode more easily
-	tnoremap <esc> <c-\><c-n>
-	tnoremap <c-w> <c-\><c-n><c-w>
+    " Navigate out of terminal mode more easily
+    tnoremap <esc> <c-\><c-n>
+    tnoremap <c-w> <c-\><c-n><c-w>
 endif
 " Reset layout
 nnoremap <leader>r <C-W>=
@@ -253,9 +261,6 @@ nnoremap <c-l> :noh<cr><c-l>
 nnoremap ` <c-w>
 nnoremap <c-w>` `
 
-" }}}
-
-" Autocmds {{{
 " }}}
 
 " Plugin Configuration {{{

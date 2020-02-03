@@ -16,25 +16,25 @@ for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
 endfor
 
 func! statuslime#left()
-	let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
-	let modified = &modified ? '+' : ''
-	let ro = &readonly ? ' [RO]' : ''
-	return '  '.filename.modified.ro.' '
+    let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
+    let modified = &modified ? '+' : ''
+    let ro = &readonly ? ' [RO]' : ''
+    return '  '.filename.modified.ro.' '
 endfunc
 
 func! statuslime#right()
-	let lchars = strlen(line('$'))
-	return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
-		    \line('.'), line('$')).' '
+    let lchars = strlen(line('$'))
+    return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
+            \line('.'), line('$')).' '
 endfunc
 
 func! Pad(str)
-	return '  '.a:str.' '
+    return '  '.a:str.' '
 endfunc
 
 func! s:add_state(condition, hlname, text)
     exe 'setlocal statusline+=%#'
-    	\.a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
+        \.a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
 endfunc
 
 func! statuslime#focused()
@@ -58,9 +58,9 @@ endfunc
 
 func! statuslime#unfocused()
     setlocal statusline=
-    call s:add_state('v:true', 'LimeInactive', 'NORMAL')
-    setlocal statusline+=%#LimeInactive#%{statuslime#left()}
+    call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
+    setlocal statusline+=%#LimeInactiveBar#%{statuslime#left()}
     setlocal statusline+=%*
     setlocal statusline+=%=
-    setlocal statusline+=%#LimeInactive#%{statuslime#right()}
+    setlocal statusline+=%#LimeInactiveBar#%{statuslime#right()}
 endfunc
