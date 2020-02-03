@@ -11,14 +11,14 @@ func autoformat#run(cmd)
     let l:pos = getpos(".")
     call system(a:cmd.' '.shellescape(expand('%')).' &> /dev/null')
     if v:shell_error
-        silent !echo -n ' *autoformat failed*'
+        silent !echo -ne '\e[2K\rautoformat failed'
         return
     endif
     silent exe '%!'.a:cmd
     if v:shell_error == 0
-        silent !echo -n ' *autoformatted*'
+        silent !echo -ne '\e[2K\rautoformatted'
     else
-        silent !echo -n ' *autoformat failed when success was expected*'
+        silent !echo -ne '\e[2K\rautoformat failed when success was expected'
     endif
     call setpos('.', l:pos)
     call winrestview(l:win)
