@@ -7,6 +7,8 @@ let g:autoformat_loaded = 1
 " exit with nonzero if format was unsuccessful.
 " Do not use modify-in-place flags
 func autoformat#run(cmd)
+    let l:win = winsaveview()
+    let l:pos = getpos(".")
     call system(a:cmd.' '.shellescape(expand('%')).' &> /dev/null')
     if v:shell_error
         silent !echo -n ' *autoformat failed*'
@@ -18,6 +20,8 @@ func autoformat#run(cmd)
     else
         silent !echo -n ' *autoformat failed when success was expected*'
     endif
+    call setpos('.', l:pos)
+    call winrestview(l:win)
 endfunc
 
 " Sets the command for autoformatting the current buffer and triggers it
