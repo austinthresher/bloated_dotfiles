@@ -1,2 +1,1 @@
-call yapf#enable_on_save()
-call EnableGutentags()
+call autoformat#enable('python3 -m yapf')

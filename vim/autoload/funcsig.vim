@@ -3,8 +3,7 @@ if exists("g:funcsig_loaded")
 endif
 let g:funcsig_loaded = 1
 
-let s:status_func_info = ''
-let s:status_func_error = ''
+let s:funcsig_string = ''
 
 " Scans the current line from start to cursor position, tracking any
 " identifiers followed by open parens it finds. When it reaches the
@@ -59,7 +58,9 @@ func! s:get_surrounding_func()
 endfunc
 
 " Uses get_surrounding_func to either look up the tag or call :is
-" Returns [found_flag, func_sig]
+" TODO: strip excess whitespace, make sure to include closing paren for
+" multiline definition
+" TODO: try not to leave excess buffers open
 func! s:find_under_cursor()
     let l:func = ""
     try
@@ -72,49 +73,41 @@ func! s:find_under_cursor()
             silent exe 'keepalt hide tag '.(l:tags[0].name)
             let l:line = getline(".")
             silent exe 'keepalt hide pop'
-            return [1, l:line]
+            return l:line
         endif
         try
             let l:sig = ""
             redir => l:sig
             silent exec "norm :is ".l:func."\<cr>"
             redir END
-            return [1, substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')]
+            return substitute(l:sig, '^\s*\(.\{-}\)\s*$', '\1', '')
         catch
         endtry
-        return [0, l:func]
     endif
-    return [1, ""]
+    return ''
 endfunc
 
 func! funcsig#update()
     if mode() =~ "[niR]"
         let l:win = winsaveview()
         let l:pos = getpos(".")
-        let [l:flag, l:sig] = find_under_cursor()
+        let l:sig = s:find_under_cursor()
         call setpos('.', l:pos)
         call winrestview(l:win)
-        if l:flag
-            return [l:sig, ""]
-        else
-            return ["", "unknown function '".l:sig."'"]
-        endif
+	let s:funcsig_string = l:sig
+    else
+        let s:funcsig_string = ''
     endif
-    return ["", ""]
 endfunc
 
-func! funcsig#get_sig()
-    return s:status_func_info
+func! funcsig#get()
+    return s:funcsig_string
 endfunc
 
-func! funcsig#get_error()
-    return s:status_func_error
-endfunc
-
-func! funcsig#has_error()
-    return s:status_func_error isnot# ''
-endfunc
-
-func! funcsig#has_sig()
-    return s:status_func_info isnot# ''
+func! funcsig#enable()
+    augroup FuncSig
+        autocmd! * <buffer>
+	autocmd CursorMoved <buffer> call funcsig#update()
+	autocmd CursorMovedI <buffer> call funcsig#update()
+    augroup END
 endfunc

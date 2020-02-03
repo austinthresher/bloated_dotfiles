@@ -1,2 +1,2 @@
-call indent#enable_on_save()
-call EnableGutentags()
+call funcsig#enable()
+call autoformat#enable('indent -kr')

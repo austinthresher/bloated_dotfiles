@@ -10,7 +10,9 @@ try
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-sleuth'
     Plug 'bling/vim-bufferline'
-
+    if executable('ctags')
+        Plug 'ludovicchabant/vim-gutentags'
+    endif
     call plug#end()
 catch
     echo "vim-plug is missing or broken"
@@ -80,18 +82,6 @@ set updatetime=500
 
 " Functions {{{
 
-function! EnableGutentags()
-    if executable('ctags')
-    try
-        call plug#begin(g:plugin_path)
-        Plug 'ludovicchabant/vim-gutentags'
-        call plug#end()
-    catch
-        echo "failed to load gutentags"
-    endtry
-    endif
-endfunc
-
 function! s:is_loaded(name)
     if empty(filter(split(execute('scriptnames'), "\n"),
         \ 'v:val =~? "'.a:name.'"'))
@@ -106,6 +96,11 @@ function! s:hi(group, fg, bg, attr)
         \ 'gui='.a:attr, 'ctermfg='.a:fg[1], 'ctermbg='.a:bg[1],
         \ 'cterm='.a:attr ]
     execute join(l:cmd, ' ')
+endfunc
+
+func! SetStatusLime()
+    let g:statuslime_left = funcsig#get()
+    let g:statuslime_right = gutentags#statusline()
 endfunc
 
 " }}}
@@ -234,11 +229,12 @@ call s:hi('LimeCommand',      s:hard_black,    s:magenta, 'bold')
 call s:hi('LimeShell',        s:hard_black,    s:cyan,    'bold')
 call s:hi('LimeOther',        s:hard_black,    s:red,     'bold')
 call s:hi('LimeFile',         s:bright_white,  s:xgray3,  'NONE')
-call s:hi('LimeFunc',         s:bright_orange, s:xgray1,  'NONE')
 call s:hi('LimeError',        s:bright_red,    s:xgray1,  'bold')
 call s:hi('LimeRuler',        s:bright_white,  s:xgray2,  'NONE')
 call s:hi('LimeInactiveBar',  s:hard_black,    s:xgray1,  'NONE')
 call s:hi('LimeInactiveMode', s:hard_black,    s:xgray2,  'NONE')
+call s:hi('LimeLeft',         s:bright_orange, s:xgray1,  'NONE')
+call s:hi('LimeRight',        s:bright_yellow, s:xgray1,  'NONE')
 
 " }}}
 

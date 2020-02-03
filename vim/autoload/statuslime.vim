@@ -4,25 +4,22 @@ endif
 let g:statuslime_loaded = 1
 
 " Highlights
-func! statuslime#defaulthl(name)
-endfunc
-
 for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
-            \ 'Shell', 'Inactive', 'Preview', 'Help', 'Other', 'File', 'Func',
-            \ 'Error' ]
+            \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
+	    \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
     if hlexists('Lime'.m) == 0
         exe 'hi link Lime'.m.' StatusLine'
     endif
 endfor
 
-func! statuslime#left()
+func! statuslime#filename()
     let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
     let modified = &modified ? '+' : ''
     let ro = &readonly ? ' [RO]' : ''
     return '  '.filename.modified.ro.' '
 endfunc
 
-func! statuslime#right()
+func! statuslime#ruler()
     let lchars = strlen(line('$'))
     return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
             \line('.'), line('$')).' '
@@ -37,8 +34,34 @@ func! s:add_state(condition, hlname, text)
         \.a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
 endfunc
 
+func! statuslime#left()
+    if exists("g:statuslime_left")
+	return Pad(g:statuslime_left)
+    endif
+    return ''
+endfunc
+
+func! statuslime#right()
+    if exists("g:statuslime_right")
+	return Pad(g:statuslime_right)
+    endif
+    return ''
+endfunc
+
+" User should define a function called SetStatusLime()
+" that updates the values of g:statuslime_left and
+" g:statuslime_right
+
 func! statuslime#focused()
-    setlocal statusline=
+    try
+	if type(SetStatusLime()) == type('')
+            setlocal statusline=%{SetStatusLime()}
+	else
+	    setlocal statusline=
+	endif
+    catch
+        setlocal statusline=
+    endtry
     call s:add_state('mode()[0]==#''n''', 'LimeNormal', 'NORMAL')
     call s:add_state('mode()[0]==#''i''', 'LimeInsert', 'INSERT')
     call s:add_state('mode()[0]==#''R''', 'LimeReplace', 'REPLACE')
@@ -50,17 +73,28 @@ func! statuslime#focused()
     call s:add_state('mode()[0]==#''r''', 'LimeOther', 'CONTINUE')
     call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
     call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
-    setlocal statusline+=%#LimeFile#%{statuslime#left()}
+    setlocal statusline+=%#LimeFile#%{statuslime#filename()}
+    setlocal statusline+=%*
+    setlocal statusline+=%#LimeLeft#%{statuslime#left()}
     setlocal statusline+=%*
     setlocal statusline+=%=
-    setlocal statusline+=%#LimeRuler#%{statuslime#right()}
+    setlocal statusline+=%#LimeRight#%{statuslime#right()}
+    setlocal statusline+=%#LimeRuler#%{statuslime#ruler()}
 endfunc
 
 func! statuslime#unfocused()
-    setlocal statusline=
+    try
+	if type(SetStatusLime()) == type('')
+            setlocal statusline=%{SetStatusLime()}
+	else
+	    setlocal statusline=
+	endif
+    catch
+        setlocal statusline=
+    endtry
     call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
-    setlocal statusline+=%#LimeInactiveBar#%{statuslime#left()}
+    setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
     setlocal statusline+=%*
     setlocal statusline+=%=
-    setlocal statusline+=%#LimeInactiveBar#%{statuslime#right()}
+    setlocal statusline+=%#LimeInactiveBar#%{statuslime#ruler()}
 endfunc
