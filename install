@@ -2,56 +2,50 @@
 
 # prompt_to_replace <file-in-current-dir> <abs-path-to-replace>
 function prompt_to_replace {
-	if [ -L "$2" ]; then
-		rm $2;
-	elif [ -f "$2" ]; then
-		read -p "Replace regular file '$2' with symlink to '$1? " yn
-		case $yn in
-			y) rm $2 ;;
-			*) return 1 ;;
-		esac
-	elif [ -d "$2" ]; then
-		read -p "Replace directory '$2' with symlink to '$1? " yn
-		case $yn in
-			y) rm -rf $2 ;;
-			*) return 1 ;;
-		esac
-	fi
-	ln -s $PWD/$1 $2
+    if [ -L "$2" ]; then
+        rm $2;
+    elif [ -f "$2" ]; then
+        read -p "Replace regular file '$2' with symlink to '$1? " yn
+        case $yn in
+            y) rm $2 ;;
+            *) return 1 ;;
+        esac
+    elif [ -d "$2" ]; then
+        read -p "Replace directory '$2' with symlink to '$1? " yn
+        case $yn in
+            y) rm -rf $2 ;;
+            *) return 1 ;;
+        esac
+    fi
+    ln -s $PWD/$1 $2
 }
 
 # netget <file-url>
 function netget {
-	local src="$1"
-	local dst="${1##*/}"
-	if which wget &> /dev/null  && [ -x "$(which wget)" ]; then
-		wget -O "$dst" "$src" --no-check-certificate
-	elif which perl &> /dev/null  && [ -x "$(which perl)" ]; then
-		perl -MLWP::Simple -e "getstore \"$src\", \"$dst\""
-	elif which curl &> /dev/null && [ -x "$(which curl)" ]; then
-		curl -L "$src" -o "$dst" --insecure
-	else
-		echo "No download utility found. Script cannot continue."
-		return 127
-	fi
-	echo "$dst"
+    local src="$1"
+    local dst="${1##*/}"
+    if which wget &> /dev/null  && [ -x "$(which wget)" ]; then
+        wget -O "$dst" "$src" --no-check-certificate
+    elif which perl &> /dev/null  && [ -x "$(which perl)" ]; then
+        perl -MLWP::Simple -e "getstore \"$src\", \"$dst\""
+    elif which curl &> /dev/null && [ -x "$(which curl)" ]; then
+        curl -L "$src" -o "$dst" --insecure
+    else
+        echo "No download utility found. Script cannot continue."
+        return 127
+    fi
+    echo "$dst"
 }
 
 # dl_if_missing <dst-path> <src-url>
 function dl_if_missing {
-	if [ ! -f "$1" ]; then
-		local fname=$(netget "$2")
-		mv "$fname" "$1"
-	fi
+    if [ ! -f "$1" ]; then
+        local fname=$(netget "$2")
+        mv "$fname" "$1"
+    fi
 }
 
-mkdir -p "$HOME/.config/vis"
-mkdir -p "$HOME/.config/vis/plugins"
-dl_if_missing "$HOME/.config/vis/plugins/vis-filetype-settings.lua" \
-	https://raw.githubusercontent.com/jocap/vis-filetype-settings/master/vis-filetype-settings.lua
-
 mkdir -p "$HOME/.vim"
-
 mkdir -p "$HOME/.config/i3"
 
 prompt_to_replace profile       "$HOME/.profile"
@@ -60,10 +54,8 @@ prompt_to_replace inputrc       "$HOME/.inputrc"
 prompt_to_replace tmux.conf     "$HOME/.tmux.conf"
 prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
-prompt_to_replace visrc.lua     "$HOME/.config/vis/visrc.lua"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
-prompt_to_replace ctags         "$HOME/.ctags"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 for f in vim/*; do
-	prompt_to_replace "$f" "$HOME/.$f"
+    prompt_to_replace "$f" "$HOME/.$f"
 done

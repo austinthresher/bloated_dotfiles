@@ -94,7 +94,7 @@ func! funcsig#update()
         let l:sig = s:find_under_cursor()
         call setpos('.', l:pos)
         call winrestview(l:win)
-	let s:funcsig_string = l:sig
+        let s:funcsig_string = l:sig
     else
         let s:funcsig_string = ''
     endif
@@ -107,7 +107,7 @@ endfunc
 func! funcsig#enable()
     augroup FuncSig
         autocmd! * <buffer>
-	autocmd CursorMoved <buffer> call funcsig#update()
-	autocmd CursorMovedI <buffer> call funcsig#update()
+        autocmd CursorMoved <buffer> call funcsig#update()
+        autocmd CursorMovedI <buffer> call funcsig#update()
     augroup END
 endfunc

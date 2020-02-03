@@ -29,7 +29,7 @@ endfunc
 func autoformat#enable(cmd)
     let b:autoformat_cmd = a:cmd
     augroup AutoFormat
-	autocmd! * <buffer>
-	autocmd BufWritePost <buffer> call autoformat#run(b:autoformat_cmd)
+        autocmd! * <buffer>
+        autocmd BufWritePost <buffer> call autoformat#run(b:autoformat_cmd)
     augroup END
 endfunc

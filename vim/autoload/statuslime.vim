@@ -5,8 +5,8 @@ let g:statuslime_loaded = 1
 
 " Highlights
 for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
-            \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
-	    \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
+        \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
+        \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
     if hlexists('Lime'.m) == 0
         exe 'hi link Lime'.m.' StatusLine'
     endif
@@ -22,7 +22,7 @@ endfunc
 func! statuslime#ruler()
     let lchars = strlen(line('$'))
     return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
-            \line('.'), line('$')).' '
+            \ line('.'), line('$')).' '
 endfunc
 
 func! Pad(str)
@@ -31,19 +31,19 @@ endfunc
 
 func! s:add_state(condition, hlname, text)
     exe 'setlocal statusline+=%#'
-        \.a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
+            \ .a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
 endfunc
 
 func! statuslime#left()
     if exists("g:statuslime_left")
-	return Pad(g:statuslime_left)
+    return Pad(g:statuslime_left)
     endif
     return ''
 endfunc
 
 func! statuslime#right()
     if exists("g:statuslime_right")
-	return Pad(g:statuslime_right)
+    return Pad(g:statuslime_right)
     endif
     return ''
 endfunc
@@ -54,11 +54,11 @@ endfunc
 
 func! statuslime#focused()
     try
-	if type(SetStatusLime()) == type('')
-            setlocal statusline=%{SetStatusLime()}
-	else
-	    setlocal statusline=
-	endif
+        if type(SetStatusLime()) == type('')
+                setlocal statusline=%{SetStatusLime()}
+        else
+            setlocal statusline=
+        endif
     catch
         setlocal statusline=
     endtry
@@ -84,11 +84,11 @@ endfunc
 
 func! statuslime#unfocused()
     try
-	if type(SetStatusLime()) == type('')
+        if type(SetStatusLime()) == type('')
             setlocal statusline=%{SetStatusLime()}
-	else
-	    setlocal statusline=
-	endif
+        else
+            setlocal statusline=
+        endif
     catch
         setlocal statusline=
     endtry

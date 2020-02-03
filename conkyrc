@@ -1,31 +1,31 @@
 conky.config = {
-	background = true,
-	double_buffer = true,
-	own_window = true,
-	own_window_class = 'Conky',
-	own_window_type = 'override',
-	own_window_transparent = true,
-	own_window_argb_visual = true,
-	own_window_argb_value = 255,
-	draw_shades = false,
-	draw_outline = false,
-	draw_borders = false,
-	use_xft = true,
-	font = 'Saira Extra Condensed:size=18',
-	update_interval = 0.1,
-	minimum_width = %WIDTH%,
-	maximum_width = %WIDTH%,
-	color0 = 'fe8019', -- workspace active color
-	color1 = '282828', -- workspace inactive color
-	color2 = 'fabd2f', -- battery status
-	color3 = '8ec07c', -- song title
-	color4 = 'a89984', -- date
-	color5 = 'fbf1c7', -- time
-	-- i3 workspace switcher
-	template0 = '${color0}${font Monofett:size=18}${execpi 0.1'
-		  ..' ~/.dotfiles/scripts/i3-workspace.sh}${font}${color0}',
-	template1 = '${alignr}${color2}${battery}    ',
-	template2 = '${alignr}${color3}${execpi 1 ~/.dotfiles/scripts/get-playing-ampache.sh}    '
+    background = true,
+    double_buffer = true,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'override',
+    own_window_transparent = true,
+    own_window_argb_visual = true,
+    own_window_argb_value = 255,
+    draw_shades = false,
+    draw_outline = false,
+    draw_borders = false,
+    use_xft = true,
+    font = 'Saira Extra Condensed:size=18',
+    update_interval = 0.1,
+    minimum_width = %WIDTH%,
+    maximum_width = %WIDTH%,
+    color0 = 'fe8019', -- workspace active color
+    color1 = '282828', -- workspace inactive color
+    color2 = 'fabd2f', -- battery status
+    color3 = '8ec07c', -- song title
+    color4 = 'a89984', -- date
+    color5 = 'fbf1c7', -- time
+    -- i3 workspace switcher
+    template0 = '${color0}${font Monofett:size=18}${execpi 0.1'
+          ..' ~/.dotfiles/scripts/i3-workspace.sh}${font}${color0}',
+    template1 = '${alignr}${color2}${battery}    ',
+    template2 = '${alignr}${color3}${execpi 1 ~/.dotfiles/scripts/get-playing-ampache.sh}    '
 };
 
 conky.text = [[

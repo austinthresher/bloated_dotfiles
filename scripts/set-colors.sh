@@ -1,14 +1,14 @@
 #!/bin/bash
 
 function rgb_set_col {
-	case $TERM in
-		*tmux*|*screen*)
-			echo -ne "\eP\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\a\e\\"
-			;;
-		*)
-			echo -ne "\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\e\\"
-			;;
-	esac
+    case $TERM in
+        *tmux*|*screen*)
+            echo -ne "\eP\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\a\e\\"
+            ;;
+        *)
+            echo -ne "\e]4;$1;rgb:${2:0:2}/${2:2:2}/${2:4:2}\e\\"
+            ;;
+    esac
 }
 
 # srcery theme
