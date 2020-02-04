@@ -19,23 +19,23 @@ if [ -d "/sys/class/power_supply/BAT0" ]; then
             -e "s@%WIDTH%@$__WIDTH@g" \
             -e "s@%HEIGHT%@$__HEIGHT@g" \
             -e '33i${template1}    \\' \
-        > "$HOME/.generated/conky.conf"
+        > "$HOME/.conky.gen"
 else
     cat "$HOME/.conkyrc" \
         | sed \
             -e "s@%WIDTH%@$__WIDTH@g" \
             -e "s@%HEIGHT%@$__HEIGHT@g" \
-        > "$HOME/.generated/conky.conf"
+        > "$HOME/.conky.gen"
 fi
 
 if [ "$__HEIGHT" -gt 1080 -a "$__WIDTH" -gt 1920 ]; then
-    conky -y 32 --config="$HOME/.generated/conky.conf" --daemonize
+    conky -y 32 --config="$HOME/.conky.gen" --daemonize
     i3-msg gaps inner all set 128 &> /dev/null
 elif [ "$__HEIGHT" -gt 1366 -a "$__WIDTH" -gt 768 ]; then
-    conky -y 24 --config="$HOME/.generated/conky.conf" --daemonize
+    conky -y 24 --config="$HOME/.conky.gen" --daemonize
     i3-msg gaps inner all set 64 &> /dev/null
 else
-    conky -y 16 --config="$HOME/.generated/conky.conf" --daemonize
+    conky -y 16 --config="$HOME/.conky.gen" --daemonize
     i3-msg gaps inner all set 32
     i3-msg gaps bottom all set 32
 fi
