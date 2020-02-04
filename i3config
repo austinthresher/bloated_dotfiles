@@ -17,7 +17,7 @@ for_window [class="fontforge"] floating enable
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 8
+font pango:Sudo 8
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -48,7 +48,7 @@ set $right l
 floating_modifier Mod4
 
 # start a terminal
-bindsym Mod4+Return exec stterm -f Input:size=18
+bindsym Mod4+Return exec stterm -f Sudo:size=20
 
 # kill focused window
 bindsym Mod4+Shift+q kill
