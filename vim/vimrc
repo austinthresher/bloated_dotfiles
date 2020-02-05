@@ -1,22 +1,53 @@
 
 " Plugins {{{
 
+" Keep track of plugins to auto-generate help menu
+let g:plugin_list = []
+func! s:plug(repo)
+    try
+        call plug#(a:repo)
+        let g:plugin_list = g:plugin_list + [a:repo]
+    catch
+        echoerr 'Failed to load plugin "'.a:repo.'"'
+    endtry
+endfunc
+let g:plugin_menu = 1
+
 let g:plugin_path = '~/.vim/plugs'
 try
     call plug#begin(g:plugin_path)
 
-    Plug 'tpope/vim-sensible'
-    Plug 'tpope/vim-unimpaired'
-    Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-sleuth'
-    Plug 'tpope/vim-abolish'
-    Plug 'tpope/vim-eunuch'
-    Plug 'bling/vim-bufferline'
-    Plug 'yggdroot/indentline'
-    Plug 'sheerun/vim-polyglot'
+    call s:plug('tpope/vim-sensible')
+    call s:plug('tpope/vim-unimpaired')
+    call s:plug('tpope/vim-fugitive')
+    call s:plug('tpope/vim-sleuth')
+    call s:plug('tpope/vim-abolish')
+    call s:plug('tpope/vim-eunuch')
+    call s:plug('tpope/vim-rsi')
+    call s:plug('tpope/vim-commentary')
+    call s:plug('google/vim-searchindex')
+    call s:plug('yggdroot/indentline')
+    call s:plug('sheerun/vim-polyglot')
+    call s:plug('unblevable/quick-scope')
+    call s:plug('andymass/vim-matchup')
+    call s:plug('mboughaba/i3config.vim')
+    call s:plug('peterrincker/vim-argumentative')
+    call s:plug('machakann/vim-sandwich')
+    call s:plug('ap/vim-buftabline')
+    call s:plug('reedes/vim-litecorrect')
+    call s:plug('thinca/vim-ref')
+    call s:plug('junegunn/vim-easy-align')
+    call s:plug('skywind3000/quickmenu.vim')
+    call s:plug('vim-scripts/errormarker.vim')
+    "call s:plug('mizuchi/stl-syntax')
+    call s:plug('rhysd/git-messenger.vim')
+    call s:plug('tbastos/vim-lua')
+    "call s:plug('shougo/echodoc')
+    call s:plug('bfrg/vim-cpp-modern')
+    " TODO: look at official yapf plugin
 
     if executable('ctags') " TODO: check for exuberant ctags
-        Plug 'ludovicchabant/vim-gutentags'
+        call s:plug('ludovicchabant/vim-gutentags')
     endif
 
     call plug#end()
@@ -225,7 +256,7 @@ if has('terminal')
     call s:hi('Terminal', s:bright_white, s:hard_black, 'NONE')
 endif
 
-" Used by statuslime
+" statuslime colors
 call s:hi('LimeNormal',       s:hard_black,    s:white,   'bold')
 call s:hi('LimeVisual',       s:hard_black,    s:blue,    'bold')
 call s:hi('LimeInsert',       s:hard_black,    s:yellow,  'bold')
@@ -242,6 +273,11 @@ call s:hi('LimeInactiveMode', s:hard_black,    s:xgray3,  'NONE')
 call s:hi('LimeLeft',         s:bright_orange, s:xgray1,  'NONE')
 call s:hi('LimeRight',        s:bright_yellow, s:xgray1,  'NONE')
 
+" buftabline colors
+call s:hi('BufTabLineCurrent', s:hard_black, s:white, 'bold')
+call s:hi('BufTabLineActive', s:blue, s:white, 'NONE')
+call s:hi('BufTabLineHidden', s:bright_black, s:white, 'NONE')
+call s:hi('BufTabLineFill', s:black, s:bright_black, 'NONE')
 
 " }}}
 
@@ -264,6 +300,19 @@ nnoremap <c-l> :noh<cr><c-l>
 nnoremap ` <c-w>
 nnoremap <c-w>` `
 
+nmap <leader>1 <Plug>BufTabLine.Go(1)
+nmap <leader>2 <Plug>BufTabLine.Go(2)
+nmap <leader>3 <Plug>BufTabLine.Go(3)
+nmap <leader>4 <Plug>BufTabLine.Go(4)
+nmap <leader>5 <Plug>BufTabLine.Go(5)
+nmap <leader>6 <Plug>BufTabLine.Go(6)
+nmap <leader>7 <Plug>BufTabLine.Go(7)
+nmap <leader>8 <Plug>BufTabLine.Go(8)
+nmap <leader>9 <Plug>BufTabLine.Go(9)
+nmap <leader>0 <Plug>BufTabLine.Go(10)
+
+noremap <silent><leader>h :call quickmenu#toggle(g:plugin_menu)<cr>
+
 " }}}
 
 " Plugin Configuration {{{
@@ -271,13 +320,24 @@ nnoremap <c-w>` `
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
 
-let g:bufferline_rotate = 1
-let g:bufferline_show_bufnr = 0
-let g:bufferline_active_buffer_left = '[ '
-let g:bufferline_fname_mod = ':t'
+let g:buftabline_indicators = 1
+let g:buftabline_numbers = 2
 
 let g:gutentags_generate_on_empty_buffer = 1
 let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
 let g:gutentags_ctags_exclude_wildignore = 1
+
+let g:qs_lazy_highlight = 1
+
+let g:quickmenu_options = "LH"
+
+" Populate quickmenu with installed plugins
+call quickmenu#current(g:plugin_menu)
+call quickmenu#reset()
+call quickmenu#header('installed plugins')
+for p in g:plugin_list
+    " TODO: Make each entry open the plugin's help doc
+    call quickmenu#append(p, '', '')
+endfor
 
 " }}}
