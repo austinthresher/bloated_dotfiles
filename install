@@ -59,3 +59,12 @@ prompt_to_replace conkyrc       "$HOME/.conkyrc"
 for f in vim/*; do
     prompt_to_replace "$f" "$HOME/.$f"
 done
+
+if [ -d fonts ]; then
+    echo "$PWD/fonts already exists. Skipping font extraction."
+else
+    tar -xf fonts.tar
+    mkdir -p "$HOME/.local/share/fonts"
+    cp fonts/*.ttf "$HOME/.local/share/fonts/"
+    rm -rf fonts
+fi

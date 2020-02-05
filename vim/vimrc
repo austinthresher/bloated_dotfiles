@@ -26,10 +26,9 @@ try
     call s:plug('tpope/vim-rsi')
     call s:plug('tpope/vim-commentary')
     call s:plug('google/vim-searchindex')
-    call s:plug('yggdroot/indentline')
+    "call s:plug('yggdroot/indentline')
     call s:plug('sheerun/vim-polyglot')
-    call s:plug('unblevable/quick-scope')
-    call s:plug('andymass/vim-matchup')
+    "call s:plug('unblevable/quick-scope')
     call s:plug('mboughaba/i3config.vim')
     call s:plug('peterrincker/vim-argumentative')
     call s:plug('machakann/vim-sandwich')
@@ -38,7 +37,7 @@ try
     call s:plug('thinca/vim-ref')
     call s:plug('junegunn/vim-easy-align')
     call s:plug('skywind3000/quickmenu.vim')
-    call s:plug('vim-scripts/errormarker.vim')
+    "call s:plug('vim-scripts/errormarker.vim') " TODO: set up cmake in vim
     "call s:plug('mizuchi/stl-syntax')
     call s:plug('rhysd/git-messenger.vim')
     call s:plug('tbastos/vim-lua')
@@ -52,7 +51,7 @@ try
 
     call plug#end()
 catch
-    echo "vim-plug is missing or broken"
+    echom "vim-plug is missing or broken"
 endtry
 
 " }}}
@@ -327,17 +326,17 @@ let g:gutentags_generate_on_empty_buffer = 1
 let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
 let g:gutentags_ctags_exclude_wildignore = 1
 
-let g:qs_lazy_highlight = 1
-
 let g:quickmenu_options = "LH"
-
-" Populate quickmenu with installed plugins
-call quickmenu#current(g:plugin_menu)
-call quickmenu#reset()
-call quickmenu#header('installed plugins')
-for p in g:plugin_list
-    " TODO: Make each entry open the plugin's help doc
-    call quickmenu#append(p, '', '')
-endfor
-
+try
+    " Populate quickmenu with installed plugins
+    call quickmenu#current(g:plugin_menu)
+    call quickmenu#reset()
+    call quickmenu#header('installed plugins')
+    for p in g:plugin_list
+        " TODO: Make each entry open the plugin's help doc
+        call quickmenu#append(p, '', '')
+    endfor
+catch
+    echom 'quickmenu could not be initialized'
+endtry
 " }}}
