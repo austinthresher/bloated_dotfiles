@@ -2,51 +2,56 @@
 " Plugins {{{
 
 " Keep track of plugins to auto-generate help menu
-let g:plugin_list = []
-func! s:plug(repo)
+let g:plugin_master_list = []
+let g:plugin_help_list = []
+func! s:plug(repo, has_help)
     try
         call plug#(a:repo)
-        let g:plugin_list = g:plugin_list + [a:repo]
+        let g:plugin_master_list = g:plugin_master_list + [a:repo]
+        if a:has_help != 0
+            let g:plugin_help_list = g:plugin_help_list + [a:repo]
+        endif
     catch
         echoerr 'Failed to load plugin "'.a:repo.'"'
     endtry
 endfunc
-let g:plugin_menu = 1
+let g:plugin_help_menu = 1
 
 let g:plugin_path = '~/.vim/plugs'
 try
     call plug#begin(g:plugin_path)
 
-    call s:plug('tpope/vim-sensible')
-    call s:plug('tpope/vim-unimpaired')
-    call s:plug('tpope/vim-fugitive')
-    call s:plug('tpope/vim-sleuth')
-    call s:plug('tpope/vim-abolish')
-    call s:plug('tpope/vim-eunuch')
-    call s:plug('tpope/vim-rsi')
-    call s:plug('tpope/vim-commentary')
-    call s:plug('google/vim-searchindex')
-    "call s:plug('yggdroot/indentline')
-    call s:plug('sheerun/vim-polyglot')
-    "call s:plug('unblevable/quick-scope')
-    call s:plug('mboughaba/i3config.vim')
-    call s:plug('peterrincker/vim-argumentative')
-    call s:plug('machakann/vim-sandwich')
-    call s:plug('ap/vim-buftabline')
-    call s:plug('reedes/vim-litecorrect')
-    call s:plug('thinca/vim-ref')
-    call s:plug('junegunn/vim-easy-align')
-    call s:plug('skywind3000/quickmenu.vim')
-    "call s:plug('vim-scripts/errormarker.vim') " TODO: set up cmake in vim
-    "call s:plug('mizuchi/stl-syntax')
-    call s:plug('rhysd/git-messenger.vim')
-    call s:plug('tbastos/vim-lua')
-    "call s:plug('shougo/echodoc')
-    call s:plug('bfrg/vim-cpp-modern')
     " TODO: look at official yapf plugin
+    "call s:plug('mizuchi/stl-syntax')
+    "call s:plug('unblevable/quick-scope') " TODO: see if this caused slowdown
+    "call s:plug('vim-scripts/errormarker.vim') " TODO: set up cmake in vim
+    call s:plug('ap/vim-buftabline', 1)
+    call s:plug('bfrg/vim-cpp-modern', 0)
+    call s:plug('google/vim-searchindex', 1)
+    call s:plug('junegunn/vim-easy-align', 1)
+    call s:plug('machakann/vim-sandwich', 1)
+    call s:plug('mboughaba/i3config.vim', 0)
+    call s:plug('peterrincker/vim-argumentative', 1)
+    call s:plug('reedes/vim-litecorrect', 0)
+    call s:plug('rhysd/git-messenger.vim', 1)
+    call s:plug('sheerun/vim-polyglot', 0)
+    call s:plug('shougo/echodoc', 1) " TODO: Figure out how this works, try disabling funcsig
+    call s:plug('skywind3000/quickmenu.vim', 0)
+    call s:plug('tbastos/vim-lua', 0)
+    call s:plug('thinca/vim-ref', 1)
+    call s:plug('tpope/vim-abolish', 1)
+    call s:plug('tpope/vim-commentary', 1)
+    call s:plug('tpope/vim-eunuch', 1)
+    call s:plug('tpope/vim-fugitive', 1)
+    call s:plug('tpope/vim-rsi', 1)
+    call s:plug('tpope/vim-sensible', 0)
+    call s:plug('tpope/vim-sleuth', 1)
+    call s:plug('tpope/vim-unimpaired', 1)
+    call s:plug('tweekmonster/braceless.vim', 1)
+    call s:plug('yggdroot/indentline', 1)
 
     if executable('ctags') " TODO: check for exuberant ctags
-        call s:plug('ludovicchabant/vim-gutentags')
+        call s:plug('ludovicchabant/vim-gutentags', 1)
     endif
 
     call plug#end()
@@ -113,6 +118,8 @@ set guicursor=
 set previewheight=1
 " CursorHold kicks in after half a second
 set updatetime=500
+" Show cmd in progress
+set showcmd
 
 " }}}
 
@@ -310,7 +317,11 @@ nmap <leader>8 <Plug>BufTabLine.Go(8)
 nmap <leader>9 <Plug>BufTabLine.Go(9)
 nmap <leader>0 <Plug>BufTabLine.Go(10)
 
-noremap <silent><leader>h :call quickmenu#toggle(g:plugin_menu)<cr>
+noremap <silent><leader>? :call quickmenu#toggle(g:plugin_help_menu)<cr>
+noremap <silent><leader>g :GitMessenger<cr>
+
+nmap ga <Plug>(EasyAlign)
+vmap <Enter> <Plug>(EasyAlign)
 
 " }}}
 
@@ -326,15 +337,24 @@ let g:gutentags_generate_on_empty_buffer = 1
 let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
 let g:gutentags_ctags_exclude_wildignore = 1
 
-let g:quickmenu_options = "LH"
+let g:git_messenger_include_diff = v:true
+let g:git_messenger_max_popup_height = 8
+
+let g:echodoc#enable_at_startup = 1
+
+let g:quickmenu_options = "H"
 try
-    " Populate quickmenu with installed plugins
-    call quickmenu#current(g:plugin_menu)
+    " Populate quickmenu with installed plugins with helpfiles
+    call quickmenu#current(g:plugin_help_menu)
     call quickmenu#reset()
-    call quickmenu#header('installed plugins')
-    for p in g:plugin_list
-        " TODO: Make each entry open the plugin's help doc
-        call quickmenu#append(p, '', '')
+    call quickmenu#header('plugin help')
+    for p in g:plugin_help_list
+        let short = substitute(
+                \ substitute(
+                    \ split(p, '/')[1],
+                \ 'vim-', '', 'g'),
+            \ '.vim', '', 'g')
+        call quickmenu#append(short, 'h '.short.'.txt', '')
     endfor
 catch
     echom 'quickmenu could not be initialized'

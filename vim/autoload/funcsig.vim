@@ -3,6 +3,8 @@ if exists("g:funcsig_loaded")
 endif
 let g:funcsig_loaded = 1
 
+finish " FIXME Temporarily disabled
+
 let s:funcsig_string = ''
 
 " Scans the current line from start to cursor position, tracking any
