@@ -1,4 +1,11 @@
 
+" TODO: Find a better solution for tabs. Sleuth is fooled by
+" clang-format's half-indentation of public/private
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+
 " Plugins {{{
 
 " Keep track of plugins to auto-generate help menu
@@ -45,10 +52,11 @@ try
     call s:plug('tpope/vim-fugitive', 1)
     call s:plug('tpope/vim-rsi', 1)
     call s:plug('tpope/vim-sensible', 0)
-    call s:plug('tpope/vim-sleuth', 1)
+    "call s:plug('tpope/vim-sleuth', 1)
     call s:plug('tpope/vim-unimpaired', 1)
     call s:plug('tweekmonster/braceless.vim', 1)
     call s:plug('yggdroot/indentline', 1)
+    call s:plug('vim-scripts/OmniCppComplete', 1)
 
     if executable('ctags') " TODO: check for exuberant ctags
         call s:plug('ludovicchabant/vim-gutentags', 1)
