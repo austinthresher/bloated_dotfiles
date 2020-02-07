@@ -10,7 +10,7 @@ if [[ $PATH != *"$PREFIX/bin"* ]]; then
 fi
 
 # Ensure we have the programs we need
-REQUIRED=(git python3 wget tar cmake)
+REQUIRED=(git python3 wget tar curl)
 for x in "${REQUIRED[@]}"; do
 	which $x &> /dev/null || {
 		echo "Requires '$x', please install before continuing."
@@ -29,6 +29,7 @@ pip3 install pylint
 pip3 install jedi
 pip3 install black
 pip3 install neovim
+pip3 install python-language-server
 
 # package urls
 NVIM=nvim-linux64
@@ -99,15 +100,18 @@ else
 	echo "Failed to create temporary directory"
 fi
 
+curl -sL install-node.now.sh | bash -s -- --prefix=$PREFIX
+
 echo "Writing init.vim"
 cat << EOF > "$HOME/.config/nvim/init.vim"
 set nocompatible
-
+set previewheight=3
 call plug#begin('$VIMPLUG')
-	Plug 'ycm-core/YouCompleteMe'
-	"Plug 'scrooloose/syntastic'
-	Plug 'SirVer/ultisnips'
-	Plug 'honza/vim-snippets'
+	Plug 'prabirshrestha/async.vim'
+	Plug 'prabirshrestha/vim-lsp'
+	Plug 'prabirshrestha/asyncomplete.vim'
+	Plug 'prabirshrestha/asyncomplete-lsp.vim'
+	Plug 'mattn/vim-lsp-settings'
 	Plug 'tpope/vim-sensible'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-eunuch'
@@ -120,35 +124,61 @@ call plug#begin('$VIMPLUG')
 	Plug 'tpope/vim-abolish'
 	Plug 'tpope/vim-unimpaired'
 	Plug 'srcery-colors/srcery-vim'
+    Plug 'ap/vim-buftabline'
+    Plug 'yggdroot/indentline'
+    Plug 'google/vim-searchindex'
+    Plug 'junegunn/vim-easy-align'
 call plug#end()
 
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"let g:ycm_show_diagnostics_ui = 0
+let g:python3_host_prog = '$HOME/.local/python/bin/python3'
 
 let g:srcery_italic = 1
 colorscheme srcery
 
-"let g:ycm_filetype_whitelist = [ 'python', 'cpp', 'c' ]
-let g:ycm_error_symbol = '!'
-let g:ycm_warning_symbol = '@'
-let g:ycm_seed_identifiers_with_syntax = 1
-let g:ycm_server_python_interpreter = '$PREFIX/python/bin/python3'
-let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_virtual_text_enabled = 0
+let g:lsp_signs_enabled = 0
 
-nnoremap <C-]> YcmCompleter GoTo<cr>
-nnoremap K :YcmCompleter GetDoc<cr>
+hi LspErrorHighlight gui=underline cterm=underline guifg=red ctermfg=red
+hi LspWarningHighlight gui=underline cterm=underline guifg=yellow ctermfg=yellow
 
-set previewheight=3
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set expandtab
+
+EOF
+cat << 'EOF' >> "$HOME/.config/nvim/init.vim"
+" Clear search with <C-L>
+nnoremap <c-l> :noh<cr><c-l>
+
+nnoremap ` <c-w>
+nnoremap <c-w>` `
+
+nmap <leader>1 <Plug>BufTabLine.Go(1)
+nmap <leader>2 <Plug>BufTabLine.Go(2)
+nmap <leader>3 <Plug>BufTabLine.Go(3)
+nmap <leader>4 <Plug>BufTabLine.Go(4)
+nmap <leader>5 <Plug>BufTabLine.Go(5)
+nmap <leader>6 <Plug>BufTabLine.Go(6)
+nmap <leader>7 <Plug>BufTabLine.Go(7)
+nmap <leader>8 <Plug>BufTabLine.Go(8)
+nmap <leader>9 <Plug>BufTabLine.Go(9)
+nmap <leader>0 <Plug>BufTabLine.Go(10)
+nmap ga <Plug>(EasyAlign)
+vmap <Enter> <Plug>(EasyAlign)
+
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_list_hide = netrw_gitignore#Hide()
+
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_setColors = 0
+
+let g:buftabline_indicators = 1
+let g:buftabline_numbers = 2
 
 EOF
 
 echo "Installing neovim plugins"
 nvim -c ':PlugInstall' -c ':qa'
-
-echo "Building YouCompleteMe"
-pushd "$VIMPLUG/YouCompleteMe" &> /dev/null
-python3 install.py --clangd-completer
-popd &> /dev/null
