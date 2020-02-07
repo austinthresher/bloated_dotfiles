@@ -6,6 +6,8 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 
+" TODO: write a plugin that automatically sets window sizes
+
 " Plugins {{{
 
 " Keep track of plugins to auto-generate help menu
@@ -115,8 +117,8 @@ set nowrap
 " Don't page output
 set nomore
 " Use relative line numbers
-set relativenumber
-set number
+"set relativenumber
+"set number
 filetype plugin indent on
 " Default to new windows appearing below current
 set splitbelow
@@ -124,11 +126,23 @@ set splitbelow
 set guicursor=
 " Preview window is 1 line tall
 set previewheight=1
-" CursorHold kicks in after half a second
-set updatetime=500
+" CursorHold kicks in after one second
+set updatetime=1000
 " Show cmd in progress
 set showcmd
-
+" Recursive searching
+set path+=**
+" Tab completion menu
+set wildmenu
+" Minimum active window size
+set winwidth=80
+set winheight=24
+" Allow windows to collapse completely
+set winminwidth=1
+set winminheight=1
+" Keep the cursor near the center of the screen
+set scrolloff=8
+" TODO: Auto-center the view when cursor would move off screen, like emacs
 " }}}
 
 " Functions {{{
@@ -335,6 +349,10 @@ vmap <Enter> <Plug>(EasyAlign)
 
 " Plugin Configuration {{{
 
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_list_hide = netrw_gitignore#Hide()
+
 let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
 
@@ -368,3 +386,50 @@ catch
     echom 'quickmenu could not be initialized'
 endtry
 " }}}
+
+
+" TODO: Move this to a plugin
+" This shades the background of every 5th line to give
+" a similar benefit to relative line numbers without
+" the visual clutter
+" TODO: blank lines are skipped, find a solution
+let cidx = 1
+for c in [s:xgray1, s:xgray2, s:xgray3, s:xgray4, s:xgray5, s:xgray6]
+    call s:hi('LineMark'.cidx, s:none, c, 'NONE')
+    let cidx += 1
+endfor
+
+func! ClearLineHelpers()
+    call clearmatches()
+endfunc
+
+func! SetLineHelpers()
+    call clearmatches()
+    if &ro
+        return
+    endif
+    let l:win = winsaveview()
+    let l:interval = 5
+    let l:line = line('.') - l:interval
+    let l:cidx = 1
+    while l:line > l:win['topline']
+        call matchaddpos('LineMark'.l:cidx, [l:line])
+        let l:line -= l:interval
+        if l:cidx < 6
+            let l:cidx += 1
+        endif
+    endwhile
+    let l:line = line('.') + l:interval
+    let l:height = winheight(0)
+    let l:cidx = 1
+    while l:line < l:win['topline']+l:height
+        call matchaddpos('LineMark'.l:cidx, [l:line])
+        let l:line += l:interval
+        if l:cidx < 6
+            let l:cidx += 1
+        endif
+    endwhile
+endfunc
+
+au! CursorHold * call SetLineHelpers()
+au! CursorMoved * call ClearLineHelpers()

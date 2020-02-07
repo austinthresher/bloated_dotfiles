@@ -49,7 +49,7 @@ set $right l
 floating_modifier Mod4
 
 # start a terminal
-bindsym Mod4+Return exec stterm -f JetBrains\ Mono:size=20
+bindsym Mod4+Return exec stterm -f JetBrains\ Mono:size=24
 
 # kill focused window
 bindsym Mod4+Shift+q kill
