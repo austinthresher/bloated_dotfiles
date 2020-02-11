@@ -1,11 +1,7 @@
 
-" TODO: Find a better solution for tabs. Sleuth is fooled by
-" clang-format's half-indentation of public/private
 set shiftwidth=4
 set softtabstop=4
 set expandtab
-
-" TODO: write a plugin that automatically sets window sizes
 
 " Plugins {{{
 
@@ -37,7 +33,6 @@ try
     " TODO: look at official yapf plugin
     "call s:plug('mizuchi/stl-syntax')
     "call s:plug('unblevable/quick-scope') " TODO: see if this caused slowdown
-    "call s:plug('vim-scripts/errormarker.vim') " TODO: set up cmake in vim
     call s:plug('ap/vim-buftabline', 1)
     call s:plug('bfrg/vim-cpp-modern', 0)
     call s:plug('google/vim-searchindex', 1)
@@ -48,7 +43,6 @@ try
     call s:plug('reedes/vim-litecorrect', 0)
     call s:plug('rhysd/git-messenger.vim', 1)
     call s:plug('sheerun/vim-polyglot', 0)
-    "call s:plug('shougo/echodoc', 1) " TODO: Figure out how this works, try disabling funcsig
     call s:plug('skywind3000/quickmenu.vim', 0)
     call s:plug('tbastos/vim-lua', 0)
     call s:plug('thinca/vim-ref', 1)
@@ -61,11 +55,12 @@ try
     call s:plug('tpope/vim-unimpaired', 1)
     "call s:plug('tweekmonster/braceless.vim', 1)
     call s:plug('yggdroot/indentline', 1)
-    call s:plug('lifepillar/vim-mucomplete', 1)
 
-    if has('nvim')
-        Plug 'neovim/nvim-lsp'
-    endif
+    call s:plug('prabirshrestha/async.vim', 0)
+    call s:plug('prabirshrestha/vim-lsp', 1)
+    call s:plug('prabirshrestha/asyncomplete.vim', 0)
+    call s:plug('prabirshrestha/asyncomplete-lsp.vim', 0)
+   
 
     call plug#end()
 catch
@@ -122,9 +117,9 @@ set splitbelow
 " Don't try to set the cursor
 set guicursor=
 " Preview window is 1 line tall
-set previewheight=1
-" CursorHold kicks in after one second
-set updatetime=1000
+"set previewheight=1
+" CursorHold kicks in after 1/4 second
+set updatetime=100
 " Show cmd in progress
 set showcmd
 " Recursive searching
@@ -170,9 +165,11 @@ function! s:hi(group, fg, bg, attr)
     execute join(l:cmd, ' ')
 endfunc
 
+let g:statuslime_hover = 'left'
 func! SetStatusLime()
-    let g:statuslime_left = 'left'
+    let g:statuslime_left = g:statuslime_hover 
     let g:statuslime_right = 'right'
+    return ''
 endfunc
 
 " }}}
@@ -244,28 +241,30 @@ hi! link lCursor Cursor
 call s:hi('Special', s:orange, s:none, 'NONE')
 call s:hi('Comment', s:bright_black, s:none, 'italic')
 call s:hi('Todo', s:bright_white, s:black, 'bold,italic')
-call s:hi('Error', s:bright_white, s:red, 'bold')
+call s:hi('Error', s:bright_red, s:none, 'italic')
 call s:hi('String', s:bright_green, s:none, 'NONE')
-
-for group in ['Statement', 'Conditional', 'Repeat', 'Label', 'Exception', 'Keyword']
-    call s:hi(group, s:red, s:none, 'NONE')
-endfor
-
-for group in ['Identifier', 'PreProc', 'Include', 'Define', 'PreCondit', 'Structure']
-    call s:hi(group, s:cyan, s:none, 'NONE')
-endfor
-
-call s:hi('Function', s:yellow, s:none, 'NONE')
-call s:hi('Macro', s:orange, s:none, 'NONE')
 
 for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float']
     call s:hi(group, s:bright_magenta, s:none, 'NONE')
 endfor
 
-call s:hi('Type', s:bright_blue, s:none, 'NONE')
-call s:hi('StorageClass', s:orange, s:none, 'NONE')
-call s:hi('Typedef', s:magenta, s:none, 'NONE')
+call s:hi('Type', s:cyan, s:none, 'bold')
+call s:hi('StorageClass', s:orange, s:none, 'bold')
+call s:hi('Typedef', s:bright_cyan, s:none, 'bold')
 call s:hi('Delimiter', s:bright_black, s:none, 'NONE')
+for group in ['Statement', 'Conditional', 'Repeat', 'Label', 'Exception', 'Keyword']
+    call s:hi(group, s:red, s:none, 'bold')
+endfor
+call s:hi('Identifier', s:bright_orange, s:none, 'NONE')
+call s:hi('PreProc', s:red, s:none, 'NONE')
+call s:hi('Include', s:red, s:none, 'NONE')
+call s:hi('Define', s:red, s:none, 'NONE')
+call s:hi('PreCondit', s:red, s:none, 'NONE')
+call s:hi('Structure', s:cyan, s:none, 'bold')
+
+call s:hi('Function', s:yellow, s:none, 'NONE')
+call s:hi('Macro', s:red, s:none, 'NONE')
+
 
 " Make folds blend in so that the status bar and splits are easier to identify
 call s:hi('Folded', s:none, s:none, 'italic')
@@ -309,10 +308,29 @@ call s:hi('LimeLeft',         s:bright_orange, s:xgray1,  'NONE')
 call s:hi('LimeRight',        s:bright_yellow, s:xgray1,  'NONE')
 
 " buftabline colors
-call s:hi('BufTabLineCurrent', s:hard_black, s:white, 'bold')
-call s:hi('BufTabLineActive', s:blue, s:white, 'NONE')
-call s:hi('BufTabLineHidden', s:bright_black, s:white, 'NONE')
-call s:hi('BufTabLineFill', s:black, s:bright_black, 'NONE')
+call s:hi('BufTabLineCurrent', s:hard_black,   s:white,        'bold')
+call s:hi('BufTabLineActive',  s:blue,         s:white,        'NONE')
+call s:hi('BufTabLineHidden',  s:bright_black, s:white,        'NONE')
+call s:hi('BufTabLineFill',    s:black,        s:bright_black, 'NONE')
+
+" vim-lsp colors
+call s:hi('LspErrorHighlight',       s:red,    s:none, 'underline')
+call s:hi('LspWarningHighlight',     s:yellow, s:none, 'underline')
+call s:hi('LspInformationHighlight', s:blue,   s:none, 'underline')
+call s:hi('LspHintHighlight',        s:green,  s:none, 'underline')
+
+" vim-lsp semantic highlighting
+call s:hi('SemFunction',   s:yellow,         s:none, 'NONE')
+call s:hi('SemMethod',     s:bright_yellow,  s:none, 'italic')
+call s:hi('SemNamespace',  s:bright_magenta, s:none, 'NONE')
+call s:hi('SemEnum',       s:bright_blue,    s:none, 'NONE')
+call s:hi('SemClass',      s:bright_yellow,  s:none, 'NONE')
+call s:hi('SemType',       s:cyan,           s:none, 'NONE')
+call s:hi('SemTemplate',   s:bright_cyan,    s:none, 'NONE')
+call s:hi('SemEnumMember', s:magenta,        s:none, 'NONE')
+call s:hi('SemVariable',   s:bright_white,   s:none, 'NONE')
+call s:hi('SemField',      s:bright_white,   s:none, 'italic')
+
 
 " }}}
 
@@ -355,8 +373,6 @@ vmap <Enter> <Plug>(EasyAlign)
 " }}}
 
 " Plugin Configuration {{{
-
-let g:mucomplete#enable_auto_at_startup = 1
 
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
@@ -436,32 +452,95 @@ func! SetLineHelpers()
     endwhile
 endfunc
 
-au! CursorHold * call SetLineHelpers()
-au! CursorMoved * call ClearLineHelpers()
+"au! CursorHold * call SetLineHelpers()
+"au! CursorMoved * call ClearLineHelpers()
 
-if has('nvim') == 0
-    finish
+if executable('clangd')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd']},
+        \ 'whitelist': ['cpp', 'c'],
+        \ 'semantic_highlight': {
+        \   'entity.name.function.cpp': 'SemFunction',
+        \   'entity.name.function.method.cpp': 'SemMethod',
+        \   'entity.name.namespace.cpp': 'SemNamespace',
+        \   'entity.name.type.class.cpp': 'SemClass',
+        \   'entity.name.type.enum.cpp': 'SemEnum',
+        \   'entity.name.type.template.cpp': 'SemTemplate',
+        \   'variable.other.cpp': 'SemVariable',
+        \   'variable.other.enummember.cpp': 'SemEnumMember',
+        \   'variable.other.field.cpp': 'SemField'
+        \ }
+        \ })
 endif
 
-try
-    lua << ENDLUA
-require'nvim_lsp'.pyls.setup{}
-require'nvim_lsp'.clangd.setup{}
-require'nvim_lsp'.bashls.setup{}
-require'nvim_lsp'.dockerls.setup{}
-ENDLUA
-catch
-    echom 'nvim-lsp could not start'
-    finish
-endtry
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
 
-set omnifunc=v:lua.vim.lsp.omnifunc
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+let g:lsp_preview_doubletap = 0
+"let g:lsp_diagnostics_float_cursor = 1
+"let g:lsp_diagnostics_float_delay = 250
+let g:lsp_signs_enabled = 1
+let g:lsp_virtual_text_enabled = 1
+"let g:lsp_semantic_enabled = 1
+"let g:lsp_diagnostics_echo_cursor = 1
+"let g:lsp_diagnostics_echo_delay = 200
 
+function! s:status_hover(server, data) abort
+    let g:statuslime_hover = ''
+    if lsp#client#is_error(a:data['response'])
+        return
+    endif
+    if !has_key(a:data['response'], 'result')
+        return
+    endif
+    if !empty(a:data['response']['result']) && !empty(a:data['response']['result']['contents'])
+        let l:data = string(a:data['response']['result']['contents']['value'])
+        let g:statuslime_hover = "'".join(split(l:data)[4:], ' ')
+    else
+        LspSignatureHelp
+    endif
+endfunc
 
+function! LspSilentHover()
+    let g:statuslime_hover = ''
+    let l:servers = filter(lsp#get_whitelisted_servers(), 'lsp#capabilities#has_hover_provider(v:val)')
+    if len(l:servers) == 0
+        return
+    endif
+
+    for l:server in l:servers
+        call lsp#send_request(l:server, {
+            \ 'method': 'textDocument/hover',
+            \ 'params': {
+            \   'textDocument': lsp#get_text_document_identifier(),
+            \   'position': lsp#get_position(),
+            \ },
+            \ 'on_notification': function('s:status_hover', [l:server]),
+            \ })
+    endfor
+    let g:statuslime_hover = '...'
+endfunc
+
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=no
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    augroup AutoLSP
+        au!
+        au CursorHold <buffer> call LspSilentHover()
+    augroup END
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END

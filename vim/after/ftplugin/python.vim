@@ -1,4 +1,4 @@
-call autoformat#enable('autopep8')
+call autoformat#enable_path('autopep8')
 "try
 "    BracelessEnable +indent +fold
 "catch

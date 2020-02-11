@@ -1,2 +1,2 @@
 " call funcsig#enable()
-call autoformat#enable('indent -kr')
+call autoformat#enable_pipe('indent -kr')
