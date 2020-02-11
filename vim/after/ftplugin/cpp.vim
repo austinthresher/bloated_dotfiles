@@ -1,3 +1,2 @@
 " call funcsig#enable()
-let g:gutentags_ctags_extra_args = ['--c++-kinds=+p', '--fields=+iaS', '--extra=+q']
-call clangformat#enable_on_save()
+call autoformat#enable('clang-format -style="{BasedOnStyle: WebKit, AccessModifierOffset: 0, ColumnLimit: 80, IndentCaseLabels: false, Language: Cpp, PointerAlignment: Right}"')

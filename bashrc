@@ -8,24 +8,9 @@ function under   { printf "\e[4m"; }
 function colorfg { printf "\e[3$1m"; }
 function colorbg { printf "\e[4$1m"; }
 
-function launch_vi {
-    if [ -f "$(which vim)" ]; then
-        $(which vim) "$@"
-    elif [ -f "$(which nvim)" ]; then
-        $(which nvim) "$@"
-    elif [ -f "$(which vis)" ]; then
-        $(which vis) "$@"
-    else
-        $(which vi) "$@"
-    fi
-}
-
 alias ls='ls -F'
 alias rgrep='grep -Iirn'
 alias more='less'
-alias nvim='launch_vi'
-alias vim='launch_vi'
-alias vi='launch_vi'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then

@@ -8,8 +8,12 @@ if exists("g:clang_format_loaded")
 endif
 let g:clang_format_loaded = 1
 
+if exists("g:clang_format_path") == 0
+    let g:clang_format_path = $HOME.'/.local/bin/clang-format'
+endif
+
 if exists("g:clang_format_py") == 0
-    let g:clang_format_py = '/usr/share/clang/clang-format-9/clang-format.py'
+    let g:clang_format_py = $HOME.'/.local/share/clang/clang-format.py'
 endif
 
 if exists("g:clang_format_fallback_style") == 0
@@ -18,9 +22,10 @@ endif
 
 func clangformat#run()
     if has("python3") && filereadable(g:clang_format_py)
-        let l:lines = 'all'
-        let l:formatdiff = 1
-        exe 'py3f '.g:clang_format_py
+        let l:lines='all'
+        let l:cmd='py3f '.g:clang_format_py
+        echom l:cmd
+        exe l:cmd
     endif
 endfunc
 

@@ -2,7 +2,6 @@
 " TODO: Find a better solution for tabs. Sleuth is fooled by
 " clang-format's half-indentation of public/private
 set shiftwidth=4
-set tabstop=4
 set softtabstop=4
 set expandtab
 
@@ -26,7 +25,12 @@ func! s:plug(repo, has_help)
 endfunc
 let g:plugin_help_menu = 1
 
-let g:plugin_path = '~/.vim/plugs'
+if has('nvim')
+    let g:plugin_path = '~/.config/nvim/repos'
+else
+    let g:plugin_path = '~/.vim/repos'
+endif
+
 try
     call plug#begin(g:plugin_path)
 
@@ -44,7 +48,7 @@ try
     call s:plug('reedes/vim-litecorrect', 0)
     call s:plug('rhysd/git-messenger.vim', 1)
     call s:plug('sheerun/vim-polyglot', 0)
-    call s:plug('shougo/echodoc', 1) " TODO: Figure out how this works, try disabling funcsig
+    "call s:plug('shougo/echodoc', 1) " TODO: Figure out how this works, try disabling funcsig
     call s:plug('skywind3000/quickmenu.vim', 0)
     call s:plug('tbastos/vim-lua', 0)
     call s:plug('thinca/vim-ref', 1)
@@ -54,14 +58,13 @@ try
     call s:plug('tpope/vim-fugitive', 1)
     call s:plug('tpope/vim-rsi', 1)
     call s:plug('tpope/vim-sensible', 0)
-    "call s:plug('tpope/vim-sleuth', 1)
     call s:plug('tpope/vim-unimpaired', 1)
-    call s:plug('tweekmonster/braceless.vim', 1)
+    "call s:plug('tweekmonster/braceless.vim', 1)
     call s:plug('yggdroot/indentline', 1)
-    call s:plug('vim-scripts/OmniCppComplete', 1)
+    call s:plug('lifepillar/vim-mucomplete', 1)
 
-    if executable('ctags') " TODO: check for exuberant ctags
-        call s:plug('ludovicchabant/vim-gutentags', 1)
+    if has('nvim')
+        Plug 'neovim/nvim-lsp'
     endif
 
     call plug#end()
@@ -104,10 +107,8 @@ set noshowmode
 set incsearch
 " Allow backspacing over everything
 set backspace=indent,eol,start
-" Spaces for status line and fold
-"set fillchars=stl:\ ,stlnc:\ ,fold:\ ,eob:~
 " Enable the mouse
-" set mouse=a " Disabled, having some issues with Konsole
+set mouse=a
 " Set US English for spellcheck
 set spelllang=en_us
 " Always show statusbar
@@ -115,11 +116,7 @@ set laststatus=2
 " Don't wrap lines by default
 set nowrap
 " Don't page output
-set nomore
-" Use relative line numbers
-"set relativenumber
-"set number
-filetype plugin indent on
+set more
 " Default to new windows appearing below current
 set splitbelow
 " Don't try to set the cursor
@@ -134,14 +131,24 @@ set showcmd
 set path+=**
 " Tab completion menu
 set wildmenu
-" Minimum active window size
-set winwidth=80
-set winheight=24
+" TODO: Set this in an autocmd so that popups are unaffected
+"try
+"" Minimum active window size
+"    set winwidth=80
+"    set winheight=24
+"    " Keep the cursor near the center of the screen
+"    set scrolloff=8
+"catch
+"    set winheight=8
+"    set scrolloff=1
+"endtry
 " Allow windows to collapse completely
 set winminwidth=1
 set winminheight=1
-" Keep the cursor near the center of the screen
-set scrolloff=8
+set completeopt+=menuone
+set completeopt+=noinsert
+
+filetype plugin indent on
 " TODO: Auto-center the view when cursor would move off screen, like emacs
 " }}}
 
@@ -164,8 +171,8 @@ function! s:hi(group, fg, bg, attr)
 endfunc
 
 func! SetStatusLime()
-    let g:statuslime_left = funcsig#get()
-    let g:statuslime_right = gutentags#statusline()
+    let g:statuslime_left = 'left'
+    let g:statuslime_right = 'right'
 endfunc
 
 " }}}
@@ -349,6 +356,8 @@ vmap <Enter> <Plug>(EasyAlign)
 
 " Plugin Configuration {{{
 
+let g:mucomplete#enable_auto_at_startup = 1
+
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_list_hide = netrw_gitignore#Hide()
@@ -358,10 +367,6 @@ let g:indentLine_setColors = 0
 
 let g:buftabline_indicators = 1
 let g:buftabline_numbers = 2
-
-let g:gutentags_generate_on_empty_buffer = 1
-let g:gutentags_ctags_exclude = ['*.txt', '*.md', 'INSTALL', 'README', 'LICENSE' ]
-let g:gutentags_ctags_exclude_wildignore = 1
 
 let g:git_messenger_include_diff = v:true
 let g:git_messenger_max_popup_height = 8
@@ -433,3 +438,30 @@ endfunc
 
 au! CursorHold * call SetLineHelpers()
 au! CursorMoved * call ClearLineHelpers()
+
+if has('nvim') == 0
+    finish
+endif
+
+try
+    lua << ENDLUA
+require'nvim_lsp'.pyls.setup{}
+require'nvim_lsp'.clangd.setup{}
+require'nvim_lsp'.bashls.setup{}
+require'nvim_lsp'.dockerls.setup{}
+ENDLUA
+catch
+    echom 'nvim-lsp could not start'
+    finish
+endtry
+
+set omnifunc=v:lua.vim.lsp.omnifunc
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+
+

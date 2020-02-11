@@ -14,7 +14,7 @@ func autoformat#run(cmd)
         silent !echo -ne '\e[2K\rautoformat failed'
         return
     endif
-    silent exe '%!'.a:cmd
+    silent exe '%!'.a:cmd.' '.shellescape(expand('%'))
     if v:shell_error == 0
         silent !echo -ne '\e[2K\rautoformatted'
     else

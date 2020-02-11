@@ -47,6 +47,7 @@ function dl_if_missing {
 
 mkdir -p "$HOME/.vim"
 mkdir -p "$HOME/.config/i3"
+mkdir -p "$HOME/.config/nvim"
 
 prompt_to_replace profile       "$HOME/.profile"
 prompt_to_replace bashrc        "$HOME/.bashrc"
@@ -55,10 +56,13 @@ prompt_to_replace tmux.conf     "$HOME/.tmux.conf"
 prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
-prompt_to_replace conkyrc       "$HOME/.conkyrc"
 for f in vim/*; do
-    prompt_to_replace "$f" "$HOME/.$f"
+    bf=$(basename $f)
+    prompt_to_replace "$f" "$HOME/.vim/$bf"
+    prompt_to_replace "$f" "$HOME/.config/nvim/$bf"
 done
+prompt_to_replace vim/vimrc "$HOME/.config/nvim/init.vim"
+popd &> /dev/null
 
 if [ -d fonts ]; then
     echo "$PWD/fonts already exists. Skipping font extraction."
