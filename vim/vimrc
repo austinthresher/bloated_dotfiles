@@ -53,14 +53,14 @@ try
     call s:plug('tpope/vim-rsi', 1)
     call s:plug('tpope/vim-sensible', 0)
     call s:plug('tpope/vim-unimpaired', 1)
-    "call s:plug('tweekmonster/braceless.vim', 1)
     call s:plug('yggdroot/indentline', 1)
 
-    call s:plug('prabirshrestha/async.vim', 0)
-    call s:plug('prabirshrestha/vim-lsp', 1)
-    call s:plug('prabirshrestha/asyncomplete.vim', 0)
-    call s:plug('prabirshrestha/asyncomplete-lsp.vim', 0)
-   
+    if has('nvim')
+        call s:plug('prabirshrestha/async.vim', 0)
+        call s:plug('prabirshrestha/vim-lsp', 1)
+        call s:plug('prabirshrestha/asyncomplete.vim', 0)
+        call s:plug('prabirshrestha/asyncomplete-lsp.vim', 0)
+    endif
 
     call plug#end()
 catch
@@ -176,34 +176,65 @@ endfunc
 
 " Color Palette {{{
 
-" srcery color palette
-let s:black          = ['#1C1B19', 0]
-let s:red            = ['#EF2F27', 1]
-let s:green          = ['#519F50', 2]
-let s:yellow         = ['#FBB829', 3]
-let s:blue           = ['#2C78BF', 4]
-let s:magenta        = ['#E02C6D', 5]
-let s:cyan           = ['#0AAEB3', 6]
-let s:white          = ['#D0BFA1', 7]
-let s:bright_black   = ['#918175', 8]
-let s:bright_red     = ['#F75341', 9]
-let s:bright_green   = ['#98BC37', 10]
-let s:bright_yellow  = ['#FED06E', 11]
-let s:bright_blue    = ['#68A8E4', 12]
-let s:bright_magenta = ['#FF5C8F', 13]
-let s:bright_cyan    = ['#53FDE9', 14]
-let s:bright_white   = ['#FCE8C3', 15]
+" different theme to distinguish vim / neovim
+if has('nvim')
+    " srcery color palette
+    let s:black          = ['#1C1B19', 235] " first 16 xterm colors are gruvbox
+    let s:red            = ['#EF2F27', 124]
+    let s:green          = ['#519F50', 106]
+    let s:yellow         = ['#FBB829', 172]
+    let s:blue           = ['#2C78BF', 66]
+    let s:magenta        = ['#E02C6D', 132]
+    let s:cyan           = ['#0AAEB3', 72]
+    let s:white          = ['#D0BFA1', 246]
+    let s:bright_black   = ['#918175', 245]
+    let s:bright_red     = ['#F75341', 167]
+    let s:bright_green   = ['#98BC37', 142]
+    let s:bright_yellow  = ['#FED06E', 214]
+    let s:bright_blue    = ['#68A8E4', 109]
+    let s:bright_magenta = ['#FF5C8F', 175]
+    let s:bright_cyan    = ['#53FDE9', 108]
+    let s:bright_white   = ['#FCE8C3', 223]
 
-" xterm colors.
-let s:orange        = ['#FF5F00', 202]
-let s:bright_orange = ['#FF8700', 208]
-let s:hard_black    = ['#121212', 233]
-let s:xgray1        = ['#262626', 235]
-let s:xgray2        = ['#303030', 236]
-let s:xgray3        = ['#3A3A3A', 237]
-let s:xgray4        = ['#444444', 238]
-let s:xgray5        = ['#4E4E4E', 239]
-let s:xgray6        = ['#585858', 240]
+    " xterm colors.
+    let s:orange        = ['#FF5F00', 202]
+    let s:bright_orange = ['#FF8700', 208]
+    let s:hard_black    = ['#121212', 233]
+    let s:xgray1        = ['#262626', 235]
+    let s:xgray2        = ['#303030', 236]
+    let s:xgray3        = ['#3A3A3A', 237]
+    let s:xgray4        = ['#444444', 238]
+    let s:xgray5        = ['#4E4E4E', 239]
+    let s:xgray6        = ['#585858', 240]
+else
+    " monokai palette
+    let s:black   = ['#272822', 234]
+    let s:red     = ['#e73c50', 196]
+    let s:green   = ['#A6E22D', 148]
+    let s:yellow  = ['#E6DB74', 186]
+    let s:blue    = ['#66d9ef', 81]
+    let s:magenta = ['#ae81ff', 141]
+    let s:cyan    = ['#A1EFE4', 153] " verify 256 color
+    let s:white   = ['#E8E8E3', 252]
+    let s:bright_black   = ['#75715E', 59]
+    let s:bright_red     = ['#ff0000', 52]
+    let s:bright_green   = ['#9EC400', 76] " verify 256 color
+    let s:bright_yellow  = ['#E7C547', 229] " verify 256 color
+    let s:bright_blue    = ['#7AA6DA', 147] " verify 256 color
+    let s:bright_magenta = ['#B77EE0', 183] " verify 256 color
+    let s:bright_cyan    = ['#54CED6', 159] " verify 256 color
+    let s:bright_white   = ['#d8d8d3', 250]
+    
+    let s:orange        = ['#FD9720', 208]
+    let s:bright_orange = ['#F92772', 197]
+    let s:hard_black    = ['#211F1C', 233]
+    let s:xgray1        = ['#2D2E27', 235]
+    let s:xgray2        = ['#383a3e', 236]
+    let s:xgray3        = ['#3f4145', 237]
+    let s:xgray4        = ['#575b61', 237]
+    let s:xgray5        = ['#64645e', 239]
+    let s:xgray6        = ['#8F908A', 243]
+endif
 
 let s:none = ['NONE', 'NONE']
 
@@ -450,6 +481,11 @@ endfunc
 
 "au! CursorHold * call SetLineHelpers()
 "au! CursorMoved * call ClearLineHelpers()
+
+" For now, only enable LSP on neovim. Will configure for vim8 later.
+if has('nvim') == 0
+    finish
+endif
 
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
