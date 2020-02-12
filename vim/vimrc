@@ -341,12 +341,8 @@ if has("terminal")
     tnoremap <esc> <c-\><c-n>
     tnoremap <c-w> <c-\><c-n><c-w>
 endif
-" Reset layout
-nnoremap <leader>r <C-W>=
 " Quick reload of vimrc
-nnoremap <leader>R :source $MYVIMRC<cr>
-" Toggle spellcheck
-nnoremap <leader>S :set spell!<cr>
+nnoremap <leader><home> :source $MYVIMRC<cr>
 " Clear search with <C-L>
 nnoremap <c-l> :noh<cr><c-l>
 
@@ -484,59 +480,24 @@ if executable('pyls')
 endif
 
 let g:lsp_preview_doubletap = 0
-"let g:lsp_diagnostics_float_cursor = 1
-"let g:lsp_diagnostics_float_delay = 250
 let g:lsp_signs_enabled = 1
 let g:lsp_virtual_text_enabled = 1
-"let g:lsp_semantic_enabled = 1
-"let g:lsp_diagnostics_echo_cursor = 1
-"let g:lsp_diagnostics_echo_delay = 200
 
-function! s:status_hover(server, data) abort
-    let g:statuslime_hover = ''
-    if lsp#client#is_error(a:data['response'])
-        return
-    endif
-    if !has_key(a:data['response'], 'result')
-        return
-    endif
-    if !empty(a:data['response']['result']) && !empty(a:data['response']['result']['contents'])
-        let l:data = string(a:data['response']['result']['contents']['value'])
-        let g:statuslime_hover = "'".join(split(l:data)[4:], ' ')
-    else
-        LspSignatureHelp
-    endif
-endfunc
-
-function! LspSilentHover()
-    let g:statuslime_hover = ''
-    let l:servers = filter(lsp#get_whitelisted_servers(), 'lsp#capabilities#has_hover_provider(v:val)')
-    if len(l:servers) == 0
-        return
-    endif
-
-    for l:server in l:servers
-        call lsp#send_request(l:server, {
-            \ 'method': 'textDocument/hover',
-            \ 'params': {
-            \   'textDocument': lsp#get_text_document_identifier(),
-            \   'position': lsp#get_position(),
-            \ },
-            \ 'on_notification': function('s:status_hover', [l:server]),
-            \ })
-    endfor
-    let g:statuslime_hover = '...'
+" The preview window does not update while typing / moving cursor
+" inside signature help. This function should continue to show
+" the help while the arguments are being entered.
+function! s:sig()
+    " TODO
 endfunc
 
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
-    setlocal signcolumn=no
-    nmap <buffer> gd <plug>(lsp-definition)
-    nmap <buffer> <leader>rn <plug>(lsp-rename)
-    augroup AutoLSP
-        au!
-        au CursorHold <buffer> call LspSilentHover()
-    augroup END
+    nmap <buffer> <leader>D <plug>(lsp-peek-definition)
+    nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
+    nmap <buffer> <leader>R <plug>(lsp-rename)
+    nmap <buffer> <leader>s <plug>(lsp-signature-help)
+    nmap <buffer> <leader>r <plug>(lsp-references)
+    nmap <buffer> <leader>h <plug>(lsp-hover)
 endfunction
 
 augroup lsp_install
