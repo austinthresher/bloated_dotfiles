@@ -30,36 +30,43 @@ endif
 try
     call plug#begin(g:plugin_path)
 
-    " TODO: look at official yapf plugin
-    "call s:plug('mizuchi/stl-syntax')
-    "call s:plug('unblevable/quick-scope') " TODO: see if this caused slowdown
-    call s:plug('ap/vim-buftabline', 1)
-    call s:plug('bfrg/vim-cpp-modern', 0)
-    call s:plug('google/vim-searchindex', 1)
-    call s:plug('junegunn/vim-easy-align', 1)
-    call s:plug('machakann/vim-sandwich', 1)
-    call s:plug('mboughaba/i3config.vim', 0)
-    call s:plug('peterrincker/vim-argumentative', 1)
-    call s:plug('reedes/vim-litecorrect', 0)
-    call s:plug('rhysd/git-messenger.vim', 1)
-    call s:plug('sheerun/vim-polyglot', 0)
-    call s:plug('skywind3000/quickmenu.vim', 0)
-    call s:plug('tbastos/vim-lua', 0)
-    call s:plug('thinca/vim-ref', 1)
-    call s:plug('tpope/vim-abolish', 1)
-    call s:plug('tpope/vim-commentary', 1)
-    call s:plug('tpope/vim-eunuch', 1)
-    call s:plug('tpope/vim-fugitive', 1)
-    call s:plug('tpope/vim-rsi', 1)
-    call s:plug('tpope/vim-sensible', 0)
-    call s:plug('tpope/vim-unimpaired', 1)
-    call s:plug('yggdroot/indentline', 1)
+    " TODO: Compare cpp highlighters
+    "call s:plug('bfrg/vim-cpp-modern', v:false)
+    "call s:plug('octol/vim-cpp-enhanced-highlight', v:false)
+    
+    call s:plug('ap/vim-buftabline', v:true)
+    call s:plug('ekalinin/dockerfile.vim', v:false)
+    call s:plug('google/vim-searchindex', v:true)
+    call s:plug('guns/xterm-color-table.vim', v:true)
+    call s:plug('junegunn/gv.vim', v:false) " git commit browser
+    call s:plug('junegunn/vim-easy-align', v:true)
+    call s:plug('machakann/vim-sandwich', v:true)
+    call s:plug('mboughaba/i3config.vim', v:false)
+    call s:plug('michaeljsmith/vim-indent-object', v:true)
+    call s:plug('peterrincker/vim-argumentative', v:true)
+    call s:plug('reedes/vim-litecorrect', v:false)
+    call s:plug('rhysd/conflict-marker.vim', v:true) " [x ]x
+    call s:plug('rhysd/git-messenger.vim', v:true)
+    call s:plug('roxma/vim-paste-easy', v:false)
+    call s:plug('sheerun/vim-polyglot', v:false)
+    call s:plug('skywind3000/quickmenu.vim', v:false)
+    call s:plug('tbastos/vim-lua', v:false)
+    call s:plug('thinca/vim-ref', v:true)
+    call s:plug('tpope/vim-abolish', v:true)
+    call s:plug('tpope/vim-commentary', v:true)
+    call s:plug('tpope/vim-eunuch', v:true)
+    call s:plug('tpope/vim-fugitive', v:true)
+    call s:plug('tpope/vim-rsi', v:true)
+    call s:plug('tpope/vim-sensible', v:false)
+    call s:plug('tpope/vim-unimpaired', v:true)
+    call s:plug('tpope/vim-vinegar', v:true)
+    call s:plug('yggdroot/indentline', v:true)
 
     if has('nvim')
-        call s:plug('prabirshrestha/async.vim', 0)
-        call s:plug('prabirshrestha/vim-lsp', 1)
-        call s:plug('prabirshrestha/asyncomplete.vim', 0)
-        call s:plug('prabirshrestha/asyncomplete-lsp.vim', 0)
+        call s:plug('prabirshrestha/async.vim', v:false)
+        call s:plug('prabirshrestha/vim-lsp', v:true)
+        call s:plug('prabirshrestha/asyncomplete.vim', v:false)
+        call s:plug('prabirshrestha/asyncomplete-lsp.vim', v:false)
     endif
 
     call plug#end()
@@ -118,7 +125,7 @@ set splitbelow
 set guicursor=
 " Preview window is 1 line tall
 "set previewheight=1
-" CursorHold kicks in after 1/4 second
+" CursorHold kicks in after 1/10 second
 set updatetime=100
 " Show cmd in progress
 set showcmd
@@ -126,31 +133,18 @@ set showcmd
 set path+=**
 " Tab completion menu
 set wildmenu
-" TODO: Set this in an autocmd so that popups are unaffected
-"try
-"" Minimum active window size
-"    set winwidth=80
-"    set winheight=24
-"    " Keep the cursor near the center of the screen
-"    set scrolloff=8
-"catch
-"    set winheight=8
-"    set scrolloff=1
-"endtry
+" Don't scroll near borders, use an autocmd to do that
+set scrolloff=0
 " Allow windows to collapse completely
 set winminwidth=1
 set winminheight=1
 set completeopt+=menuone
 set completeopt+=noinsert
 
-if has('nvim')
-    set fillchars=vert:│,fold:\ ,diff:-
-else
-    set fillchars=vert:│,fold:\ ,diff:-
-endif
+set fillchars=vert:│,fold:\ ,diff:-
 
 filetype plugin indent on
-" TODO: Auto-center the view when cursor would move off screen, like emacs
+
 " }}}
 
 " Functions {{{
@@ -172,8 +166,8 @@ function! s:hi(group, fg, bg, attr)
 endfunc
 
 func! SetStatusLime()
-    let g:statuslime_left = 'left'
-    let g:statuslime_right = has('nvim') ? 'N' : 'V'
+    let b:statuslime_left = ''
+    let b:statuslime_right = has('nvim') ? 'N' : 'V'
     return ''
 endfunc
 
@@ -183,26 +177,23 @@ endfunc
 
 " 16 ANSI colors
 let s:xterm_black          = has('nvim') ? 234 : 233
-let s:xterm_red            = has('nvim') ? 197 : 160
-let s:xterm_green          = has('nvim') ? 112 : 82
-let s:xterm_yellow         = has('nvim') ? 221 : 214
-let s:xterm_blue           = has('nvim') ? 75  : 63
-let s:xterm_magenta        = has('nvim') ? 127 : 129
-let s:xterm_cyan           = has('nvim') ? 84  : 85
-let s:xterm_white          = has('nvim') ? 252 : 225
-let s:xterm_bright_black   = has('nvim') ? 241 : 240
-let s:xterm_bright_red     = has('nvim') ? 203 : 197
-let s:xterm_bright_green   = has('nvim') ? 118 : 156
-let s:xterm_bright_yellow  = has('nvim') ? 227 : 221
-let s:xterm_bright_blue    = has('nvim') ? 147 : 105 
-let s:xterm_bright_magenta = has('nvim') ? 165 : 140
+let s:xterm_red            = has('nvim') ? 197 : 52
+let s:xterm_green          = has('nvim') ? 112 : 22
+let s:xterm_yellow         = has('nvim') ? 221 : 208
+let s:xterm_blue           = has('nvim') ? 75  : 32
+let s:xterm_magenta        = has('nvim') ? 127 : 199
+let s:xterm_cyan           = has('nvim') ? 84  : 49
+let s:xterm_white          = has('nvim') ? 252 : 252
+let s:xterm_bright_black   = has('nvim') ? 241 : 59
+let s:xterm_bright_red     = has('nvim') ? 203 : 196
+let s:xterm_bright_green   = has('nvim') ? 118 : 41
+let s:xterm_bright_yellow  = has('nvim') ? 227 : 220
+let s:xterm_bright_blue    = has('nvim') ? 147 : 45
+let s:xterm_bright_magenta = has('nvim') ? 165 : 170
 let s:xterm_bright_cyan    = has('nvim') ? 122 : 159
 let s:xterm_bright_white   = has('nvim') ? 255 : 231
-" Extra colors
-let s:xterm_orange         = has('nvim') ? 166 : 202
-let s:xterm_bright_orange  = has('nvim') ? 208 : 173
 " Darker than black
-let s:xterm_dark_black     = has('nvim') ? 233 : 16
+let s:xterm_dark_black     = has('nvim') ? 233 : 232
 " Darker than bright_black, lighter than black
 let s:xterm_darkest_gray   = has('nvim') ? 235 : 234
 let s:xterm_darker_gray    = has('nvim') ? 237 : 235
@@ -229,8 +220,6 @@ if has('nvim') " neovim theme
     let s:bright_magenta = ['#FF5C8F', s:xterm_bright_magenta]
     let s:bright_cyan    = ['#53FDE9', s:xterm_bright_cyan]
     let s:bright_white   = ['#FCE8C3', s:xterm_bright_white]
-    let s:orange         = ['#FF5F00', s:xterm_orange]
-    let s:bright_orange  = ['#FF8700', s:xterm_bright_orange]
     let s:dark_black     = ['#121212', s:xterm_dark_black]
     let s:darkest_gray   = ['#262626', s:xterm_darkest_gray]
     let s:darker_gray    = ['#303030', s:xterm_darker_gray]
@@ -239,31 +228,29 @@ if has('nvim') " neovim theme
     let s:lighter_gray   = ['#4E4E4E', s:xterm_lighter_gray]
     let s:lightest_gray  = ['#585858', s:xterm_lightest_gray]
 else " vim theme
-    let s:black          = ['#1C1B19', s:xterm_black]
-    let s:red            = ['#EF2F27', s:xterm_red]
-    let s:green          = ['#519F50', s:xterm_green]
-    let s:yellow         = ['#FBB829', s:xterm_yellow]
-    let s:blue           = ['#2C78BF', s:xterm_blue]
-    let s:magenta        = ['#E02C6D', s:xterm_magenta]
-    let s:cyan           = ['#0AAEB3', s:xterm_cyan]
-    let s:white          = ['#D0BFA1', s:xterm_white]
-    let s:bright_black   = ['#918175', s:xterm_bright_black]
-    let s:bright_red     = ['#F75341', s:xterm_bright_red]
-    let s:bright_green   = ['#98BC37', s:xterm_bright_green]
-    let s:bright_yellow  = ['#FED06E', s:xterm_bright_yellow]
-    let s:bright_blue    = ['#68A8E4', s:xterm_bright_blue]
-    let s:bright_magenta = ['#FF5C8F', s:xterm_bright_magenta]
-    let s:bright_cyan    = ['#53FDE9', s:xterm_bright_cyan]
-    let s:bright_white   = ['#FCE8C3', s:xterm_bright_white]
-    let s:orange         = ['#FF5F00', s:xterm_orange]
-    let s:bright_orange  = ['#FF8700', s:xterm_bright_orange]
-    let s:dark_black     = ['#121212', s:xterm_dark_black]
-    let s:darkest_gray   = ['#262626', s:xterm_darkest_gray]
-    let s:darker_gray    = ['#303030', s:xterm_darker_gray]
+    let s:black          = ['#121212', s:xterm_black]
+    let s:red            = ['#5F0000', s:xterm_red]
+    let s:green          = ['#005F00', s:xterm_green]
+    let s:yellow         = ['#FF8700', s:xterm_yellow]
+    let s:blue           = ['#0087DF', s:xterm_blue]
+    let s:magenta        = ['#FF00AF', s:xterm_magenta]
+    let s:cyan           = ['#00FFAF', s:xterm_cyan]
+    let s:white          = ['#D0D0D0', s:xterm_white]
+    let s:bright_black   = ['#5F5F5F', s:xterm_bright_black]
+    let s:bright_red     = ['#FF0000', s:xterm_bright_red]
+    let s:bright_green   = ['#00DF5F', s:xterm_bright_green]
+    let s:bright_yellow  = ['#FFDF00', s:xterm_bright_yellow]
+    let s:bright_blue    = ['#00DFFF', s:xterm_bright_blue]
+    let s:bright_magenta = ['#DF5FDF', s:xterm_bright_magenta]
+    let s:bright_cyan    = ['#AFFFFF', s:xterm_bright_cyan]
+    let s:bright_white   = ['#FFFFFF', s:xterm_bright_white]
+    let s:dark_black     = ['#080808', s:xterm_dark_black]
+    let s:darkest_gray   = ['#1C1C1C', s:xterm_darkest_gray]
+    let s:darker_gray    = ['#262626', s:xterm_darker_gray]
     let s:dark_gray      = ['#3A3A3A', s:xterm_dark_gray]
-    let s:light_gray     = ['#444444', s:xterm_light_gray]
-    let s:lighter_gray   = ['#4E4E4E', s:xterm_lighter_gray]
-    let s:lightest_gray  = ['#585858', s:xterm_lightest_gray]
+    let s:light_gray     = ['#808080', s:xterm_light_gray]
+    let s:lighter_gray   = ['#9E9E9E', s:xterm_lighter_gray]
+    let s:lightest_gray  = ['#BCBCBC', s:xterm_lightest_gray]
 endif
 
 let s:none = ['NONE', 'NONE']
@@ -282,6 +269,7 @@ for group in ['NonText', 'SpecialKey']
     call s:hi(group, s:light_gray, s:none, 'NONE')
 endfor
 
+call s:hi('Operator', s:white, s:none, 'NONE')
 call s:hi('MatchParen', s:bright_magenta, s:none, 'bold')
 call s:hi('Conceal', s:darker_gray, s:none, 'NONE')
 call s:hi('StatusLine', s:bright_white, s:darkest_gray, 'NONE')
@@ -291,7 +279,7 @@ call s:hi('ErrorMsg', s:bright_white, s:red, 'NONE')
 call s:hi('Directory', s:green, s:none, 'bold')
 call s:hi('Title', s:green, s:none, 'bold')
 call s:hi('MoreMsg', s:yellow, s:none, 'bold')
-call s:hi('Question', s:orange, s:none, 'bold')
+call s:hi('Question', s:bright_yellow, s:none, 'bold')
 call s:hi('Warning', s:red, s:none, 'bold')
 
 call s:hi('Cursor', s:black, s:yellow, 'NONE')
@@ -299,33 +287,35 @@ hi! link vCursor Cursor
 hi! link iCursor Cursor
 hi! link lCursor Cursor
 
-call s:hi('Special', s:orange, s:none, 'NONE')
-call s:hi('Comment', s:bright_black, s:none, 'italic')
-call s:hi('Todo', s:bright_white, s:black, 'bold,italic')
+call s:hi('Special', s:yellow, s:none, 'NONE')
+call s:hi('Comment', s:bright_green, s:none, 'italic')
+call s:hi('Todo', s:bright_yellow, s:black, 'bold,italic')
 call s:hi('Error', s:bright_red, s:none, 'italic')
-call s:hi('String', s:bright_green, s:none, 'NONE')
+call s:hi('String', s:cyan, s:dark_black, 'NONE')
+call s:hi('SpecialChar', s:bright_yellow, s:dark_black, 'italic')
 
 for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float']
-    call s:hi(group, s:bright_magenta, s:none, 'NONE')
+    call s:hi(group, s:bright_red, s:none, 'NONE')
 endfor
 
-call s:hi('Type', s:cyan, s:none, 'bold')
-call s:hi('StorageClass', s:orange, s:none, 'bold')
-call s:hi('Typedef', s:bright_cyan, s:none, 'bold')
+call s:hi('Type', s:bright_blue, s:none, 'NONE')
+call s:hi('StorageClass', s:bright_blue, s:none, 'NONE')
+call s:hi('Typedef', s:bright_blue, s:none, 'NONE')
+call s:hi('Structure', s:bright_blue, s:none, 'NONE')
 call s:hi('Delimiter', s:bright_black, s:none, 'NONE')
 for group in ['Statement', 'Conditional', 'Repeat', 'Label', 'Exception', 'Keyword']
-    call s:hi(group, s:red, s:none, 'bold')
+    call s:hi(group, s:blue, s:none, 'bold')
 endfor
-call s:hi('Identifier', s:bright_orange, s:none, 'NONE')
-call s:hi('PreProc', s:red, s:none, 'NONE')
-call s:hi('Include', s:red, s:none, 'NONE')
-call s:hi('Define', s:red, s:none, 'NONE')
-call s:hi('PreCondit', s:red, s:none, 'NONE')
-call s:hi('Structure', s:cyan, s:none, 'bold')
+call s:hi('Identifier', s:bright_white, s:none, 'NONE')
+call s:hi('PreProc',   s:yellow, s:none, 'NONE')
+call s:hi('Include',   s:yellow, s:none, 'NONE')
+call s:hi('Define',    s:yellow, s:none, 'NONE')
+call s:hi('PreCondit', s:yellow, s:none, 'NONE')
 
-call s:hi('Function', s:yellow, s:none, 'NONE')
-call s:hi('Macro', s:red, s:none, 'NONE')
+call s:hi('cIncluded', s:bright_cyan, s:none, 'italic')
 
+call s:hi('Function', s:magenta, s:none, 'NONE')
+call s:hi('Macro', s:bright_red, s:none, 'NONE')
 
 " Make folds blend in so that the status bar and splits are easier to identify
 call s:hi('Folded', s:none, s:none, 'italic')
@@ -336,10 +326,10 @@ call s:hi('StatusLineNC', s:dark_gray, s:darkest_gray, 'NONE')
 call s:hi('Pmenu', s:bright_white, s:darker_gray, 'NONE')
 call s:hi('PmenuSel', s:bright_white, s:magenta, 'bold')
 
-call s:hi('DiffDelete', s:red, s:black, 'none')
-call s:hi('DiffAdd', s:green, s:black, 'none')
-call s:hi('DiffChange', s:cyan, s:black, 'none')
-call s:hi('DiffText', s:yellow, s:black, 'none')
+call s:hi('DiffDelete', s:none, s:red, 'none')
+call s:hi('DiffAdd', s:none, s:green, 'none')
+call s:hi('DiffChange', s:none, s:cyan, 'none')
+call s:hi('DiffText', s:none, s:bright_yellow, 'none')
 
 if has('spell')
     call s:hi('SpellCap', s:none, s:magenta, 'underline')
@@ -354,8 +344,8 @@ endif
 " statuslime colors
 call s:hi('LimeNormal',       s:dark_black,    s:white,   'bold')
 call s:hi('LimeVisual',       s:dark_black,    s:blue,    'bold')
-call s:hi('LimeInsert',       s:dark_black,    s:yellow,  'bold')
-call s:hi('LimeReplace',      s:dark_black,    s:orange,  'bold')
+call s:hi('LimeInsert',       s:dark_black,    s:bright_yellow,  'bold')
+call s:hi('LimeReplace',      s:dark_black,    s:yellow,  'bold')
 call s:hi('LimeTerminal',     s:dark_black,    s:green,   'bold')
 call s:hi('LimeCommand',      s:dark_black,    s:magenta, 'bold')
 call s:hi('LimeShell',        s:dark_black,    s:cyan,    'bold')
@@ -365,13 +355,13 @@ call s:hi('LimeError',        s:bright_red,    s:darkest_gray,  'bold')
 call s:hi('LimeRuler',        s:bright_white,  s:darker_gray,  'NONE')
 call s:hi('LimeInactiveBar',  s:dark_black,    s:darker_gray,  'NONE')
 call s:hi('LimeInactiveMode', s:dark_black,    s:dark_gray,  'NONE')
-call s:hi('LimeLeft',         s:bright_orange, s:darkest_gray,  'NONE')
+call s:hi('LimeLeft',         s:yellow, s:darkest_gray,  'NONE')
 call s:hi('LimeRight',        s:bright_yellow, s:darkest_gray,  'NONE')
 
 " buftabline colors
 call s:hi('BufTabLineCurrent', s:dark_black,   s:white,        'bold')
-call s:hi('BufTabLineActive',  s:blue,         s:white,        'NONE')
-call s:hi('BufTabLineHidden',  s:bright_black, s:white,        'NONE')
+call s:hi('BufTabLineActive',  s:red,          s:white,        'NONE')
+call s:hi('BufTabLineHidden',  s:lighter_gray, s:white,        'NONE')
 call s:hi('BufTabLineFill',    s:black,        s:bright_black, 'NONE')
 
 " vim-lsp colors
@@ -380,17 +370,12 @@ call s:hi('LspWarningHighlight',     s:yellow, s:none, 'underline')
 call s:hi('LspInformationHighlight', s:blue,   s:none, 'underline')
 call s:hi('LspHintHighlight',        s:green,  s:none, 'underline')
 
-" semantic highlighting, disabled for now
-call s:hi('SemFunction',   s:yellow,         s:none, 'NONE')
-call s:hi('SemMethod',     s:bright_yellow,  s:none, 'italic')
-call s:hi('SemNamespace',  s:bright_magenta, s:none, 'NONE')
-call s:hi('SemEnum',       s:bright_blue,    s:none, 'NONE')
-call s:hi('SemClass',      s:bright_yellow,  s:none, 'NONE')
-call s:hi('SemType',       s:cyan,           s:none, 'NONE')
-call s:hi('SemTemplate',   s:bright_cyan,    s:none, 'NONE')
-call s:hi('SemEnumMember', s:magenta,        s:none, 'NONE')
-call s:hi('SemVariable',   s:bright_white,   s:none, 'NONE')
-call s:hi('SemField',      s:bright_white,   s:none, 'italic')
+" conflict-marker.vim
+call s:hi('ConflictMarkerBegin',     s:bright_cyan, s:none,         'bold')
+call s:hi('ConflictMarkerOurs',      s:none,        s:darkest_gray, 'NONE')
+call s:hi('ConflictMarkerSeparator', s:cyan,        s:none,         'bold')
+call s:hi('ConflictMarkerTheirs',    s:none,        s:dark_black,   'NONE')
+call s:hi('ConflictMarkerEnd',       s:bright_cyan, s:none,         'bold')
 
 " }}}
 
@@ -402,7 +387,7 @@ if has("terminal")
     tnoremap <c-w> <c-\><c-n><c-w>
 endif
 " Quick reload of vimrc
-nnoremap <leader><home> :source $MYVIMRC<cr>
+nnoremap <leader>V :source $MYVIMRC<cr>
 " Clear search with <C-L>
 nnoremap <c-l> :noh<cr><c-l>
 
@@ -426,6 +411,9 @@ noremap <silent><leader>g :GitMessenger<cr>
 nmap ga <Plug>(EasyAlign)
 vmap <Enter> <Plug>(EasyAlign)
 
+nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
+nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
+
 " }}}
 
 " Plugin Configuration {{{
@@ -443,7 +431,7 @@ let g:buftabline_numbers = 0
 let g:git_messenger_include_diff = v:true
 let g:git_messenger_max_popup_height = 8
 
-let g:echodoc#enable_at_startup = 1
+let g:conflict_marker_enable_mappings = 0
 
 let g:quickmenu_options = "H"
 try
@@ -464,75 +452,55 @@ catch
 endtry
 " }}}
 
-
-" TODO: Move this to a plugin
-" This shades the background of every 5th line to give
-" a similar benefit to relative line numbers without
-" the visual clutter
-" TODO: blank lines are skipped, find a solution
-let cidx = 1
-for c in [s:darkest_gray, s:darker_gray, s:dark_gray, s:light_gray, s:lighter_gray, s:lightest_gray]
-    call s:hi('LineMark'.cidx, s:none, c, 'NONE')
-    let cidx += 1
-endfor
-
-func! ClearLineHelpers()
-    call clearmatches()
-endfunc
-
-func! SetLineHelpers()
-    call clearmatches()
-    if &ro
-        return
+" Emacs style scrolling where the view re-centers on cursor
+func! CenterOnScroll()
+    if exists('b:last_topline') == v:false
+        let b:last_topline = 1
     endif
-    let l:win = winsaveview()
-    let l:interval = 5
-    let l:line = line('.') - l:interval
-    let l:cidx = 1
-    while l:line > l:win['topline']
-        call matchaddpos('LineMark'.l:cidx, [l:line])
-        let l:line -= l:interval
-        if l:cidx < 6
-            let l:cidx += 1
-        endif
-    endwhile
-    let l:line = line('.') + l:interval
-    let l:height = winheight(0)
-    let l:cidx = 1
-    while l:line < l:win['topline']+l:height
-        call matchaddpos('LineMark'.l:cidx, [l:line])
-        let l:line += l:interval
-        if l:cidx < 6
-            let l:cidx += 1
-        endif
-    endwhile
-endfunc
+    if exists('b:last_curline') == v:false
+        let b:last_curline = 1
+    endif
+    let l:topline = winsaveview()['topline']
+    let l:curline = line('.')
 
-"au! CursorHold * call SetLineHelpers()
-"au! CursorMoved * call ClearLineHelpers()
+    if l:topline != b:last_topline && l:curline != b:last_curline
+        norm zz
+    endif
+    let b:last_topline = l:topline
+    let b:last_curline = l:curline
+endfunc
+au CursorMoved,CursorMovedI * call CenterOnScroll()
+
+" Useful for debugging syntax highlighting
+func! HiAtCur()
+    let l:name = ''
+    for id in synstack(line('.'), col('.'))
+        let l:name = synIDattr(id, 'name')
+        echo l:name
+    endfor
+    if l:name isnot ''
+        exec 'hi '.l:name
+    endif
+endfunc
+nmap <leader>c :call HiAtCur()<cr>
 
 " For now, only enable LSP on neovim. Will configure for vim8 later.
 if has('nvim') == 0
     finish
 endif
 
+set termguicolors
+
+let s:lsp_map = {}
+
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
         \ 'cmd': {server_info->['clangd']},
-        \ 'whitelist': ['cpp', 'c'],
-        \ 'semantic_highlight': {
-        \   'entity.name.function.cpp': 'SemFunction',
-        \   'entity.name.function.method.cpp': 'SemMethod',
-        \   'entity.name.namespace.cpp': 'SemNamespace',
-        \   'entity.name.type.class.cpp': 'SemClass',
-        \   'entity.name.type.enum.cpp': 'SemEnum',
-        \   'entity.name.type.template.cpp': 'SemTemplate',
-        \   'variable.other.cpp': 'SemVariable',
-        \   'variable.other.enummember.cpp': 'SemEnumMember',
-        \   'variable.other.field.cpp': 'SemField'
-        \ }
+        \ 'whitelist': ['cpp', 'c']
         \ })
+    let s:lsp_map['c']   = 'clangd'
+    let s:lsp_map['cpp'] = 'clangd'
 endif
 
 if executable('pyls')
@@ -542,6 +510,25 @@ if executable('pyls')
         \ 'cmd': {server_info->['pyls']},
         \ 'whitelist': ['python'],
         \ })
+    let s:lsp_map['python'] = 'pyls'
+endif
+
+if executable('bash-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'bash-language-server',
+        \ 'cmd': {server_info->['bash-language-server']},
+        \ 'whitelist': ['sh'],
+        \ })
+    let s:lsp_map['sh'] = 'bls'
+endif
+
+if executable('docker-langserver')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'docker-langserver',
+        \ 'cmd': {server_info->['docker-langserver']},
+        \ 'whitelist': ['Dockerfile'],
+        \ })
+    let s:lsp_map['Dockerfile'] = 'dls'
 endif
 
 let g:lsp_preview_doubletap = 0
@@ -563,6 +550,12 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> <leader>s <plug>(lsp-signature-help)
     nmap <buffer> <leader>r <plug>(lsp-references)
     nmap <buffer> <leader>h <plug>(lsp-hover)
+    imap <c-space> <Plug>(asyncomplete_force_refresh)
+    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+    autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+    let b:statuslime_right = s:lsp_map[&ft]
 endfunction
 
 augroup lsp_install
@@ -570,3 +563,5 @@ augroup lsp_install
     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
+
+

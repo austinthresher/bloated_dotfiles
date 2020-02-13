@@ -10,14 +10,14 @@ echo "default"
 ./theme256.sh 8   9   10  11  12  13  14  15
 
 echo "neovim"
-#             blk red grn yel blu mag cyn whi
-./theme256.sh 234 197 112 221 75  127 84  252
-./theme256.sh 241 203 118 227 147 165 122 255
+#             blk red grn yel blu mag cyn whi org
+./theme256.sh 234 197 112 221 75  127 84  252 202 
+./theme256.sh 241 203 118 227 147 165 122 255 208
 
 echo "vim"
 #             blk red grn yel blu mag cyn whi
-./theme256.sh 233 160 82  214 63  129 85  225
-./theme256.sh 59  197 156 221 105 140 159 231
+./theme256.sh 233 52  22  208 32  199 49  252
+./theme256.sh 59  196 41  220 45  170 159 231
 
 echo "muted"
 #             blk red grn yel blu mag cyn whi

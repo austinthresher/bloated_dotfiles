@@ -35,15 +35,15 @@ func! s:add_state(condition, hlname, text)
 endfunc
 
 func! statuslime#left()
-    if exists("g:statuslime_left")
-    return Pad(g:statuslime_left)
+    if exists("b:statuslime_left")
+        return Pad(b:statuslime_left)
     endif
     return ''
 endfunc
 
 func! statuslime#right()
-    if exists("g:statuslime_right")
-    return Pad(g:statuslime_right)
+    if exists("b:statuslime_right")
+        return Pad(b:statuslime_right)
     endif
     return ''
 endfunc
@@ -73,6 +73,7 @@ func! statuslime#focused()
     call s:add_state('mode()[0]==#''r''', 'LimeOther', 'CONTINUE')
     call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
     call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
+    setlocal statusline+=%<
     setlocal statusline+=%#LimeFile#%{statuslime#filename()}
     setlocal statusline+=%*
     setlocal statusline+=%#LimeLeft#%{statuslime#left()}
@@ -93,6 +94,7 @@ func! statuslime#unfocused()
         setlocal statusline=
     endtry
     call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
+    setlocal statusline+=%<
     setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
     setlocal statusline+=%*
     setlocal statusline+=%=
