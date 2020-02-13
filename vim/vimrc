@@ -143,6 +143,12 @@ set winminheight=1
 set completeopt+=menuone
 set completeopt+=noinsert
 
+if has('nvim')
+    set fillchars=vert:│,fold:\ ,diff:-
+else
+    set fillchars=vert:│,fold:\ ,diff:-
+endif
+
 filetype plugin indent on
 " TODO: Auto-center the view when cursor would move off screen, like emacs
 " }}}
@@ -165,10 +171,9 @@ function! s:hi(group, fg, bg, attr)
     execute join(l:cmd, ' ')
 endfunc
 
-let g:statuslime_hover = 'left'
 func! SetStatusLime()
-    let g:statuslime_left = g:statuslime_hover 
-    let g:statuslime_right = 'right'
+    let g:statuslime_left = 'left'
+    let g:statuslime_right = has('nvim') ? 'N' : 'V'
     return ''
 endfunc
 
@@ -177,35 +182,35 @@ endfunc
 " Color Palette {{{
 
 " 16 ANSI colors
-let s:xterm_black          = has('nvim') ? 234 : 232
-let s:xterm_red            = has('nvim') ? 125 : 203
-let s:xterm_green          = has('nvim') ? 70  : 119
-let s:xterm_yellow         = has('nvim') ? 179 : 215
-let s:xterm_blue           = has('nvim') ? 74  : 75
-let s:xterm_magenta        = has('nvim') ? 244 : 135
-let s:xterm_cyan           = has('nvim') ? 72  : 121
-let s:xterm_white          = has('nvim') ? 250 : 15
-let s:xterm_bright_black   = has('nvim') ? 241 : 243
-let s:xterm_bright_red     = has('nvim') ? 71  : 204
-let s:xterm_bright_green   = has('nvim') ? 148 : 120
-let s:xterm_bright_yellow  = has('nvim') ? 140 : 228
-let s:xterm_bright_blue    = has('nvim') ? 214 : 159
-let s:xterm_bright_magenta = has('nvim') ? 205 : 141
-let s:xterm_bright_cyan    = has('nvim') ? 37  : 122
+let s:xterm_black          = has('nvim') ? 234 : 233
+let s:xterm_red            = has('nvim') ? 197 : 160
+let s:xterm_green          = has('nvim') ? 112 : 82
+let s:xterm_yellow         = has('nvim') ? 221 : 214
+let s:xterm_blue           = has('nvim') ? 75  : 63
+let s:xterm_magenta        = has('nvim') ? 127 : 129
+let s:xterm_cyan           = has('nvim') ? 84  : 85
+let s:xterm_white          = has('nvim') ? 252 : 225
+let s:xterm_bright_black   = has('nvim') ? 241 : 240
+let s:xterm_bright_red     = has('nvim') ? 203 : 197
+let s:xterm_bright_green   = has('nvim') ? 118 : 156
+let s:xterm_bright_yellow  = has('nvim') ? 227 : 221
+let s:xterm_bright_blue    = has('nvim') ? 147 : 105 
+let s:xterm_bright_magenta = has('nvim') ? 165 : 140
+let s:xterm_bright_cyan    = has('nvim') ? 122 : 159
 let s:xterm_bright_white   = has('nvim') ? 255 : 231
 " Extra colors
 let s:xterm_orange         = has('nvim') ? 166 : 202
 let s:xterm_bright_orange  = has('nvim') ? 208 : 173
 " Darker than black
-let s:xterm_dark_black     = has('nvim') ? 233 : 0
+let s:xterm_dark_black     = has('nvim') ? 233 : 16
 " Darker than bright_black, lighter than black
-let s:xterm_darkest_gray   = 235 
-let s:xterm_darker_gray    = 237
-let s:xterm_dark_gray      = 239
+let s:xterm_darkest_gray   = has('nvim') ? 235 : 234
+let s:xterm_darker_gray    = has('nvim') ? 237 : 235
+let s:xterm_dark_gray      = has('nvim') ? 239 : 237
 " Lighter than bright_black, darker than white
-let s:xterm_light_gray     = 243
-let s:xterm_lighter_gray   = 245
-let s:xterm_lightest_gray  = 247
+let s:xterm_light_gray     = has('nvim') ? 243 : 244
+let s:xterm_lighter_gray   = has('nvim') ? 245 : 247
+let s:xterm_lightest_gray  = has('nvim') ? 247 : 250
 
 if has('nvim') " neovim theme
     let s:black          = ['#1C1B19', s:xterm_black]
@@ -375,7 +380,7 @@ call s:hi('LspWarningHighlight',     s:yellow, s:none, 'underline')
 call s:hi('LspInformationHighlight', s:blue,   s:none, 'underline')
 call s:hi('LspHintHighlight',        s:green,  s:none, 'underline')
 
-" vim-lsp semantic highlighting
+" semantic highlighting, disabled for now
 call s:hi('SemFunction',   s:yellow,         s:none, 'NONE')
 call s:hi('SemMethod',     s:bright_yellow,  s:none, 'italic')
 call s:hi('SemNamespace',  s:bright_magenta, s:none, 'NONE')
@@ -386,7 +391,6 @@ call s:hi('SemTemplate',   s:bright_cyan,    s:none, 'NONE')
 call s:hi('SemEnumMember', s:magenta,        s:none, 'NONE')
 call s:hi('SemVariable',   s:bright_white,   s:none, 'NONE')
 call s:hi('SemField',      s:bright_white,   s:none, 'italic')
-
 
 " }}}
 
