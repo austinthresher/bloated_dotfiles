@@ -1,11 +1,36 @@
-if exists("g:helper_loaded") | finish | endif
+" Copyright (c) 2020 Austin Thresher
+"
+" MIT License
+"
+" Permission is hereby granted, free of charge, to any person obtaining
+" a copy of this software and associated documentation files (the
+" "Software"), to deal in the Software without restriction, including
+" without limitation the rights to use, copy, modify, merge, publish,
+" distribute, sublicense, and/or sell copies of the Software, and to
+" permit persons to whom the Software is furnished to do so, subject to
+" the following conditions:
+"
+" The above copyright notice and this permission notice shall be
+" included in all copies or substantial portions of the Software.
+"
+" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+" EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+" MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+" NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+" LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+" OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+" WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+" helper.vim
 
-let g:helper_loaded = v:true
+if exists("g:autoloaded_helper") | finish | endif
+let g:autoloaded_helper = v:true
 
 " Requires junegunn/vim-plug and skywind3000/quickmenu.vim
 " Automatically includes quickmenu, so no need to include
 " it in your vimrc.
 
+" Wraps vim-plug's plug#begin(). Set g:helper_plug_path to
+" specify the directory that vim-plug uses.
 func! helper#begin()
     if exists("g:helper_plug_path") == v:false
         let g:helper_plug_path = has('nvim') ?
@@ -18,8 +43,11 @@ func! helper#begin()
         echoerr "helper#begin failed: vim-plug is missing or broken"
     endtry
     let s:plugin_list = []
+    let s:found_help_list = []
 endfunc
 
+" Wraps vim-plug's Plug command and tracks plugin repos
+" in an internal list
 func! helper#plug(repo)
     try
         call plug#(a:repo)
@@ -29,6 +57,15 @@ func! helper#plug(repo)
     endtry
 endfunc
 
+" If you need to use any of the advanced features of vim-plug,
+" use Plug like normal instead of helper#plug() and just include
+" this afterwards to add that plugin's folder to the locations
+" searched for help files.
+func! helper#manual(repo)
+    let s:plugin_list = s:plugin_list + [a:repo]
+endfunc
+
+" Find help docs for each plugin registered with helper#plug()
 func! s:populate()
     " quickmenu supports multiple menus with unique ids, pick one if it
     " hasn't already been set
@@ -70,6 +107,7 @@ func! s:populate()
                         " section
                         let l:head = split(system('head -n 1 '.txt), '*')[0]
                         call quickmenu#append(l:short, 'h '.l:head, '')
+                        let s:found_help_list = s:found_help_list + [l:head]
                         break
                     endif
                 endfor
@@ -80,13 +118,19 @@ func! s:populate()
     endtry
 endfunc
 
+" Toggle menu visibility
 func! helper#toggle()
     call quickmenu#toggle(g:helper_menu_id)
 endfunc
 
+" Wraps vim-plug's plug#end()
 func! helper#end()
     call plug#('skywind3000/quickmenu.vim')
     call plug#end() 
     call s:populate() 
 endfunc
 
+" Returns a list of the help docs that were found
+func! helper#found()
+    return s:found_help_list
+endfunc

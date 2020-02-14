@@ -190,7 +190,7 @@
     nmap <leader>9 <Plug>BufTabLine.Go(9)
     nmap <leader>0 <Plug>BufTabLine.Go(10)
 
-    noremap <silent><leader>? :call helper#toggle()<cr>
+    nmap <silent><leader>? <Plug>(helper-toggle)
     noremap <silent><leader>g :GitMessenger<cr>
 
     nmap ga <Plug>(EasyAlign)
