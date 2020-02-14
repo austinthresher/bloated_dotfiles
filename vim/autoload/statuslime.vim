@@ -1,7 +1,5 @@
-if exists("g:statuslime_loaded")
-    finish
-endif
-let g:statuslime_loaded = 1
+if exists("g:statuslime_loaded") | finish | endif
+let g:statuslime_loaded = v:true
 
 " Highlights
 for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
@@ -55,7 +53,7 @@ endfunc
 func! statuslime#focused()
     try
         if type(SetStatusLime()) == type('')
-                setlocal statusline=%{SetStatusLime()}
+            setlocal statusline=%{SetStatusLime()}
         else
             setlocal statusline=
         endif

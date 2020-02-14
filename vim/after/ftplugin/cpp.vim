@@ -1,4 +1,3 @@
-" call funcsig#enable()
 call autoformat#enable_path(
     \'clang-format -style="{'.
         \'BasedOnStyle: WebKit, '.
