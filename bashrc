@@ -14,9 +14,9 @@ alias more='less'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME stterm -f Iosevka\ TermLig\ Curly\ Slab:size=16 -e bash -l'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME stterm -f Iosevka\ Term:size=16 -e bash -l'
 else
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 stterm -f Iosevka\ TermLig\ Curly\ Slab:size=24:style=Light -e bash -l'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 stterm -f Iosevka\ Term:size=24:style=Light -e bash -l'
 fi
 if [[ $TERM == *"st"* ]]; then
     source "$HOME/.dotfiles/scripts/set-colors.sh"

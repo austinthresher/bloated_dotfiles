@@ -1,12 +1,3 @@
-#
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
-#Done!
-# This config file uses keycodes (bindsym) and was written for the QWERTY
-# layout.
-#
-# To get a config file with the same key positions, but for your current
-# layout, use the i3-config-wizard
-#
 
 # i3-helper uses i3-msg to set gaps based on res and launches conky and compton
 exec_always ~/.dotfiles/scripts/i3-helper.sh
@@ -18,7 +9,7 @@ for_window [class="*display*"] floating enable
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:Iosevka\ TermLig\ Curly\ Slab 12
+font pango:Iosevka\ Term 12
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
@@ -49,7 +40,7 @@ set $right l
 floating_modifier Mod4
 
 # start a terminal
-bindsym Mod4+Return exec stterm -f Iosevka\ TermLig\ Curly\ Slab:size=24:style=Light
+bindsym Mod4+Return exec stterm -f Iosevka\ Term:size=24:style=Light
 
 # kill focused window
 bindsym Mod4+Shift+q kill
