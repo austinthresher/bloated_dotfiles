@@ -56,13 +56,14 @@ prompt_to_replace tmux.conf     "$HOME/.tmux.conf"
 prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
+prompt_to_replace Xresources    "$HOME/.Xresources"
+
 for f in vim/*; do
     bf=$(basename $f)
     prompt_to_replace "$f" "$HOME/.vim/$bf"
     prompt_to_replace "$f" "$HOME/.config/nvim/$bf"
 done
 prompt_to_replace vim/vimrc "$HOME/.config/nvim/init.vim"
-popd &> /dev/null
 
 if [ -d fonts ]; then
     echo "$PWD/fonts already exists. Skipping font extraction."
@@ -72,3 +73,5 @@ else
     cp fonts/*.ttf "$HOME/.local/share/fonts/"
     rm -rf fonts
 fi
+
+xrdb -load ~/.Xresources

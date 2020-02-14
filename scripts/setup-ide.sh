@@ -14,8 +14,8 @@ REQUIRED=(git python3 pip3 wget tar curl)
 for x in "${REQUIRED[@]}"; do
     which $x &> /dev/null || {
         echo "Requires '$x', please install before continuing."
-        exit 1
-    }
+    exit 1
+}
 done
 
 pip3 install --user wheel
@@ -25,6 +25,7 @@ pip3 install --user neovim
 pip3 install --user autopep8
 pip3 install --user python-language-server
 pip3 install --user pyls-isort
+pip3 install --user cmake_format
 
 # package urls
 NVIM=nvim-linux64
@@ -50,7 +51,7 @@ done
 function install_dirs {
     for d in "${INSTALL_DIRS[@]}"; do
         echo "installing $(basename $1)/$d to $PREFIX/$d"
-        [ -d "$1/$d" ] && cp -r -t "$PREFIX/$d" /$1/$d/* 
+        [ -d "$1/$d" ] && cp -r -t "$PREFIX/$d" /$1/$d/*
     done
 }
 
@@ -100,3 +101,7 @@ curl -sL install-node.now.sh | bash -s -- --prefix=$PREFIX -y
 npm i -g neovim
 npm i -g bash-language-server
 npm i -g dockerfile-language-server-nodejs
+npm i -g standard
+npm i -g eslint
+npm i -g remark-cli
+npm i -g fixjson

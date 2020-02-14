@@ -40,7 +40,7 @@ set $right l
 floating_modifier Mod4
 
 # start a terminal
-bindsym Mod4+Return exec stterm -f Iosevka\ Term:size=24:style=Light
+bindsym Mod4+Return exec xst
 
 # kill focused window
 bindsym Mod4+Shift+q kill

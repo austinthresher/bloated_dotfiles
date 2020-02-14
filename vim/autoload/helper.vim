@@ -21,6 +21,11 @@
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+" helper.vim provides a quick and easy way to see what plugins have
+" documentation available. The command :Helper has tab completion for
+" any plugin's help files, and :HelperToggle shows a menu that allows
+" selecting the name of a plugin interactively to view its help file.
+
 if exists("g:autoloaded_helper") | finish | endif
 let g:autoloaded_helper = v:true
 
@@ -85,13 +90,13 @@ func! s:populate()
             if isdirectory(l:doc)
                 " Get the plugin's name without 'vim' as a prefix or suffix
                 let l:short = substitute(
-                    \ substitute(l:dir, 'vim-', '', 'g'),
-                    \ '.vim', '', 'g')
+                            \ substitute(l:dir, 'vim-', '', 'g'),
+                            \ '.vim', '', 'g')
                 " Help files are usually at one of these filenames
                 let l:potentials = [
-                    \ l:doc.'/'.l:short.'.txt',
-                    \ l:doc.'/'.l:dir.'.txt'
-                    \ ]
+                            \ l:doc.'/'.l:short.'.txt',
+                            \ l:doc.'/'.l:dir.'.txt'
+                            \ ]
                 let l:globbed = glob(l:doc.'/*.txt')
                 if type(l:globbed) == type([])
                     let l:potentials = l:potentials + l:globbed
@@ -125,8 +130,8 @@ endfunc
 " Wraps vim-plug's plug#end()
 func! helper#end()
     call plug#('skywind3000/quickmenu.vim')
-    call plug#end() 
-    call s:populate() 
+    call plug#end()
+    call s:populate()
 endfunc
 
 " Returns a list of the help docs that were found

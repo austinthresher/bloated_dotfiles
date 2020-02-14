@@ -20,7 +20,14 @@
 " LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-" helper.vim
+
+" helper.vim provides a quick and easy way to see what plugins have
+" documentation available. The command :Helper has tab completion for
+" any plugin's help files, and :HelperToggle shows a menu that allows
+" selecting the name of a plugin interactively to view its help file.
+
+" To use helper.vim, replace the calls to vim-plug in your vimrc with
+" the wrapper functions provided. Check autoload/helper.vim for info.
 
 if exists("g:loaded_helper") | finish | endif
 let g:loaded_helper = v:true
