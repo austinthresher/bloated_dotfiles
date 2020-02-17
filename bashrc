@@ -14,7 +14,7 @@ alias more='less'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME xst'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME stterm -f Iosevka\ Term\ Slab:size=18'
 else
     alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 xst' 
 fi
