@@ -142,7 +142,7 @@ endif
 let s:none = ['NONE', 'NONE']
 
 " Highlights
-call s:hi('Normal', s:br_white, s:black, 'NONE')
+call s:hi('Normal', s:br_white, s:none, 'NONE')
 
 for group in ['Visual', 'VisualNOS', 'Search', 'IncSearch']
     call s:hi(group, s:none, s:none, 'inverse')
