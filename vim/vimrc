@@ -246,25 +246,18 @@ let g:ale_sign_warning = '✗ '
 let g:ale_use_global_executables = 1
 
 if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
+    set grepprg=ag\ --nogroup\ --nocolor\ --column
+    set grepformat=%f:%l:%c%m
 endif
 
 " }}}
-" Language Server Configuration {{{
-" For now, only enable LSP on neovim. Will configure for vim8 later.
-if has('nvim') == 0
-    finish
-endif
-
-
-let g:ale_completion_enabled = 0
-"set omnifunc=ale#completion#OmniFunc
-let g:ale_virtualtext_cursor = 1
-
-"let g:ale_linters=['pylint']
-"let g:ale_fixers = ['pycodestyle']
+" Neovim IDE Setup {{{
+if !has('nvim') | finish | endif
 
 set termguicolors
+
+let g:ale_completion_enabled = 0
+let g:ale_virtualtext_cursor = 1
 
 func SetPreviewTheme()
     if &previewwindow
