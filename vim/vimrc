@@ -78,14 +78,13 @@ call helper#plug('tpope/vim-unimpaired')
 call helper#plug('tpope/vim-vinegar')
 call helper#plug('tpope/vim-apathy')
 call helper#plug('tpope/vim-markdown')
-call helper#plug('chiel92/vim-autoformat')
 call helper#plug('wellle/visual-split.vim')
 call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
-"call helper#plug('thirtythreeforty/lessspace.vim') " Has issues with preview window
-call helper#plug('dense-analysis/ale')
 
-if has('nvim')
+if has('nvim') " IDE-style features for nvim
+    call helper#plug('dense-analysis/ale')
+    call helper#plug('chiel92/vim-autoformat')
     call helper#plug('prabirshrestha/async.vim')
     call helper#plug('prabirshrestha/vim-lsp')
     call helper#plug('prabirshrestha/asyncomplete.vim')
@@ -217,6 +216,9 @@ nnoremap <c-w>2 :Accordion 2<CR>
 nnoremap <c-w>3 :Accordion 3<CR>
 nnoremap <c-w>4 :Accordion 4<CR>
 
+" Ctrl+K to search for cursor text and show in quickfix
+nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
 " }}}
 " Plugin Configuration {{{
 let g:netrw_banner = 0
@@ -242,6 +244,10 @@ au VimEnter * silent! AccordionAll 2
 let g:ale_sign_error   = '✘ '
 let g:ale_sign_warning = '✗ '
 let g:ale_use_global_executables = 1
+
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor
+endif
 
 " }}}
 " Language Server Configuration {{{
