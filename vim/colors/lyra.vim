@@ -1,4 +1,4 @@
-"darker Copyright (c) 2020 Austin Thresher
+"Copyright (c) 2020 Austin Thresher
 "
 " MIT License
 "
@@ -217,6 +217,7 @@ call s:hi('DiffDelete',   s:none,       s:red,        'none')
 call s:hi('DiffAdd',      s:none,       s:green,      'none')
 call s:hi('DiffChange',   s:none,       s:cyan,       'none')
 call s:hi('DiffText',     s:none,       s:br_yellow,  'none')
+call s:hi('EndOfBuffer',  s:black,      s:hard_black, 'none')
 
 if has('spell')
     call s:hi('SpellCap',   s:none, s:magenta, 'underline')
@@ -268,13 +269,8 @@ call s:hi('ConflictMarkerEnd',       s:br_cyan, s:none,       'bold')
 call s:hi('ALEErrorSign', s:red, s:none, 'NONE')
 call s:hi('ALEWarningSign', s:br_red, s:none, 'NONE')
 call s:hi('ALEError', s:none, s:none, 'NONE')
-"call s:hi('ALEErrorLine', s:none, s:none, 'NONE')
 call s:hi('ALEWarning', s:none, s:none, 'NONE')
-"call s:hi('ALEWarningLine', s:none, s:none, 'underline')
-
-"call s:hi('NormalFloat', s:black, s:white, 'NONE')
-
-"" Markdown
-"call s:hi('mkdNonListItemBlock', s:black, s:white, 'NONE')
-"call s:hi('mkdCodeDelimiter', s:none, s:none, 'NONE')
-"call s:hi('mkdCode', s:none, s:none, 'NONE')
+call s:hi('ALEVirtualTextError', s:red, s:none, 'italic')
+call s:hi('ALEVirtualTextWarning', s:br_red, s:none, 'italic')
+call s:hi('ALEVirtualTextStyleError', s:yellow, s:none, 'italic')
+call s:hi('ALEVirtualTextStyleWarning', s:br_yellow, s:none, 'italic')
