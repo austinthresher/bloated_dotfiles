@@ -48,9 +48,8 @@ endif
 call helper#begin()
 
 " TODO: Compare cpp highlighters
-"call s:plug('bfrg/vim-cpp-modern', v:false)
-"call s:plug('octol/vim-cpp-enhanced-highlight', v:false)
-
+call helper#plug('bfrg/vim-cpp-modern')
+"call helper#plug('octol/vim-cpp-enhanced-highlight')
 call helper#plug('ap/vim-buftabline')
 call helper#plug('ekalinin/dockerfile.vim')
 call helper#plug('google/vim-searchindex')
@@ -82,7 +81,6 @@ call helper#plug('chiel92/vim-autoformat')
 call helper#plug('wellle/visual-split.vim')
 call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
-"call helper#plug('thirtythreeforty/lessspace.vim') " Has issues with preview window
 call helper#plug('dense-analysis/ale')
 
 if has('nvim')
@@ -221,10 +219,9 @@ nnoremap <c-w>4 :Accordion 4<CR>
 " Plugin Configuration {{{
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
-let g:netrw_list_hide = netrw_gitignore#Hide()
+let g:netrw_list_hide = g:netrw_list_hide + netrw_gitignore#Hide()
+let g:netrw_hide = 1
 
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-let g:indentLine_setColors = 0
 
 let g:buftabline_indicators = 1
 let g:buftabline_numbers = 0
