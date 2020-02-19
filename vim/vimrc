@@ -76,8 +76,14 @@ call helper#plug('tpope/vim-rsi')
 call helper#plug('tpope/vim-sensible')
 call helper#plug('tpope/vim-unimpaired')
 call helper#plug('tpope/vim-vinegar')
-call helper#plug('yggdroot/indentline')
+call helper#plug('tpope/vim-apathy')
+call helper#plug('tpope/vim-markdown')
 call helper#plug('chiel92/vim-autoformat')
+call helper#plug('wellle/visual-split.vim')
+call helper#plug('jvirtanen/vim-octave')
+call helper#plug('mattboehm/vim-accordion')
+"call helper#plug('thirtythreeforty/lessspace.vim') " Has issues with preview window
+call helper#plug('dense-analysis/ale')
 
 if has('nvim')
     call helper#plug('prabirshrestha/async.vim')
@@ -198,6 +204,19 @@ vmap <Enter> <Plug>(EasyAlign)
 
 nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
 nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
+
+xmap <leader>p <Plug>(Visual-Split-SplitAbove)
+xmap <leader>n <Plug>(Visual-Split-Resize)
+nmap <leader>p <Plug>(Visual-Split-SplitAbove)
+nmap <leader>n <Plug>(Visual-Split-Resize)
+
+nnoremap <leader><pageup> :AccordionZoomOut<CR>
+nnoremap <leader><pagedown> :AccordionZoomIn<CR>
+
+nnoremap <c-w>2 :Accordion 2<CR>
+nnoremap <c-w>3 :Accordion 3<CR>
+nnoremap <c-w>4 :Accordion 4<CR>
+
 " }}}
 " Plugin Configuration {{{
 let g:netrw_banner = 0
@@ -217,7 +236,12 @@ let g:conflict_marker_enable_mappings = 0
 
 let g:formatterpath = [$HOME.'/.local/bin']
 
-au BufWrite * :silent! Autoformat
+au BufWrite * silent! Autoformat
+au VimEnter * silent! AccordionAll 2
+
+let g:ale_sign_error   = '✘ '
+let g:ale_sign_warning = '✗ '
+let g:ale_use_global_executables = 1
 
 " }}}
 " Language Server Configuration {{{
@@ -226,9 +250,28 @@ if has('nvim') == 0
     finish
 endif
 
+
+let g:ale_completion_enabled = 0
+"set omnifunc=ale#completion#OmniFunc
+let g:ale_virtualtext_cursor = 1
+
+"let g:ale_linters=['pylint']
+"let g:ale_fixers = ['pycodestyle']
+
 set termguicolors
 
+func SetPreviewTheme()
+    if &previewwindow
+        hi link String Normal
+        "       setlocal syntax=off
+    endif
+endfunc
+
+au Syntax * call SetPreviewTheme()
+
 let s:lsp_map = {}
+
+let g:lsp_diagnostics_enabled = v:false
 
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
@@ -241,7 +284,6 @@ if executable('clangd')
 endif
 
 if executable('pyls')
-    " pip install python-language-server
     au User lsp_setup call lsp#register_server({
                 \ 'name': 'pyls',
                 \ 'cmd': {server_info->['pyls']},
@@ -268,9 +310,11 @@ if executable('docker-langserver')
     let s:lsp_map['Dockerfile'] = 'dls'
 endif
 
-let g:lsp_preview_doubletap = 0
-let g:lsp_signs_enabled = 1
-let g:lsp_virtual_text_enabled = 1
+let g:lsp_preview_doubletap    = 0
+let g:lsp_signs_enabled        = 0
+let g:lsp_virtual_text_enabled = 0
+"let g:lsp_preview_float        = 1
+"let g:lsp_virtual_text_prefix  = ' 🯀 '
 
 " The preview window does not update while typing / moving cursor
 " inside signature help. This function should continue to show
@@ -287,6 +331,7 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> <leader>s <plug>(lsp-signature-help)
     nmap <buffer> <leader>r <plug>(lsp-references)
     nmap <buffer> <leader>h <plug>(lsp-hover)
+    "   autocmd! CursorHold <buffer> :LspHover<CR>
     imap <c-space> <Plug>(asyncomplete_force_refresh)
     inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
     inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
@@ -294,6 +339,8 @@ function! s:on_lsp_buffer_enabled() abort
     autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
     let b:statuslime_right = s:lsp_map[&ft]
 endfunction
+
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options())
 
 augroup lsp_install
     au!

@@ -1,4 +1,4 @@
-" Copyright (c) 2020 Austin Thresher
+"darker Copyright (c) 2020 Austin Thresher
 "
 " MIT License
 "
@@ -26,7 +26,7 @@ if exists("syntax_on")
     syntax reset
 endif
 
-let g:colors_name = 'Lyra'
+let g:colors_name = 'lyra'
 
 " Wrapper for setting highlights
 function! s:hi(group, fg, bg, attr)
@@ -182,7 +182,7 @@ call s:hi('Special',      s:yellow,     s:none,       'NONE')
 call s:hi('Comment',      s:br_green,   s:none,       'italic')
 call s:hi('Todo',         s:br_yellow,  s:black,      'bold')
 call s:hi('Error',        s:br_red,     s:none,       'italic')
-call s:hi('String',       s:cyan,       s:hard_black, 'NONE')
+call s:hi('String',       s:cyan,       s:darkest,    'NONE')
 call s:hi('SpecialChar',  s:br_yellow,  s:hard_black, 'italic')
 call s:hi('Type',         s:br_blue,    s:none,       'NONE')
 call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
@@ -198,10 +198,11 @@ call s:hi('cIncluded',    s:br_cyan,    s:none,       'italic')
 call s:hi('Function',     s:magenta,    s:none,       'NONE')
 call s:hi('Macro',        s:br_red,     s:none,       'NONE')
 call s:hi('Folded',       s:none,       s:none,       'italic')
+call s:hi('SignColumn',   s:white,      s:none,       'NONE')
 call s:hi('LineNr',       s:white,      s:darkest,    'NONE')
 call s:hi('CursorLineNr', s:darkest,    s:br_black,   'NONE')
 call s:hi('StatusLineNC', s:dark,       s:darkest,    'NONE')
-call s:hi('Pmenu',        s:br_white,   s:darker,     'NONE')
+call s:hi('Pmenu',        s:hard_black, s:white,   'NONE')
 call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
 call s:hi('DiffDelete',   s:none,       s:red,        'none')
 call s:hi('DiffAdd',      s:none,       s:green,      'none')
@@ -254,3 +255,17 @@ call s:hi('ConflictMarkerOurs',      s:none,    s:darkest,    'NONE')
 call s:hi('ConflictMarkerSeparator', s:cyan,    s:none,       'bold')
 call s:hi('ConflictMarkerTheirs',    s:none,    s:hard_black, 'NONE')
 call s:hi('ConflictMarkerEnd',       s:br_cyan, s:none,       'bold')
+
+call s:hi('ALEErrorSign', s:red, s:none, 'NONE')
+call s:hi('ALEWarningSign', s:br_red, s:none, 'NONE')
+call s:hi('ALEError', s:none, s:none, 'NONE')
+"call s:hi('ALEErrorLine', s:none, s:none, 'NONE')
+call s:hi('ALEWarning', s:none, s:none, 'NONE')
+"call s:hi('ALEWarningLine', s:none, s:none, 'underline')
+
+"call s:hi('NormalFloat', s:black, s:white, 'NONE')
+
+"" Markdown
+"call s:hi('mkdNonListItemBlock', s:black, s:white, 'NONE')
+"call s:hi('mkdCodeDelimiter', s:none, s:none, 'NONE')
+"call s:hi('mkdCode', s:none, s:none, 'NONE')
