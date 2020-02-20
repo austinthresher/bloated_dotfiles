@@ -27,8 +27,8 @@ let g:statuslime_loaded = v:true
 " Highlights
 " FIXME: Prune this list to what's actually used
 for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
-        \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
-        \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
+            \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
+            \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
     if hlexists('Lime'.m) == 0
         exe 'hi link Lime'.m.' StatusLine'
     endif
@@ -44,7 +44,7 @@ endfunc
 func! statuslime#ruler()
     let lchars = strlen(line('$'))
     return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
-            \ line('.'), line('$')).' '
+                \ line('.'), line('$')).' '
 endfunc
 
 func! Pad(str)
@@ -53,7 +53,7 @@ endfunc
 
 func! s:add_state(condition, hlname, text)
     exe 'setlocal statusline+=%#'
-            \ .a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
+                \ .a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
 endfunc
 
 func! statuslime#left()
@@ -115,10 +115,16 @@ func! statuslime#unfocused()
     catch
         setlocal statusline=
     endtry
-    call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
-    setlocal statusline+=%<
-    setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
-    setlocal statusline+=%*
-    setlocal statusline+=%=
-    setlocal statusline+=%#LimeInactiveBar#%{statuslime#ruler()}
+    if &previewwindow
+        call s:add_state('v:true', 'LimeInactiveMode', 'PREVIEW')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    else
+        call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
+        setlocal statusline+=%<
+        setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
+        setlocal statusline+=%*
+        setlocal statusline+=%=
+        setlocal statusline+=%#LimeInactiveBar#%{statuslime#ruler()}
+    endif
 endfunc

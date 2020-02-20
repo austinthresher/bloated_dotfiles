@@ -1,4 +1,4 @@
-"darker Copyright (c) 2020 Austin Thresher
+"Copyright (c) 2020 Austin Thresher
 "
 " MIT License
 "
@@ -142,7 +142,7 @@ endif
 let s:none = ['NONE', 'NONE']
 
 " Highlights
-call s:hi('Normal', s:br_white, s:black, 'NONE')
+call s:hi('Normal', s:br_white, s:none, 'NONE')
 
 for group in ['Visual', 'VisualNOS', 'Search', 'IncSearch']
     call s:hi(group, s:none, s:none, 'inverse')
@@ -166,6 +166,19 @@ hi! link vCursor Cursor
 hi! link iCursor Cursor
 hi! link lCursor Cursor
 
+" Neovim popups don't look very nice with bg changed on strings,
+" so only do that for vim
+if has('nvim')
+    call s:hi('String',       s:br_cyan,   s:none, 'NONE')
+    call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
+else
+    call s:hi('String',       s:cyan,      s:darkest, 'NONE')
+    call s:hi('SpecialChar',  s:br_yellow, s:darkest, 'italic')
+endif
+
+call s:hi('Pmenu',        s:hard_black, s:br_black,   'NONE')
+call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
+
 call s:hi('Operator',     s:white,      s:none,       'NONE')
 call s:hi('MatchParen',   s:br_magenta, s:none,       'bold')
 call s:hi('Conceal',      s:darker,     s:none,       'NONE')
@@ -174,7 +187,7 @@ call s:hi('VertSplit',    s:br_white,   s:none,       'NONE')
 call s:hi('WildMenu',     s:blue,       s:black,      'bold')
 call s:hi('ErrorMsg',     s:br_white,   s:red,        'NONE')
 call s:hi('Directory',    s:green,      s:none,       'bold')
-call s:hi('Title',        s:green,      s:none,       'bold')
+call s:hi('Title',        s:br_yellow,  s:none,       'bold')
 call s:hi('MoreMsg',      s:yellow,     s:none,       'bold')
 call s:hi('Question',     s:br_yellow,  s:none,       'bold')
 call s:hi('Warning',      s:red,        s:none,       'bold')
@@ -182,8 +195,6 @@ call s:hi('Special',      s:yellow,     s:none,       'NONE')
 call s:hi('Comment',      s:br_green,   s:none,       'italic')
 call s:hi('Todo',         s:br_yellow,  s:black,      'bold')
 call s:hi('Error',        s:br_red,     s:none,       'italic')
-call s:hi('String',       s:cyan,       s:darkest,    'NONE')
-call s:hi('SpecialChar',  s:br_yellow,  s:hard_black, 'italic')
 call s:hi('Type',         s:br_blue,    s:none,       'NONE')
 call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
 call s:hi('Typedef',      s:br_blue,    s:none,       'NONE')
@@ -202,12 +213,11 @@ call s:hi('SignColumn',   s:white,      s:none,       'NONE')
 call s:hi('LineNr',       s:white,      s:darkest,    'NONE')
 call s:hi('CursorLineNr', s:darkest,    s:br_black,   'NONE')
 call s:hi('StatusLineNC', s:dark,       s:darkest,    'NONE')
-call s:hi('Pmenu',        s:hard_black, s:white,   'NONE')
-call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
 call s:hi('DiffDelete',   s:none,       s:red,        'none')
 call s:hi('DiffAdd',      s:none,       s:green,      'none')
 call s:hi('DiffChange',   s:none,       s:cyan,       'none')
 call s:hi('DiffText',     s:none,       s:br_yellow,  'none')
+call s:hi('EndOfBuffer',  s:black,      s:hard_black, 'none')
 
 if has('spell')
     call s:hi('SpellCap',   s:none, s:magenta, 'underline')
@@ -259,13 +269,8 @@ call s:hi('ConflictMarkerEnd',       s:br_cyan, s:none,       'bold')
 call s:hi('ALEErrorSign', s:red, s:none, 'NONE')
 call s:hi('ALEWarningSign', s:br_red, s:none, 'NONE')
 call s:hi('ALEError', s:none, s:none, 'NONE')
-"call s:hi('ALEErrorLine', s:none, s:none, 'NONE')
 call s:hi('ALEWarning', s:none, s:none, 'NONE')
-"call s:hi('ALEWarningLine', s:none, s:none, 'underline')
-
-"call s:hi('NormalFloat', s:black, s:white, 'NONE')
-
-"" Markdown
-"call s:hi('mkdNonListItemBlock', s:black, s:white, 'NONE')
-"call s:hi('mkdCodeDelimiter', s:none, s:none, 'NONE')
-"call s:hi('mkdCode', s:none, s:none, 'NONE')
+call s:hi('ALEVirtualTextError', s:red, s:none, 'italic')
+call s:hi('ALEVirtualTextWarning', s:br_red, s:none, 'italic')
+call s:hi('ALEVirtualTextStyleError', s:yellow, s:none, 'italic')
+call s:hi('ALEVirtualTextStyleWarning', s:br_yellow, s:none, 'italic')

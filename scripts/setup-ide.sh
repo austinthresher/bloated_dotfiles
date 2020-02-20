@@ -26,6 +26,7 @@ pip3 install --user autopep8
 pip3 install --user python-language-server
 pip3 install --user pyls-isort
 pip3 install --user cmake_format
+pip3 install --user vim-vint
 
 # package urls
 NVIM=nvim-linux64
@@ -39,6 +40,10 @@ LLVM_URL="http://releases.llvm.org/9.0.0/$LLVM$LLVM_EXT"
 CMAKE=cmake-3.16.3-Linux-x86_64
 CMAKE_EXT=.tar.gz
 CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.16.3/$CMAKE$CMAKE_EXT"
+
+SHELLCHECK=shellcheck-stable.linux.x86_64
+SHELLCHECK_EXT=.tar.xz
+SHELLCHECK_URL="https://storage.googleapis.com/shellcheck/$SHELLCHECK$SHELLCHECK_EXT"
 
 # Installer functions for above packages
 INSTALL_DIRS=(bin include lib libexec share)
@@ -78,6 +83,10 @@ if [ -d "$TMP" ]; then
 
     # llvm + clang
     dl_and_install $LLVM $LLVM_URL $LLVM_EXT
+
+    # shellcheck
+    dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT
+    cp shellcheck "$PREFIX/"
 
     # vim-plug
     VIMAUTO="$HOME/.config/nvim/autoload"

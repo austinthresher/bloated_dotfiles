@@ -1,4 +1,85 @@
-" Functions {{{
+" Options {{{
+" Always use UTF-8
+set encoding=utf-8
+scriptencoding utf-8
+" Disable vi-compatible defaults
+set nocompatible
+" Allow folding in files using {{{ and }}}
+set foldenable
+set foldmethod=marker
+" No annoying sounds / flashes
+set noerrorbells
+" Allow files to customize settings on open
+set modeline
+" Characters used when list=on
+set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
+" Character used to mark wrapped lines
+set showbreak==>\
+" Copy the indentation from the previous line
+set autoindent
+" Short blink when typing matching parens
+set showmatch
+set matchtime=1
+" Allow leaving modified buffers without saving
+set hidden
+" Try to keep windows similarly sized
+set equalalways
+set eadirection=both
+" Don't show the active mode
+set noshowmode
+" Search as you're typing
+set incsearch
+" Allow backspacing over everything
+set backspace=indent,eol,start
+" Enable the mouse
+set mouse=a
+" Set US English for spellcheck
+set spelllang=en_us
+" Always show statusbar
+set laststatus=2
+" Don't wrap lines by default
+set nowrap
+" Don't page output
+set more
+" Default to new windows appearing below current
+set splitbelow
+" Don't try to set the cursor
+set guicursor=
+" Preview window is small
+"set previewheight=3
+" CursorHold kicks in after 1/10 second
+set updatetime=100
+" Reduce screen artifacts by delaying redraw
+set lazyredraw
+" Show cmd in progress
+set showcmd
+" Recursive searching
+set path+=**
+" Tab completion menu
+set wildmenu
+" Don't scroll near borders, use an autocmd to do that
+set scrolloff=0
+" Allow windows to collapse completely
+set winminwidth=1
+set winminheight=1
+set completeopt+=menuone
+set completeopt+=noinsert
+" Default tab settings
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+" Use line drawing char for vsp, spaces for folds
+if has('nvim')
+    set fillchars=vert:│,fold:\ ,eob:\ ,diff:-
+else " vim doesn't have the eob option
+    set fillchars=vert:│,fold:\ ,diff:-
+endif
+" Use filetype-based plugin and indent scripts
+filetype plugin indent on
+try
+    colorscheme lyra
+endtry
+" }}}" Functions {{{
 " FIXME this should go somewhere else
 let b:statuslime_right = has('nvim') ? 'N' : 'V'
 func! SetStatusLime()
@@ -22,7 +103,7 @@ func! CenterOnScroll()
     let b:last_topline = l:topline
     let b:last_curline = l:curline
 endfunc
-au CursorMoved,CursorMovedI * call CenterOnScroll()
+"au CursorMoved,CursorMovedI * call CenterOnScroll()
 
 " Useful for debugging syntax highlighting
 func! HiAtCur()
@@ -77,13 +158,13 @@ call helper#plug('tpope/vim-unimpaired')
 call helper#plug('tpope/vim-vinegar')
 call helper#plug('tpope/vim-apathy')
 call helper#plug('tpope/vim-markdown')
-call helper#plug('chiel92/vim-autoformat')
 call helper#plug('wellle/visual-split.vim')
 call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
-call helper#plug('dense-analysis/ale')
 
-if has('nvim')
+if has('nvim') " IDE-style features for nvim
+    call helper#plug('dense-analysis/ale')
+    call helper#plug('chiel92/vim-autoformat')
     call helper#plug('prabirshrestha/async.vim')
     call helper#plug('prabirshrestha/vim-lsp')
     call helper#plug('prabirshrestha/asyncomplete.vim')
@@ -91,82 +172,6 @@ if has('nvim')
 endif
 
 call helper#end()
-" }}}
-" Options {{{
-" Disable vi-compatible defaults
-set nocompatible
-" Allow folding in files using {{{ and }}}
-set foldenable
-set foldmethod=marker
-" Always use UTF-8
-set encoding=utf-8
-scriptencoding utf-8
-" No annoying sounds / flashes
-set noerrorbells
-" Allow files to customize settings on open
-set modeline
-" Characters used when list=on
-set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
-" Character used to mark wrapped lines
-set showbreak==>\
-" Copy the indentation from the previous line
-set autoindent
-" Short blink when typing matching parens
-set showmatch
-set matchtime=1
-" Allow leaving modified buffers without saving
-set hidden
-" Try to keep windows similarly sized
-set equalalways
-set eadirection=both
-" Don't show the active mode
-set noshowmode
-" Search as you're typing
-set incsearch
-" Allow backspacing over everything
-set backspace=indent,eol,start
-" Enable the mouse
-set mouse=a
-" Set US English for spellcheck
-set spelllang=en_us
-" Always show statusbar
-set laststatus=2
-" Don't wrap lines by default
-set nowrap
-" Don't page output
-set more
-" Default to new windows appearing below current
-set splitbelow
-" Don't try to set the cursor
-set guicursor=
-" Preview window is 1 line tall
-"set previewheight=1
-" CursorHold kicks in after 1/10 second
-set updatetime=100
-" Show cmd in progress
-set showcmd
-" Recursive searching
-set path+=**
-" Tab completion menu
-set wildmenu
-" Don't scroll near borders, use an autocmd to do that
-set scrolloff=0
-" Allow windows to collapse completely
-set winminwidth=1
-set winminheight=1
-set completeopt+=menuone
-set completeopt+=noinsert
-" Default tab settings
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-" Use line drawing char for vsp, spaces for folds
-set fillchars=vert:│,fold:\ ,diff:-
-" Use filetype-based plugin and indent scripts
-filetype plugin indent on
-try
-    colorscheme lyra
-endtry
 " }}}
 " Maps {{{
 if has("terminal")
@@ -215,6 +220,9 @@ nnoremap <c-w>2 :Accordion 2<CR>
 nnoremap <c-w>3 :Accordion 3<CR>
 nnoremap <c-w>4 :Accordion 4<CR>
 
+" Ctrl+K to search for cursor text and show in quickfix
+nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
 " }}}
 " Plugin Configuration {{{
 let g:netrw_banner = 0
@@ -233,42 +241,35 @@ let g:conflict_marker_enable_mappings = 0
 
 let g:formatterpath = [$HOME.'/.local/bin']
 
-au BufWrite * silent! Autoformat
 au VimEnter * silent! AccordionAll 2
 
-let g:ale_sign_error   = '✘ '
-let g:ale_sign_warning = '✗ '
-let g:ale_use_global_executables = 1
-
-" }}}
-" Language Server Configuration {{{
-" For now, only enable LSP on neovim. Will configure for vim8 later.
-if has('nvim') == 0
-    finish
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor\ --column
+    set grepformat=%f:%l:%c%m
 endif
 
-
-let g:ale_completion_enabled = 0
-"set omnifunc=ale#completion#OmniFunc
-let g:ale_virtualtext_cursor = 1
-
-"let g:ale_linters=['pylint']
-"let g:ale_fixers = ['pycodestyle']
+" }}}
+" Neovim IDE Setup {{{
+if !has('nvim') | finish | endif
 
 set termguicolors
 
-func SetPreviewTheme()
-    if &previewwindow
-        hi link String Normal
-        "       setlocal syntax=off
-    endif
-endfunc
+" Autoformat on save
+au BufWrite * silent! Autoformat
 
-au Syntax * call SetPreviewTheme()
+let g:ale_hover_to_preview = 1
+let g:ale_completion_enabled = 0
+let g:ale_virtualtext_cursor = 1
+let g:ale_virtualtext_prefix = ' 🯀 '
+let g:ale_sign_error   = '✘ '
+let g:ale_sign_warning = '✗ '
+let g:ale_use_global_executables = 1
+let g:ale_hover_to_preview = 1
+let g:ale_cursor_detail = 1
+let g:ale_echo_cursor = 0
 
 let s:lsp_map = {}
 
-let g:lsp_diagnostics_enabled = v:false
 
 if executable('clangd')
     au User lsp_setup call lsp#register_server({
@@ -307,11 +308,10 @@ if executable('docker-langserver')
     let s:lsp_map['Dockerfile'] = 'dls'
 endif
 
-let g:lsp_preview_doubletap    = 0
-let g:lsp_signs_enabled        = 0
-let g:lsp_virtual_text_enabled = 0
-"let g:lsp_preview_float        = 1
-"let g:lsp_virtual_text_prefix  = ' 🯀 '
+let g:lsp_preview_doubletap    = v:false
+let g:lsp_signs_enabled        = v:false
+let g:lsp_virtual_text_enabled = v:false
+let g:lsp_diagnostics_enabled  = v:false
 
 " The preview window does not update while typing / moving cursor
 " inside signature help. This function should continue to show
