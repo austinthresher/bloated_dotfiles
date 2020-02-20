@@ -48,6 +48,7 @@ function dl_if_missing {
 mkdir -p "$HOME/.vim"
 mkdir -p "$HOME/.config/i3"
 mkdir -p "$HOME/.config/nvim"
+mkdir -p "$HOME/.config/yapf"
 
 prompt_to_replace profile       "$HOME/.profile"
 prompt_to_replace bashrc        "$HOME/.bashrc"
@@ -59,6 +60,7 @@ prompt_to_replace i3config      "$HOME/.config/i3/config"
 prompt_to_replace Xresources    "$HOME/.Xresources"
 prompt_to_replace pylintrc      "$HOME/.pylintrc"
 prompt_to_replace pycodestyle   "$HOME/.config/pycodestyle"
+prompt_to_replace yapf          "$HOME/.config/yapf/style"
 
 for f in vim/*; do
     bf=$(basename $f)

@@ -34,12 +34,12 @@ function! neomakelist#listfollowcursor() abort
     if l:ln < str2nr(l:loclist[0]['lnum']) | return | endif
     if l:ln > str2nr(l:loclist[-1]['lnum']) | return | endif
     let l:idx = 1
+    match none
     for entry in l:loclist
         let l:intbn = str2nr(entry['bufnr'])
         let l:intln = str2nr(entry['lnum'])
-"        if l:ln < l:intln | return | endif
         if l:ln == l:intln && bufnr('%') == l:intbn
-            execute 'match Search /\%'.line('.').'l/'
+            execute 'match IncSearch /\%'.line('.').'l/'
             let l:pos = getcurpos()
             execute 'll '.l:idx
             call setpos('.', l:pos)

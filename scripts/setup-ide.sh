@@ -26,6 +26,7 @@ pip3 install --user python-language-server
 pip3 install --user pyls-isort
 pip3 install --user cmake_format
 pip3 install --user vim-vint
+pip3 install --user yapf
 
 # package urls
 NVIM=nvim-linux64
