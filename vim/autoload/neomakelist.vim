@@ -56,14 +56,14 @@ function! s:closelists() abort
     for entry in reverse(l:lists)
         execute string(entry).'wincmd c'
     endfor
-    let g:ll_winnr = 0
+    let s:ll_winnr = 0
 endfunc
 
 function! s:showloclist() abort
     let l:wnr = winnr()
     if !empty(getloclist(l:wnr))
-        if g:ll_winnr != l:wnr
-            let g:ll_winnr = l:wnr
+        if s:ll_winnr != l:wnr
+            let s:ll_winnr = l:wnr
             call s:closelists()
             lwindow 3  " 3 lines tall
             wincmd J " Force list to bottom of screen
