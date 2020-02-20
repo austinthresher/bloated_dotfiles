@@ -144,9 +144,6 @@ let s:none = ['NONE', 'NONE']
 " Highlights
 call s:hi('Normal', s:br_white, s:none, 'NONE')
 
-for group in ['Visual', 'VisualNOS', 'Search', 'IncSearch']
-    call s:hi(group, s:none, s:none, 'inverse')
-endfor
 
 for group in ['NonText', 'SpecialKey']
     call s:hi(group, s:light, s:none, 'NONE')
@@ -165,6 +162,12 @@ call s:hi('Cursor', s:black, s:yellow, 'NONE')
 hi! link vCursor Cursor
 hi! link iCursor Cursor
 hi! link lCursor Cursor
+
+call s:hi('Visual', s:br_white, s:blue, 'NONE')
+hi! link VisualNOS Visual
+
+call s:hi('Search', s:hard_black, s:br_green, 'NONE')
+call s:hi('IncSearch', s:hard_black, s:br_magenta, 'NONE')
 
 " Neovim popups don't look very nice with bg changed on strings,
 " so only do that for vim

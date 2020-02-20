@@ -3,7 +3,6 @@
 set encoding=utf-8
 scriptencoding utf-8
 " Disable vi-compatible defaults
-set nocompatible
 " Allow folding in files using {{{ and }}}
 set foldenable
 set foldmethod=marker
@@ -29,6 +28,7 @@ set eadirection=both
 set noshowmode
 " Search as you're typing
 set incsearch
+set hlsearch
 " Allow backspacing over everything
 set backspace=indent,eol,start
 " Enable the mouse
@@ -59,11 +59,12 @@ set path+=**
 set wildmenu
 " Don't scroll near borders, use an autocmd to do that
 set scrolloff=0
+set sidescrolloff=0
+set sidescroll=80
 " Allow windows to collapse completely
 set winminwidth=1
 set winminheight=1
-set completeopt+=menuone
-set completeopt+=noinsert
+set completeopt+=menuone,noinsert,preview,longest
 " Default tab settings
 set shiftwidth=4
 set softtabstop=4
@@ -79,31 +80,22 @@ filetype plugin indent on
 try
     colorscheme lyra
 endtry
-" }}}" Functions {{{
+" }}}
+" Functions {{{
 " FIXME this should go somewhere else
 let b:statuslime_right = has('nvim') ? 'N' : 'V'
 func! SetStatusLime()
-    let b:statuslime_left = ''
+    if has('nvim')
+        let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
+              \ 'format_running': '{{running_job_names}}…',
+              \ 'format_loclist_ok': '✓',
+              \ 'format_quickfix_ok': '',
+              \ 'format_quickfix_issues': '%s',
+              \ 'format_loclist_type_W': ' {{type}}:{{count}} ',
+              \ })
+    endif
     return ''
 endfunc
-
-" Emacs style scrolling where the view re-centers on cursor
-func! CenterOnScroll()
-    if exists('b:last_topline') == v:false
-        let b:last_topline = 1
-    endif
-    if exists('b:last_curline') == v:false
-        let b:last_curline = 1
-    endif
-    let l:topline = winsaveview()['topline']
-    let l:curline = line('.')
-    if l:topline != b:last_topline && l:curline != b:last_curline
-        noa norm zz
-    endif
-    let b:last_topline = l:topline
-    let b:last_curline = l:curline
-endfunc
-"au CursorMoved,CursorMovedI * call CenterOnScroll()
 
 " Useful for debugging syntax highlighting
 func! HiAtCur()
@@ -112,7 +104,7 @@ func! HiAtCur()
         let l:name = synIDattr(id, 'name')
         echo l:name
     endfor
-    if l:name isnot ''
+    if l:name isnot# ''
         exec 'hi '.l:name
     endif
 endfunc
@@ -129,8 +121,8 @@ endif
 call helper#begin()
 
 " TODO: Compare cpp highlighters
-call helper#plug('bfrg/vim-cpp-modern')
 "call helper#plug('octol/vim-cpp-enhanced-highlight')
+call helper#plug('bfrg/vim-cpp-modern')
 call helper#plug('ap/vim-buftabline')
 call helper#plug('ekalinin/dockerfile.vim')
 call helper#plug('google/vim-searchindex')
@@ -161,20 +153,22 @@ call helper#plug('tpope/vim-markdown')
 call helper#plug('wellle/visual-split.vim')
 call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
+call helper#plug('terryma/vim-multiple-cursors')
 
 if has('nvim') " IDE-style features for nvim
-    call helper#plug('dense-analysis/ale')
-    call helper#plug('chiel92/vim-autoformat')
-    call helper#plug('prabirshrestha/async.vim')
-    call helper#plug('prabirshrestha/vim-lsp')
-    call helper#plug('prabirshrestha/asyncomplete.vim')
-    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
+    call helper#plug('neomake/neomake')
+    "    call helper#plug('dense-analysis/ale')
+    "    call helper#plug('chiel92/vim-autoformat')
+    "    call helper#plug('prabirshrestha/async.vim')
+    "    call helper#plug('prabirshrestha/vim-lsp')
+    "    call helper#plug('prabirshrestha/asyncomplete.vim')
+    "    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
 endif
 
 call helper#end()
 " }}}
 " Maps {{{
-if has("terminal")
+if has('terminal')
     " Navigate out of terminal mode more easily
     tnoremap <esc> <c-\><c-n>
     tnoremap <c-w> <c-\><c-n><c-w>
@@ -224,12 +218,12 @@ nnoremap <c-w>4 :Accordion 4<CR>
 nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " }}}
-" Plugin Configuration {{{
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_list_hide = g:netrw_list_hide + netrw_gitignore#Hide()
-let g:netrw_hide = 1
+" Autocmds & Plugin Configuration {{{
 
+augroup vimrc_help
+    autocmd!
+    autocmd BufEnter *.txt if &buftype == 'help' | wincmd L | endif
+augroup END
 
 let g:buftabline_indicators = 1
 let g:buftabline_numbers = 0
@@ -248,6 +242,25 @@ if executable('ag')
     set grepformat=%f:%l:%c%m
 endif
 
+let g:multi_cursor_use_default_mapping=0
+
+if has('nvim')
+    call neomake#configure#automake({  
+            \ 'TextChanged': {},
+            \ 'InsertLeave': {},
+            \ 'BufWritePost': {'delay': 0},
+            \ 'BufWinEnter': {},
+            \}, 500)
+    let g:neomake_open_list          = v:true
+    let g:neomake_list_height        = 5
+    let g:neomake_virtualtext_prefix = ' 🯀 '
+    let g:neomake_error_sign         = { 'text': '╳', 'texthl': 'Error' }
+    let g:neomake_warning_sign       = { 'text': '✖', 'texthl': 'Error' }
+    let g:neomake_info_sign          = { 'text': '▷' }
+    let g:neomake_message_sign       = { 'text': '▶' }
+    call neomake#signs#RedefineErrorSign()
+    call neomake#signs#RedefineWarningSign()
+endif
 " }}}
 " Neovim IDE Setup {{{
 if !has('nvim') | finish | endif
@@ -328,13 +341,12 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> <leader>s <plug>(lsp-signature-help)
     nmap <buffer> <leader>r <plug>(lsp-references)
     nmap <buffer> <leader>h <plug>(lsp-hover)
-    "   autocmd! CursorHold <buffer> :LspHover<CR>
     imap <c-space> <Plug>(asyncomplete_force_refresh)
     inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
     inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
     inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
     autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-    let b:statuslime_right = s:lsp_map[&ft]
+    let b:statuslime_right = s:lsp_map[&filetype]
 endfunction
 
 au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#ale#get_source_options())

@@ -43,8 +43,8 @@ endfunc
 
 func! statuslime#ruler()
     let lchars = strlen(line('$'))
-    return '  '.virtcol('.').' : '.printf('%'.lchars.'d / %'.lchars.'d',
-                \ line('.'), line('$')).' '
+    return '  '.printf('%'.lchars.'d / %'.lchars.'d',
+                \ line('.'), line('$')).' : '.virtcol('.').' '
 endfunc
 
 func! Pad(str)

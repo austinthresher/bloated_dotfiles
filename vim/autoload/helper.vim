@@ -122,8 +122,13 @@ func! s:populate()
     endtry
 endfunc
 
+let s:loaded_on_demand = v:false
 " Toggle menu visibility
 func! helper#toggle()
+    if !s:loaded_on_demand
+        call s:populate()
+        let s:loaded_on_demand = v:true
+    endif
     call quickmenu#toggle(g:helper_menu_id)
 endfunc
 
@@ -131,7 +136,6 @@ endfunc
 func! helper#end()
     call plug#('skywind3000/quickmenu.vim')
     call plug#end()
-    call s:populate()
 endfunc
 
 " Returns a list of the help docs that were found
