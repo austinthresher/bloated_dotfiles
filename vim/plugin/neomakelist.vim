@@ -21,21 +21,13 @@
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-" helper.vim provides a quick and easy way to see what plugins have
-" documentation available. The command :Helper has tab completion for
-" any plugin's help files, and :HelperToggle shows a menu that allows
-" selecting the name of a plugin interactively to view its help file.
+if exists('g:loaded_neomakelist') | finish | endif
+let g:loaded_neomakelist = v:true
 
-" To use helper.vim, replace the calls to vim-plug in your vimrc with
-" the wrapper functions provided. Check autoload/helper.vim for info.
-
-if exists('g:loaded_helper') | finish | endif
-let g:loaded_helper = v:true
-
-func! HelperComplete(ArgLead, CmdLine, CursorPos)
-    return helper#found()
-endfunc
-
-command! HelperToggle call helper#toggle()
-command! -nargs=1 -complete=customlist,HelperComplete Helper :h <args>
-noremap <Plug>(helper-toggle) :HelperToggle<cr>
+augroup neomakelist_autocmds
+    au!
+    au CursorMoved * call neomakelist#listfollowcursor()
+    au VimEnter * call neomakelist#startup()
+    au WinEnter * call neomakelist#enter()
+    au BufEnter * call neomakelist#bufenter()
+augroup END

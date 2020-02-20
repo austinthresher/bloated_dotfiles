@@ -22,7 +22,7 @@
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 highlight clear
-if exists("syntax_on")
+if exists('syntax_on')
     syntax reset
 endif
 
@@ -38,7 +38,7 @@ endfunc
 
 " Set palette based on t_Co
 if &t_Co || &termguicolors
-    if &t_Co < 16 || &t_Co is ''
+    if &t_Co < 16 || &t_Co is# ''
         let s:pal = range(0, 7) + range(0, 7)
         let s:grays = [0, 0, 0, 0, 0, 7, 7, 7, 7]
     elseif &t_Co < 256
@@ -241,14 +241,17 @@ call s:hi('LimeReplace',      s:hard_black, s:yellow,    'bold')
 call s:hi('LimeTerminal',     s:hard_black, s:green,     'bold')
 call s:hi('LimeCommand',      s:hard_black, s:magenta,   'bold')
 call s:hi('LimeShell',        s:hard_black, s:cyan,      'bold')
-call s:hi('LimeOther',        s:hard_black, s:red,       'bold')
-call s:hi('LimeFile',         s:br_white,   s:dark,      'NONE')
 call s:hi('LimeError',        s:br_red,     s:darkest,   'bold')
+call s:hi('LimeFile',         s:br_white,   s:dark,      'NONE')
 call s:hi('LimeRuler',        s:br_white,   s:darker,    'NONE')
 call s:hi('LimeInactiveBar',  s:hard_black, s:darker,    'NONE')
 call s:hi('LimeInactiveMode', s:hard_black, s:dark,      'NONE')
+call s:hi('LimeInactiveFT',   s:br_black, s:hard_black,      'NONE')
 call s:hi('LimeLeft',         s:yellow,     s:darkest,   'NONE')
 call s:hi('LimeRight',        s:br_yellow,  s:darkest,   'NONE')
+call s:hi('LimeOther',        s:red, s:hard_black,       'bold')
+call s:hi('LimeHelp',         s:green, s:hard_black,     'bold')
+call s:hi('LimePreview',      s:br_green, s:hard_black,     'bold')
 
 " buftabline colors
 call s:hi('BufTabLineCurrent', s:hard_black, s:white,    'bold')

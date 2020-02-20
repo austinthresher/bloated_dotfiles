@@ -1,3 +1,6 @@
+" TODO: map bnext / bprev to skip quickfix / location list / etc (non
+" modifiable?)
+
 " Options {{{
 " Always use UTF-8
 set encoding=utf-8
@@ -86,13 +89,18 @@ endtry
 let b:statuslime_right = has('nvim') ? 'N' : 'V'
 func! SetStatusLime()
     if has('nvim')
-        let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
-              \ 'format_running': '{{running_job_names}}…',
-              \ 'format_loclist_ok': '✓',
-              \ 'format_quickfix_ok': '',
-              \ 'format_quickfix_issues': '%s',
-              \ 'format_loclist_type_W': ' {{type}}:{{count}} ',
-              \ })
+        try
+            let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
+                  \ 'use_highlights_with_defaults': 0,
+                  \ 'format_running': 'Running {{running_job_names}}…',
+                  \ 'format_loclist_ok': '✓',
+                  \ 'format_loclist_issues': '%s',
+                  \ 'format_quickfix_ok': '',
+                  \ 'format_quickfix_issues': '%s',
+                  \ 'format_loclist_type_W': '{{count}} warning(s) ',
+                  \ 'format_loclist_type_E': '{{count}} error(s) ',
+                  \ })
+        endtry
     endif
     return ''
 endfunc
@@ -154,6 +162,7 @@ call helper#plug('wellle/visual-split.vim')
 call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
 call helper#plug('terryma/vim-multiple-cursors')
+call helper#plug('romainl/vim-qf')
 
 if has('nvim') " IDE-style features for nvim
     call helper#plug('neomake/neomake')
@@ -163,6 +172,8 @@ if has('nvim') " IDE-style features for nvim
     "    call helper#plug('prabirshrestha/vim-lsp')
     "    call helper#plug('prabirshrestha/asyncomplete.vim')
     "    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
+else
+    let g:loaded_neomakelist = v:true
 endif
 
 call helper#end()
@@ -244,45 +255,32 @@ endif
 
 let g:multi_cursor_use_default_mapping=0
 
-if has('nvim')
-    call neomake#configure#automake({  
-            \ 'TextChanged': {},
-            \ 'InsertLeave': {},
-            \ 'BufWritePost': {'delay': 0},
-            \ 'BufWinEnter': {},
-            \}, 500)
-    let g:neomake_open_list          = v:true
-    let g:neomake_list_height        = 5
-    let g:neomake_virtualtext_prefix = ' 🯀 '
-    let g:neomake_error_sign         = { 'text': '╳', 'texthl': 'Error' }
-    let g:neomake_warning_sign       = { 'text': '✖', 'texthl': 'Error' }
-    let g:neomake_info_sign          = { 'text': '▷' }
-    let g:neomake_message_sign       = { 'text': '▶' }
-    call neomake#signs#RedefineErrorSign()
-    call neomake#signs#RedefineWarningSign()
-endif
 " }}}
 " Neovim IDE Setup {{{
 if !has('nvim') | finish | endif
 
 set termguicolors
 
+call neomake#configure#automake({  
+        \ 'TextChanged': {},
+        \ 'InsertLeave': {},
+        \ 'BufWritePost': {'delay': 0},
+        \ 'BufWinEnter': {},
+        \}, 500)
+
+let g:neomake_virtualtext_current_error = 0
+let g:neomake_error_sign         = { 'text': '╳', 'texthl': 'Error' }
+let g:neomake_warning_sign       = { 'text': '✖', 'texthl': 'Error' }
+let g:neomake_info_sign          = { 'text': '▷' }
+let g:neomake_message_sign       = { 'text': '▶' }
+call neomake#signs#RedefineErrorSign()
+call neomake#signs#RedefineWarningSign()
+call neomake#config#set('maker_defaults.remove_invalid_entries', 1)
+
 " Autoformat on save
 au BufWrite * silent! Autoformat
 
-let g:ale_hover_to_preview = 1
-let g:ale_completion_enabled = 0
-let g:ale_virtualtext_cursor = 1
-let g:ale_virtualtext_prefix = ' 🯀 '
-let g:ale_sign_error   = '✘ '
-let g:ale_sign_warning = '✗ '
-let g:ale_use_global_executables = 1
-let g:ale_hover_to_preview = 1
-let g:ale_cursor_detail = 1
-let g:ale_echo_cursor = 0
-
 let s:lsp_map = {}
-
 
 if executable('clangd')
     au User lsp_setup call lsp#register_server({

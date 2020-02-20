@@ -26,7 +26,7 @@
 " any plugin's help files, and :HelperToggle shows a menu that allows
 " selecting the name of a plugin interactively to view its help file.
 
-if exists("g:autoloaded_helper") | finish | endif
+if exists('g:autoloaded_helper') | finish | endif
 let g:autoloaded_helper = v:true
 
 " Requires junegunn/vim-plug and skywind3000/quickmenu.vim
@@ -35,8 +35,8 @@ let g:autoloaded_helper = v:true
 
 " Wraps vim-plug's plug#begin(). Set g:helper_plug_path to
 " specify the directory that vim-plug uses.
-func! helper#begin()
-    if exists("g:helper_plug_path") == v:false
+function! helper#begin() abort
+    if exists('g:helper_plug_path') == v:false
         let g:helper_plug_path = has('nvim') ?
                     \ $HOME.'/.config/nvim/plugged' :
                     \ $HOME.'/.vim/plugged'
@@ -44,39 +44,39 @@ func! helper#begin()
     try
         call plug#begin(g:helper_plug_path)
     catch
-        echoerr "helper#begin failed: vim-plug is missing or broken"
+        echoerr 'helper#begin failed: vim-plug is missing or broken'
     endtry
     let s:plugin_list = []
     let s:found_help_list = []
-endfunc
+endfunction
 
 " Wraps vim-plug's Plug command and tracks plugin repos
 " in an internal list
-func! helper#plug(repo)
+function! helper#plug(repo) abort
     try
         call plug#(a:repo)
         let s:plugin_list = s:plugin_list + [a:repo]
     catch
         echoerr 'helper#plug failed for plugin '.a:repo
     endtry
-endfunc
+endfunction
 
 " If you need to use any of the advanced features of vim-plug,
 " use Plug like normal instead of helper#plug() and just include
 " this afterwards to add that plugin's folder to the locations
 " searched for help files.
-func! helper#manual(repo)
+function! helper#manual(repo) abort
     let s:plugin_list = s:plugin_list + [a:repo]
-endfunc
+endfunction
 
 " Find help docs for each plugin registered with helper#plug()
-func! s:populate()
+function! s:populate() abort
     " quickmenu supports multiple menus with unique ids, pick one if it
     " hasn't already been set
-    if exists("g:helper_menu_id") == v:false
+    if exists('g:helper_menu_id') == v:false
         let g:helper_menu_id = 42
     endif
-    let g:quickmenu_options = "H"
+    let g:quickmenu_options = 'H'
     try
         " Populate quickmenu with installed plugins with helpfiles
         call quickmenu#current(g:helper_menu_id)
@@ -120,25 +120,30 @@ func! s:populate()
     catch
         echom 'helper#populate was unsuccessful'
     endtry
-endfunc
+endfunction
 
 let s:loaded_on_demand = v:false
-" Toggle menu visibility
-func! helper#toggle()
+function! s:lazyload() abort
     if !s:loaded_on_demand
         call s:populate()
         let s:loaded_on_demand = v:true
     endif
+endfunction
+
+" Toggle menu visibility
+function! helper#toggle() abort
+    call s:lazyload()
     call quickmenu#toggle(g:helper_menu_id)
-endfunc
+endfunction
 
 " Wraps vim-plug's plug#end()
-func! helper#end()
+function! helper#end() abort
     call plug#('skywind3000/quickmenu.vim')
     call plug#end()
-endfunc
+endfunction
 
 " Returns a list of the help docs that were found
-func! helper#found()
+function! helper#found() abort
+    call s:lazyload()
     return s:found_help_list
-endfunc
+endfunction

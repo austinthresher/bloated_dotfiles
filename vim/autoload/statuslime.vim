@@ -21,8 +21,8 @@
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-if exists("g:statuslime_loaded") | finish | endif
-let g:statuslime_loaded = v:true
+if exists('g:autoloaded_statuslime') | finish | endif
+let g:autoloaded_statuslime = v:true
 
 " Highlights
 " FIXME: Prune this list to what's actually used
@@ -34,7 +34,7 @@ for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
     endif
 endfor
 
-func! statuslime#filename()
+func! statuslime#filename() abort
     let filename = expand('%') !=# '' ? expand('%') : '[No Name]'
     let modified = &modified ? '+' : ''
     let ro = &readonly ? ' [RO]' : ''
@@ -74,7 +74,7 @@ endfunc
 " that updates the values of g:statuslime_left and
 " g:statuslime_right
 
-func! statuslime#focused()
+func! statuslime#focused() abort
     try
         if type(SetStatusLime()) == type('')
             setlocal statusline=%{SetStatusLime()}
@@ -84,25 +84,39 @@ func! statuslime#focused()
     catch
         setlocal statusline=
     endtry
-    call s:add_state('mode()[0]==#''n''', 'LimeNormal', 'NORMAL')
-    call s:add_state('mode()[0]==#''i''', 'LimeInsert', 'INSERT')
-    call s:add_state('mode()[0]==#''R''', 'LimeReplace', 'REPLACE')
-    call s:add_state('mode()[0]==#''t''', 'LimeTerminal', 'TERMINAL')
-    call s:add_state('mode()[0]==#''v''', 'LimeVisual', 'VISUAL')
-    call s:add_state('mode()[0]==#''V''', 'LimeVisual', 'VISUAL-LINE')
-    call s:add_state('char2nr(mode()[0])==0x16', 'LimeVisual', 'VISUAL-BLOCK')
-    call s:add_state('mode()[0]==#''c''', 'LimeCommand', 'COMMAND')
-    call s:add_state('mode()[0]==#''r''', 'LimeOther', 'CONTINUE')
-    call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
-    call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
-    setlocal statusline+=%<
-    setlocal statusline+=%#LimeFile#%{statuslime#filename()}
-    setlocal statusline+=%*
-    setlocal statusline+=%#LimeLeft#%{statuslime#left()}
-    setlocal statusline+=%*
-    setlocal statusline+=%=
-    setlocal statusline+=%#LimeRight#%{statuslime#right()}
-    setlocal statusline+=%#LimeRuler#%{statuslime#ruler()}
+    if &previewwindow
+        call s:add_state('v:true', 'LimePreview', 'PREVIEW')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    elseif &filetype is# 'qf'
+        call s:add_state('v:true', 'LimeOther', 'QUICKFIX')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    elseif &filetype is# 'help'
+        call s:add_state('v:true', 'LimeHelp', 'HELP')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    else
+        call s:add_state('mode()[0]==#''n''', 'LimeNormal', 'NORMAL')
+        call s:add_state('mode()[0]==#''i''', 'LimeInsert', 'INSERT')
+        call s:add_state('mode()[0]==#''R''', 'LimeReplace', 'REPLACE')
+        call s:add_state('mode()[0]==#''t''', 'LimeTerminal', 'TERMINAL')
+        call s:add_state('mode()[0]==#''v''', 'LimeVisual', 'VISUAL')
+        call s:add_state('mode()[0]==#''V''', 'LimeVisual', 'VISUAL-LINE')
+        call s:add_state('char2nr(mode()[0])==0x16', 'LimeVisual', 'VISUAL-BLOCK')
+        call s:add_state('mode()[0]==#''c''', 'LimeCommand', 'COMMAND')
+        call s:add_state('mode()[0]==#''r''', 'LimeOther', 'CONTINUE')
+        call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
+        call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
+        setlocal statusline+=%<
+        setlocal statusline+=%#LimeFile#%{statuslime#filename()}
+        setlocal statusline+=%*
+        setlocal statusline+=%#LimeLeft#%{statuslime#left()}
+        setlocal statusline+=%*
+        setlocal statusline+=%=
+        setlocal statusline+=%#LimeRight#%{statuslime#right()}
+        setlocal statusline+=%#LimeRuler#%{statuslime#ruler()}
+    endif
 endfunc
 
 func! statuslime#unfocused()
@@ -116,7 +130,15 @@ func! statuslime#unfocused()
         setlocal statusline=
     endtry
     if &previewwindow
-        call s:add_state('v:true', 'LimeInactiveMode', 'PREVIEW')
+        call s:add_state('v:true', 'LimeInactiveFT', 'PREVIEW')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    elseif &filetype is# 'qf'
+        call s:add_state('v:true', 'LimeInactiveFT', 'QUICKFIX')
+        setlocal statusline+=%<
+        setlocal statusline+=%*
+    elseif &filetype is# 'help'
+        call s:add_state('v:true', 'LimeInactiveFT', 'HELP')
         setlocal statusline+=%<
         setlocal statusline+=%*
     else
