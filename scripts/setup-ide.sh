@@ -19,10 +19,9 @@ for x in "${REQUIRED[@]}"; do
 done
 
 pip3 install --user wheel
-pip3 install --user pylint
+pip3 install --user pylama
 pip3 install --user jedi==0.15.0
 pip3 install --user neovim
-pip3 install --user autopep8
 pip3 install --user python-language-server
 pip3 install --user pyls-isort
 pip3 install --user cmake_format

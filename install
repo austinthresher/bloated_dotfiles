@@ -57,6 +57,8 @@ prompt_to_replace gdbinit       "$HOME/.gdbinit"
 prompt_to_replace conkyrc       "$HOME/.conkyrc"
 prompt_to_replace i3config      "$HOME/.config/i3/config"
 prompt_to_replace Xresources    "$HOME/.Xresources"
+prompt_to_replace pylintrc      "$HOME/.pylintrc"
+prompt_to_replace pycodestyle   "$HOME/.config/pycodestyle"
 
 for f in vim/*; do
     bf=$(basename $f)

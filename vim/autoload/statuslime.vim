@@ -89,7 +89,6 @@ func! statuslime#focused() abort
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'qf'
-        call s:add_state('v:true', 'LimeOther', 'QUICKFIX')
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'help'
@@ -134,7 +133,6 @@ func! statuslime#unfocused()
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'qf'
-        call s:add_state('v:true', 'LimeInactiveFT', 'QUICKFIX')
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'help'

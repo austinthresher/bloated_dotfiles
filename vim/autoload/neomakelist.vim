@@ -29,7 +29,7 @@ let g:autoloaded_neomakelist = v:true
 function! neomakelist#listfollowcursor() abort
     if &filetype is# 'qf' | return | endif
     let l:loclist = getloclist(0)
-    if empty(l:loclist) | return | endif 
+    if empty(l:loclist) | return | endif
     let l:ln = line('.')
     if l:ln < str2nr(l:loclist[0]['lnum']) | return | endif
     if l:ln > str2nr(l:loclist[-1]['lnum']) | return | endif
@@ -37,8 +37,9 @@ function! neomakelist#listfollowcursor() abort
     for entry in l:loclist
         let l:intbn = str2nr(entry['bufnr'])
         let l:intln = str2nr(entry['lnum'])
-        if l:ln < l:intln | return | endif
+"        if l:ln < l:intln | return | endif
         if l:ln == l:intln && bufnr('%') == l:intbn
+            execute 'match Search /\%'.line('.').'l/'
             let l:pos = getcurpos()
             execute 'll '.l:idx
             call setpos('.', l:pos)
@@ -73,7 +74,7 @@ function! s:showloclist() abort
     endif
 endfunction
 
-let s:ll_winnr = 0 
+let s:ll_winnr = 0
 let s:ll_startup_timer = 0
 
 function! s:stop_startup_timer() abort
