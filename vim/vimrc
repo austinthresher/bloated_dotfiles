@@ -126,8 +126,6 @@ endif
 
 call helper#begin()
 
-" TODO: Compare cpp highlighters
-"call helper#plug('octol/vim-cpp-enhanced-highlight')
 call helper#plug('bfrg/vim-cpp-modern')
 call helper#plug('ap/vim-buftabline')
 call helper#plug('ekalinin/dockerfile.vim')
@@ -161,15 +159,15 @@ call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
 call helper#plug('terryma/vim-multiple-cursors')
 call helper#plug('romainl/vim-qf')
-"call helper#plug('prabirshrestha/asyncomplete.vim')
-call helper#plug('ajh17/VimCompletesMe')
+call helper#plug('ervandew/supertab')
+
 if has('nvim') " IDE-style features for nvim
     call helper#plug('neomake/neomake')
     call helper#plug('chiel92/vim-autoformat')
     call helper#plug('prabirshrestha/async.vim')
     call helper#plug('prabirshrestha/vim-lsp')
-    "    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
 else
+    " Disable neomakelist on vim
     let g:loaded_neomakelist = v:true
 endif
 
@@ -225,32 +223,6 @@ nnoremap <c-w>4 :Accordion 4<CR>
 " Ctrl+K to search for cursor text and show in quickfix
 nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
-" asyncompleteggt
-if has('nvim')
-    imap <c-space> <Plug>(asyncomplete_force_refresh)
-else
-    imap <nul> <Plug>(asyncomplete_force_refresh)
-endif
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-
-" Copied from asyncomplete.vim README
-let g:asyncomplete_auto_popup = 0
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-            \ pumvisible() ? "\<C-n>" :
-            \ <SID>check_back_space() ? "\<TAB>" :
-            \ asyncomplete#force_refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-set completeopt+=preview
-
 " }}}
 " Autocmds & Plugin Configuration {{{
 
@@ -280,6 +252,11 @@ if executable('ag')
 endif
 
 let g:multi_cursor_use_default_mapping=0
+
+let g:SuperTabContextTextMembersPatterns = ['\.', '>\?::', '->', ':', ' ']
+let g:SuperTabDefaultCompletionType = 'context'
+let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
+let g:SuperTabNoCompleteAfter = ['^ *', '\t']
 
 " }}}
 " Neovim IDE Setup {{{
@@ -400,8 +377,6 @@ let g:lsp_diagnostics_enabled  = v:false
 
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
-    " FIXME trying to get it to automatically appear after a space
-    "let b:vcm_omni_pattern = '\k\+\(\.\|->\|::\| \|:)\l*$'
     nmap <buffer> <leader>D <plug>(lsp-peek-definition)
     nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
     nmap <buffer> <leader>R <plug>(lsp-rename)
