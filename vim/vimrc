@@ -244,7 +244,7 @@ let g:formatterpath = [$HOME.'/.local/bin']
 
 augroup vimrc
     autocmd!
-    autocmd VimEnter * silent! AccordionAll 2
+    autocmd VimEnter * silent! AccordionAll 2 | IndentGuidesToggle
 augroup END
 
 if executable('ag')
@@ -256,14 +256,15 @@ let g:multi_cursor_use_default_mapping=0
 
 let g:SuperTabContextTextMembersPatterns = ['\.', '>\?::', '->', ':', ' ']
 let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
 let g:SuperTabNoCompleteAfter = ['^ *', '\t']
+if has('nvim')
+    let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
+endif
 
 let g:indentguides_spacechar = '🮌'
 let g:indentguides_tabchar = '░'
 let g:indentguides_toggleListMode = v:false
-
-exec 'norm :IndentGuidesToggle<cr>'
+let g:indentguides_firstlevel = v:true
 
 " }}}
 " Neovim IDE Setup {{{
