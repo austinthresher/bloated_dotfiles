@@ -1,5 +1,5 @@
 [style]
-based_on_style = pep8
+based_on_style = facebook
 split_before_logical_operator = true
 split_before_named_assigns = true
 split_before_bitwise_operator = true
@@ -15,5 +15,6 @@ split_before_dot = true
 split_before_first_argument = true
 split_before_expression_after_opening_paren = true
 split_penalty_arithmetic_operator = 0
-split_penalty_after_opening_bracket = 1
+split_penalty_after_opening_bracket = 100
 split_penalty_excess_character = 1
+split_arguments_when_comma_terminated = true

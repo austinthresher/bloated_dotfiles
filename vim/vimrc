@@ -160,6 +160,7 @@ call helper#plug('mattboehm/vim-accordion')
 call helper#plug('terryma/vim-multiple-cursors')
 call helper#plug('romainl/vim-qf')
 call helper#plug('ervandew/supertab')
+call helper#plug('thaerkh/vim-indentguides')
 
 if has('nvim') " IDE-style features for nvim
     call helper#plug('neomake/neomake')
@@ -257,6 +258,12 @@ let g:SuperTabContextTextMembersPatterns = ['\.', '>\?::', '->', ':', ' ']
 let g:SuperTabDefaultCompletionType = 'context'
 let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
 let g:SuperTabNoCompleteAfter = ['^ *', '\t']
+
+let g:indentguides_spacechar = '🮌'
+let g:indentguides_tabchar = '░'
+let g:indentguides_toggleListMode = v:false
+
+exec 'norm :IndentGuidesToggle<cr>'
 
 " }}}
 " Neovim IDE Setup {{{
