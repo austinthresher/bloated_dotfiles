@@ -96,6 +96,7 @@ func! SetStatusLime()
                         \ 'format_quickfix_issues': '%s',
                         \ 'format_loclist_type_W': '{{count}} warning(s) ',
                         \ 'format_loclist_type_E': '{{count}} error(s) ',
+                        \ 'format_loclist_type_I': '{{count}} message(s) ',
                         \ })
         endtry
     endif
@@ -268,6 +269,7 @@ call neomake#configure#automake({
             \ 'BufWinEnter': {},
             \}, 500)
 
+let g:neomake_highlight_columns = 0
 let g:neomake_makers_buffer_output = 0
 let g:neomake_virtualtext_current_error = 0
 let g:neomake_info_sign          = { 'text': '▷' }
@@ -275,9 +277,8 @@ let g:neomake_message_sign       = { 'text': '▶' }
 call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
 call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
 
-let g:autoformat_autoindent = 0
-let g:autoformat_retab = 0
-
+let g:formatters_python = ['yapf']
+let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
 let s:lsp_map = {}
 augroup NeovimIDE
     autocmd!

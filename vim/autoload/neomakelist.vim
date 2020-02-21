@@ -28,13 +28,13 @@ let g:autoloaded_neomakelist = v:true
 
 function! neomakelist#listfollowcursor() abort
     if &filetype is# 'qf' | return | endif
+    match none
     let l:loclist = getloclist(0)
     if empty(l:loclist) | return | endif
     let l:ln = line('.')
     if l:ln < str2nr(l:loclist[0]['lnum']) | return | endif
     if l:ln > str2nr(l:loclist[-1]['lnum']) | return | endif
     let l:idx = 1
-    match none
     for entry in l:loclist
         let l:intbn = str2nr(entry['bufnr'])
         let l:intln = str2nr(entry['lnum'])

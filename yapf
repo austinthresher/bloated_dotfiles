@@ -1,3 +1,19 @@
-[yapf]
+[style]
 based_on_style = pep8
 split_before_logical_operator = true
+split_before_named_assigns = true
+split_before_bitwise_operator = true
+split_before_arithmetic_operator = true
+split_complex_comprehension = true
+arithmetic_precedence_indication = true
+coalesce_brackets = true
+dedent_closing_brackets = true
+no_spaces_around_selected_binary_operators = true
+split_all_top_level_comma_separated_values = true
+split_before_closing_bracket = true
+split_before_dot = true
+split_before_first_argument = true
+split_before_expression_after_opening_paren = true
+split_penalty_arithmetic_operator = 0
+split_penalty_after_opening_bracket = 1
+split_penalty_excess_character = 1
