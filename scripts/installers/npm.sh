@@ -9,3 +9,6 @@ npm i -g standard
 npm i -g eslint
 npm i -g remark-cli
 npm i -g fixjson
+npm i -g yarn
+
+yarn global add vim-language-server

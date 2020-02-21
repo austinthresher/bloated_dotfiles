@@ -66,6 +66,7 @@ function! s:showloclist() abort
         if s:ll_winnr != l:wnr
             let s:ll_winnr = l:wnr
             call s:closelists()
+            " FIXME: This was applying to a normal split
             lwindow 3  " 3 lines tall
             wincmd J " Force list to bottom of screen
             doautocmd WinLeave

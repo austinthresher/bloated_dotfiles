@@ -14,8 +14,8 @@ REQUIRED=(git python3 pip3 tar curl)
 for x in "${REQUIRED[@]}"; do
     which $x &> /dev/null || {
         echo "Requires '$x', please install before continuing."
-    exit 1
-}
+            exit 1
+        }
 done
 
 # package urls
@@ -48,8 +48,8 @@ function install_dirs {
         [ -d "$1/$d" ] \
             && echo "installing $(basename $1)/$d to $PREFIX/$d" \
             && cp -r -t "$PREFIX/$d" /$1/$d/*
-    done
-}
+        done
+    }
 
 function dl_and_install {
     NAME=$1
@@ -80,7 +80,7 @@ if [ -d "$TMP" ]; then
     # llvm + clang
     dl_and_install $LLVM $LLVM_URL $LLVM_EXT
 
-    # shellcheck
+    # get shellcheck
     dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT
     [ -f shellcheck ] && cp shellcheck "$PREFIX/bin/"
     [ -f shellcheck-stable ] && cp shellcheck-stable "$PREFIX/bin/shellcheck"

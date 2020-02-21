@@ -161,14 +161,14 @@ call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
 call helper#plug('terryma/vim-multiple-cursors')
 call helper#plug('romainl/vim-qf')
-
+"call helper#plug('prabirshrestha/asyncomplete.vim')
+call helper#plug('ajh17/VimCompletesMe')
 if has('nvim') " IDE-style features for nvim
     call helper#plug('neomake/neomake')
     call helper#plug('chiel92/vim-autoformat')
     call helper#plug('prabirshrestha/async.vim')
     call helper#plug('prabirshrestha/vim-lsp')
-    call helper#plug('prabirshrestha/asyncomplete.vim')
-    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
+    "    call helper#plug('prabirshrestha/asyncomplete-lsp.vim')
 else
     let g:loaded_neomakelist = v:true
 endif
@@ -225,6 +225,32 @@ nnoremap <c-w>4 :Accordion 4<CR>
 " Ctrl+K to search for cursor text and show in quickfix
 nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
+" asyncompleteggt
+if has('nvim')
+    imap <c-space> <Plug>(asyncomplete_force_refresh)
+else
+    imap <nul> <Plug>(asyncomplete_force_refresh)
+endif
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+
+" Copied from asyncomplete.vim README
+let g:asyncomplete_auto_popup = 0
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+            \ pumvisible() ? "\<C-n>" :
+            \ <SID>check_back_space() ? "\<TAB>" :
+            \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+set completeopt+=preview
+
 " }}}
 " Autocmds & Plugin Configuration {{{
 
@@ -257,7 +283,6 @@ let g:multi_cursor_use_default_mapping=0
 
 " }}}
 " Neovim IDE Setup {{{
-
 if !has('nvim') | finish | endif
 
 set termguicolors
@@ -276,6 +301,47 @@ let g:neomake_info_sign          = { 'text': '▷' }
 let g:neomake_message_sign       = { 'text': '▶' }
 call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
 call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
+
+" Don't report issues inside system headers
+function PostprocessClangTidy(entry)
+    try
+        let l:fname = a:entry['filename']
+    catch
+        let l:fname = bufname(a:entry['bufnr'])
+    endtry
+    try
+        if l:fname =~# '/usr/include'
+            let a:entry['valid'] = -1
+        endif
+    endtry
+endfunction
+
+try
+    let g:nproc = str2nr(system('nproc'))
+catch
+    let g:nproc = 1
+endtry
+
+let g:neomake_cpp_enabled_makers = executable('clang++') ?
+            \ ['clangtidy'] : ['gcc']
+call add(g:neomake_cpp_enabled_makers, 'cppcheck')
+let g:neomake_cpp_clangtidy_maker = {
+            \ 'exe': '/home/athresher/.local/share/clang/run-clang-tidy.py',
+            \ 'args': [
+            \       '-quiet',
+            \       '-j', string(g:nproc),
+            \       '-checks=-*,bugprone-*,cppcoreguidelines-*,'
+            \           .'clang-analyzer*,hicpp-*,misc-*,modernize-*,mpi-*,'
+            \           .'openmp-*,performance-*,readability-*,portability-*'
+            \ ],
+            \ 'postprocess': function('PostprocessClangTidy'),
+            \ 'errorformat':
+            \       '%E%f:%l:%c: fatal error: %m,' .
+            \       '%E%f:%l:%c: error: %m,' .
+            \       '%W%f:%l:%c: warning: %m,' .
+            \       '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
+            \       '%E%m'
+            \}
 
 let g:formatters_python = ['yapf']
 let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
@@ -301,21 +367,29 @@ augroup NeovimIDE
                     \ })
         let s:lsp_map['python'] = 'pyls'
     endif
-    if executable('bash-language-server')
+    if executable($HOME.'/.local/bin/bash-language-server')
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'bash-language-server',
-                    \ 'cmd': {server_info->['bash-language-server']},
+                    \ 'cmd': {server_info->[$HOME.'/.local/bin/bash-language-server', 'start']},
                     \ 'whitelist': ['sh'],
                     \ })
         let s:lsp_map['sh'] = 'bls'
     endif
-    if executable('docker-langserver')
+    if executable($HOME.'/.local/bin/docker-langserver')
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'docker-langserver',
-                    \ 'cmd': {server_info->['docker-langserver']},
+                    \ 'cmd': {server_info->[$HOME.'/.local/bin/docker-langserver', '--stdio']},
                     \ 'whitelist': ['Dockerfile'],
                     \ })
         let s:lsp_map['Dockerfile'] = 'dls'
+    endif
+    if executable($HOME.'/.yarn/bin/vim-language-server')
+        autocmd User lsp_setup call lsp#register_server({
+                    \ 'name': 'vim-language-server',
+                    \ 'cmd': {server_info->[$HOME.'/.yarn/bin/vim-language-server', '--stdio']},
+                    \ 'whitelist': ['vim'],
+                    \ })
+        let s:lsp_map['vim'] = 'vls'
     endif
 augroup END
 
@@ -326,16 +400,14 @@ let g:lsp_diagnostics_enabled  = v:false
 
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
+    " FIXME trying to get it to automatically appear after a space
+    "let b:vcm_omni_pattern = '\k\+\(\.\|->\|::\| \|:)\l*$'
     nmap <buffer> <leader>D <plug>(lsp-peek-definition)
     nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
     nmap <buffer> <leader>R <plug>(lsp-rename)
     nmap <buffer> <leader>s <plug>(lsp-signature-help)
     nmap <buffer> <leader>r <plug>(lsp-references)
     nmap <buffer> <leader>h <plug>(lsp-hover)
-    imap <c-space> <Plug>(asyncomplete_force_refresh)
-    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
     augroup lsp_enabled
         autocmd!
         autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
