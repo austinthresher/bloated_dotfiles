@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Sets up development environment with neovim and lsp
+# Downloads and installs binaries for a general development environment
 # on Ubuntu 18.04
 
 # Set PATH
@@ -10,7 +10,7 @@ if [[ $PATH != *"$PREFIX/bin"* ]]; then
 fi
 
 # Ensure we have the programs we need
-REQUIRED=(git python3 pip3 wget tar curl)
+REQUIRED=(git python3 pip3 tar curl)
 for x in "${REQUIRED[@]}"; do
     which $x &> /dev/null || {
         echo "Requires '$x', please install before continuing."
@@ -18,20 +18,10 @@ for x in "${REQUIRED[@]}"; do
 }
 done
 
-pip3 install --user wheel
-pip3 install --user pylama
-pip3 install --user jedi==0.15.0
-pip3 install --user neovim
-pip3 install --user python-language-server
-pip3 install --user pyls-isort
-pip3 install --user cmake_format
-pip3 install --user vim-vint
-pip3 install --user yapf
-
 # package urls
 NVIM=nvim-linux64
 NVIM_EXT=.tar.gz
-NVIM_URL="https://github.com/neovim/neovim/releases/download/nightly/$NVIM$NVIM_EXT"
+NVIM_URL="https://github.com/neovim/neovim/releases/download/v0.4.3/$NVIM$NVIM_EXT"
 
 LLVM=clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04
 LLVM_EXT=.tar.xz
@@ -55,8 +45,9 @@ done
 
 function install_dirs {
     for d in "${INSTALL_DIRS[@]}"; do
-        echo "installing $(basename $1)/$d to $PREFIX/$d"
-        [ -d "$1/$d" ] && cp -r -t "$PREFIX/$d" /$1/$d/*
+        [ -d "$1/$d" ] \
+            && echo "installing $(basename $1)/$d to $PREFIX/$d" \
+            && cp -r -t "$PREFIX/$d" /$1/$d/*
     done
 }
 
@@ -65,7 +56,12 @@ function dl_and_install {
     URL=$2
     EXT=$3
     echo "downloading $URL"
-    wget "$URL" -q
+    curl -fsSL "$URL" -o "$NAME$EXT" --insecure
+    if [ ! -e "$NAME$EXT" ]; then
+        echo "Could not find $NAME$EXT. Directory listing:"
+        ls -a
+        exit 1
+    fi
     echo "extracting $NAME$EXT"
     tar -xf "$NAME$EXT"
     install_dirs "$PWD/$NAME"
@@ -86,7 +82,9 @@ if [ -d "$TMP" ]; then
 
     # shellcheck
     dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT
-    cp shellcheck "$PREFIX/"
+    [ -f shellcheck ] && cp shellcheck "$PREFIX/bin/"
+    [ -f shellcheck-stable ] && cp shellcheck-stable "$PREFIX/bin/shellcheck"
+    [ -d shellcheck-stable ] && cp shellcheck-stable/shellcheck "$PREFIX/bin/shellcheck"
 
     # vim-plug
     VIMAUTO="$HOME/.config/nvim/autoload"
@@ -105,12 +103,3 @@ else
     echo "Failed to create temporary directory"
 fi
 
-# Node.js
-curl -sL install-node.now.sh | bash -s -- --prefix=$PREFIX -y
-npm i -g neovim
-npm i -g bash-language-server
-npm i -g dockerfile-language-server-nodejs
-npm i -g standard
-npm i -g eslint
-npm i -g remark-cli
-npm i -g fixjson
