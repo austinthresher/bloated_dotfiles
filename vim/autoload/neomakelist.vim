@@ -52,12 +52,19 @@ endfunction
 function! s:closelists() abort
     if &filetype ==# 'qf' | return | endif
     let l:lists = filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") ==# "qf"')
-    let l:stack = []
     " Reverse order so that we close from highest winnr to lowest
     for entry in reverse(l:lists)
         execute string(entry).'wincmd c'
     endfor
     let s:ll_winnr = 0
+endfunc
+
+function! s:goto_list() abort
+    if &filetype ==# 'qf' | return | endif
+    let l:lists = filter(range(1, winnr('$')), 'getwinvar(v:val, "&ft") ==# "qf"')
+    if !empty(l:lists)
+        execute string(l:lists[0]).'wincmd w'
+    endif
 endfunc
 
 function! s:showloclist() abort
@@ -66,11 +73,13 @@ function! s:showloclist() abort
         if s:ll_winnr != l:wnr
             let s:ll_winnr = l:wnr
             call s:closelists()
-            " FIXME: This was applying to a normal split
-            lwindow 3  " 3 lines tall
-            wincmd J " Force list to bottom of screen
-            doautocmd WinLeave
-            wincmd p " Go back to active window
+            lwindow 5  " 5 lines tall
+            call s:goto_list()
+            if &filetype ==# 'qf'
+                wincmd J " Force list to bottom of screen
+                doautocmd WinLeave
+            endif
+            execute string(s:ll_winnr).'wincmd w'
         endif
     endif
 endfunction
