@@ -1,6 +1,14 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 unset -f command_not_found_handle
 
+if [[ $OSTYPE == *darwin* ]]; then
+    alias ls='ls -F'
+else
+    alias ls='ls -F --color=auto'
+    source "$HOME/.dotfiles/scripts/themes.sh"
+    theme_spacedust
+fi
+
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
 function reverse { printf "\e[7m"; }
@@ -8,7 +16,6 @@ function under   { printf "\e[4m"; }
 function colorfg { printf "\e[3$1m"; }
 function colorbg { printf "\e[4$1m"; }
 
-alias ls='ls -F --color=auto'
 alias rgrep='grep -Iirn'
 alias more='less'
 alias gdb='gdb -q'
@@ -24,8 +31,6 @@ export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
 
-source "$HOME/.dotfiles/scripts/themes.sh"
-theme_spacedust
 
 PROMPT_COLOR=2
 if [ ! -z "$SSH_CLIENT" ]; then
