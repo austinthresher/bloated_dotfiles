@@ -1,0 +1,10 @@
+---
+IndentWidth: 4
+ColumnLimit: 80
+UseTab: false
+---
+Language: Cpp
+PointerAlignment: Right
+SortIncludes: true
+SpaceBeforeParens: ControlStatements
+BreakBeforeBraces: Attach

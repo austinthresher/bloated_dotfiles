@@ -27,7 +27,6 @@ rgb_set_bg() {
 			echo -ne "\e]11;rgb:${1:0:2}/${1:2:2}/${1:4:2}\e\\"
 			;;
 	esac
-
 }
 rgb_set_fg() {
 	case $TERM in

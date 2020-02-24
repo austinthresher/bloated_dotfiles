@@ -60,6 +60,7 @@ prompt_to_replace Xresources    "$HOME/.Xresources"
 prompt_to_replace pylintrc      "$HOME/.pylintrc"
 prompt_to_replace pycodestyle   "$HOME/.config/pycodestyle"
 prompt_to_replace yapf          "$HOME/.style.yapf"
+prompt_to_replace clang-format  "$HOME/.clang-format"
 
 for f in vim/*; do
     bf=$(basename $f)

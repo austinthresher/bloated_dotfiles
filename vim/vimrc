@@ -270,7 +270,7 @@ let g:indentguides_firstlevel = v:true
 " Neovim IDE Setup {{{
 if !has('nvim') | finish | endif
 
-set termguicolors
+"set termguicolors
 
 call neomake#configure#automake({
             \ 'TextChanged': {},
