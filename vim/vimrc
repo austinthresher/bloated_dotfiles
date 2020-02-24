@@ -78,6 +78,8 @@ endif
 " Use filetype-based plugin and indent scripts
 filetype plugin indent on
 try
+    let g:lyra_string_bg = v:false
+    let g:lyra_use_system_colors = v:true
     colorscheme lyra
 endtry
 " }}}

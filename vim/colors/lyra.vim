@@ -45,7 +45,7 @@ if &t_Co || &termguicolors
         let s:pal = range(0, 15)
         let s:grays = [0, 0, 0, 8, 8, 7, 7, 15, 15]
     else
-        if has('nvim')
+        if exists('g:lyra_use_system_colors') && g:lyra_use_system_colors
             let s:pal = [   0,   1,   2,   3,   4,   5,   6,   7,
                         \   8,   9,  10,  11,  12,  13,  14,  15]
         else
@@ -89,55 +89,29 @@ let s:xterm_lighter    = s:grays[5]
 let s:xterm_lightest   = s:grays[6]
 
 " Associate truecolor values with color names
-if has('nvim') " neovim theme
-    let s:black      = ['#1C1B19', s:xterm_black]
-    let s:red        = ['#EF2F27', s:xterm_red]
-    let s:green      = ['#519F50', s:xterm_green]
-    let s:yellow     = ['#FBB829', s:xterm_yellow]
-    let s:blue       = ['#2C78BF', s:xterm_blue]
-    let s:magenta    = ['#E02C6D', s:xterm_magenta]
-    let s:cyan       = ['#0AAEB3', s:xterm_cyan]
-    let s:white      = ['#D0BFA1', s:xterm_white]
-    let s:br_black   = ['#918175', s:xterm_br_black]
-    let s:br_red     = ['#F75341', s:xterm_br_red]
-    let s:br_green   = ['#98BC37', s:xterm_br_green]
-    let s:br_yellow  = ['#FED06E', s:xterm_br_yellow]
-    let s:br_blue    = ['#68A8E4', s:xterm_br_blue]
-    let s:br_magenta = ['#FF5C8F', s:xterm_br_magenta]
-    let s:br_cyan    = ['#53FDE9', s:xterm_br_cyan]
-    let s:br_white   = ['#FCE8C3', s:xterm_br_white]
-    let s:hard_black = ['#121212', s:xterm_hard_black]
-    let s:darkest    = ['#262626', s:xterm_darkest]
-    let s:darker     = ['#303030', s:xterm_darker]
-    let s:dark       = ['#3A3A3A', s:xterm_dark]
-    let s:light      = ['#444444', s:xterm_light]
-    let s:lighter    = ['#4E4E4E', s:xterm_lighter]
-    let s:lightest   = ['#585858', s:xterm_lightest]
-else " vim theme
-    let s:black      = ['#121212', s:xterm_black]
-    let s:red        = ['#5F0000', s:xterm_red]
-    let s:green      = ['#005F00', s:xterm_green]
-    let s:yellow     = ['#FF8700', s:xterm_yellow]
-    let s:blue       = ['#0087DF', s:xterm_blue]
-    let s:magenta    = ['#FF00AF', s:xterm_magenta]
-    let s:cyan       = ['#00FFAF', s:xterm_cyan]
-    let s:white      = ['#D0D0D0', s:xterm_white]
-    let s:br_black   = ['#5F5F5F', s:xterm_br_black]
-    let s:br_red     = ['#FF0000', s:xterm_br_red]
-    let s:br_green   = ['#00DF5F', s:xterm_br_green]
-    let s:br_yellow  = ['#FFDF00', s:xterm_br_yellow]
-    let s:br_blue    = ['#00DFFF', s:xterm_br_blue]
-    let s:br_magenta = ['#DF5FDF', s:xterm_br_magenta]
-    let s:br_cyan    = ['#AFFFFF', s:xterm_br_cyan]
-    let s:br_white   = ['#FFFFFF', s:xterm_br_white]
-    let s:hard_black = ['#080808', s:xterm_hard_black]
-    let s:darkest    = ['#1C1C1C', s:xterm_darkest]
-    let s:darker     = ['#262626', s:xterm_darker]
-    let s:dark       = ['#3A3A3A', s:xterm_dark]
-    let s:light      = ['#808080', s:xterm_light]
-    let s:lighter    = ['#9E9E9E', s:xterm_lighter]
-    let s:lightest   = ['#BCBCBC', s:xterm_lightest]
-endif
+let s:black      = ['#121212', s:xterm_black]
+let s:red        = ['#5F0000', s:xterm_red]
+let s:green      = ['#005F00', s:xterm_green]
+let s:yellow     = ['#FF8700', s:xterm_yellow]
+let s:blue       = ['#0087DF', s:xterm_blue]
+let s:magenta    = ['#FF00AF', s:xterm_magenta]
+let s:cyan       = ['#00FFAF', s:xterm_cyan]
+let s:white      = ['#D0D0D0', s:xterm_white]
+let s:br_black   = ['#5F5F5F', s:xterm_br_black]
+let s:br_red     = ['#FF0000', s:xterm_br_red]
+let s:br_green   = ['#00DF5F', s:xterm_br_green]
+let s:br_yellow  = ['#FFDF00', s:xterm_br_yellow]
+let s:br_blue    = ['#00DFFF', s:xterm_br_blue]
+let s:br_magenta = ['#DF5FDF', s:xterm_br_magenta]
+let s:br_cyan    = ['#AFFFFF', s:xterm_br_cyan]
+let s:br_white   = ['#FFFFFF', s:xterm_br_white]
+let s:hard_black = ['#080808', s:xterm_hard_black]
+let s:darkest    = ['#1C1C1C', s:xterm_darkest]
+let s:darker     = ['#262626', s:xterm_darker]
+let s:dark       = ['#3A3A3A', s:xterm_dark]
+let s:light      = ['#808080', s:xterm_light]
+let s:lighter    = ['#9E9E9E', s:xterm_lighter]
+let s:lightest   = ['#BCBCBC', s:xterm_lightest]
 
 let s:none = ['NONE', 'NONE']
 
@@ -169,14 +143,12 @@ hi! link VisualNOS Visual
 call s:hi('Search', s:hard_black, s:br_green, 'NONE')
 call s:hi('IncSearch', s:hard_black, s:br_magenta, 'NONE')
 
-" Neovim popups don't look very nice with bg changed on strings,
-" so only do that for vim
-if has('nvim')
-    call s:hi('String',       s:br_cyan,   s:none, 'NONE')
-    call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
-else
+if exists('g:lyra_string_bg') && g:lyra_string_bg
     call s:hi('String',       s:cyan,      s:darkest, 'NONE')
     call s:hi('SpecialChar',  s:br_yellow, s:darkest, 'italic')
+else
+    call s:hi('String',       s:br_cyan,   s:none, 'NONE')
+    call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
 endif
 
 call s:hi('Pmenu',        s:hard_black, s:br_black,   'NONE')
