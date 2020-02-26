@@ -23,31 +23,52 @@ for x in "${REQUIRED[@]}"; do
 done
 
 # package urls
-osx \
-    && NVIM=nvim-macos \
-    || NVIM=nvim-linux64
+
+# Neovim
+if osx; then
+    NVIM=nvim-macos
+    NVIM_DIR=nvim-osx64
+else
+    NVIM=nvim-linux64
+    NVIM_DIR=$NVIM
+fi
 NVIM_EXT=.tar.gz
 NVIM_URL="https://github.com/neovim/neovim/releases/download/v0.4.3/$NVIM$NVIM_EXT"
 
-osx \
-    && LLVM=clang+llvm-9.0.0-x86_64-darwin-apple \
-    || LLVM=clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04
+# Clang + LLVM
+if osx; then
+    LLVM=clang+llvm-9.0.0-x86_64-darwin-apple
+    LLVM_DIR=$LLVM
+else
+    LLVM=clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04
+    LLVM_DIR=$LLVM
+fi
 LLVM_EXT=.tar.xz
 LLVM_URL="http://releases.llvm.org/9.0.0/$LLVM$LLVM_EXT"
 
-osx \
-    && CMAKE=cmake-3.16.3-Darwin-x86_64 \
-    || CMAKE=cmake-3.16.3-Linux-x86_64
+# CMake
+if osx; then
+    CMAKE=cmake-3.16.3-Darwin-x86_64
+    CMAKE_DIR=$CMAKE/CMake.app/Contents
+else
+    CMAKE=cmake-3.16.3-Linux-x86_64
+    CMAKE_DIR=$CMAKE
+fi
 CMAKE_EXT=.tar.gz
 CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.16.3/$CMAKE$CMAKE_EXT"
 
-osx \
-    && SHELLCHECK=shellcheck-stable.darwin.x86_64 \
-    || SHELLCHECK=shellcheck-stable.linux.x86_64
+# Shellcheck
+if osx; then
+    SHELLCHECK=shellcheck-stable.darwin.x86_64
+    SHELLCHECK_DIR=shellcheck-stable
+else
+    SHELLCHECK=shellcheck-stable.linux.x86_64
+    SHELLCHECK_DIR=shellcheck-stable
+fi
 SHELLCHECK_EXT=.tar.xz
 SHELLCHECK_URL="https://storage.googleapis.com/shellcheck/$SHELLCHECK$SHELLCHECK_EXT"
 
-# Installer functions for above packages
+# Copy these folders from the packages above
 INSTALL_DIRS=(bin include lib libexec share)
 
 mkdir -p "$PREFIX"
@@ -57,58 +78,64 @@ done
 
 function install_dirs {
     for d in "${INSTALL_DIRS[@]}"; do
-        [ -d "$1/$d" ] \
-            && echo "installing $(basename $1)/$d to $PREFIX/$d" \
-            && cp -r -t "$PREFIX/$d" /$1/$d/*
-        done
-    }
+        [ -d "$d" ] \
+            && echo "installing $d to $PREFIX/$d" \
+            && cp -r "$d" "$PREFIX/"
+    done
+}
 
 function dl_and_install {
     NAME=$1
     URL=$2
     EXT=$3
+    DIR=$4
     echo "downloading $URL"
     curl -fsSL "$URL" -o "$NAME$EXT" --insecure
     if [ ! -e "$NAME$EXT" ]; then
         echo "Could not find $NAME$EXT. Directory listing:"
-        ls -a
+        ls -aF
         exit 1
     fi
     echo "extracting $NAME$EXT"
     tar -xf "$NAME$EXT"
-    install_dirs "$PWD/$NAME"
+    if [ ! -d "$DIR" ]; then
+        echo "Couldn't find $DIR. Directory listing:"
+        ls -aF
+        exit 1
+    fi
+    pushd "$DIR"
+    install_dirs
+    popd
 }
 
 TMP=$(mktemp -d)
 if [ -d "$TMP" ]; then
-    pushd "$TMP" &> /dev/null
-
+    cd "$TMP"
+    trap "rm -rf $TMP" EXIT
     # neovim
-    dl_and_install $NVIM $NVIM_URL $NVIM_EXT
+    dl_and_install $NVIM $NVIM_URL $NVIM_EXT $NVIM_DIR
 
     # cmake
-    dl_and_install $CMAKE $CMAKE_URL $CMAKE_EXT
+    dl_and_install $CMAKE $CMAKE_URL $CMAKE_EXT $CMAKE_DIR
 
     # llvm + clang
-    dl_and_install $LLVM $LLVM_URL $LLVM_EXT
+    dl_and_install $LLVM $LLVM_URL $LLVM_EXT $LLVM_DIR
 
     # get shellcheck
-    dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT
-    # os extract dir is inconsistent
-    [ -f shellcheck ] && cp shellcheck "$PREFIX/bin/"
-    [ -f shellcheck-stable ] && cp shellcheck-stable "$PREFIX/bin/shellcheck"
-    [ -d shellcheck-stable ] && cp shellcheck-stable/shellcheck "$PREFIX/bin/shellcheck"
+    dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT $SHELLCHECK_DIR
+    cp $SHELLCHECK_DIR/shellcheck "$PREFIX/bin/shellcheck"
 
     # vim-plug
-    for VIM in ( "$HOME/.config/nvim" "$HOME/.vim" ); do
+    for VIM in "$HOME/.config/nvim" "$HOME/.vim"; do
         mkdir -p "$VIM/autoload"
         mkdir -p "$VIM/repos"
-        git clone https://github.com/junegunn/vim-plug "$VIM/repos/vim-plug"
-        ln -s "$VIM/repos/vim-plug/plug.vim" "$VIM/autoload/plug.vim"
+        if [ ! -d "$VIM/repos/vim-plug" ]; then
+            git clone https://github.com/junegunn/vim-plug "$VIM/repos/vim-plug"
+            ln -s "$VIM/repos/vim-plug/plug.vim" "$VIM/autoload/plug.vim"
+        fi
     done
 
     popd &> /dev/null
-    rm -rf "$TMP"
 else
     echo "Failed to create temporary directory"
 fi
