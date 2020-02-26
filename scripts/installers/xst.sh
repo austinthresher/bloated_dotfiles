@@ -1,8 +1,7 @@
 #!/bin/bash
 
 DIR=$(mktemp -d)
+trap "rm -rf '$DIR'" EXIT
 git clone https://github.com/gnotclub/xst "$DIR/xst"
-pushd "$DIR/xst"
+cd "$DIR/xst"
 make PREFIX="$HOME/.local" && make PREFIX="$HOME/.local" install
-popd
-rm -rf "$DIR"

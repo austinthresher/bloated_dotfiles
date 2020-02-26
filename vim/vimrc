@@ -161,14 +161,24 @@ call helper#plug('jvirtanen/vim-octave')
 call helper#plug('mattboehm/vim-accordion')
 call helper#plug('terryma/vim-multiple-cursors')
 call helper#plug('romainl/vim-qf')
-call helper#plug('ervandew/supertab')
 call helper#plug('thaerkh/vim-indentguides')
+call helper#plug('haya14busa/incsearch.vim')
+call helper#plug('MarcWeber/vim-addon-mw-utils')
+call helper#plug('tomtom/tlib_vim')
+call helper#plug('chiel92/vim-autoformat')
+call helper#plug('moll/vim-bbye')
 
 if has('nvim') " IDE-style features for nvim
+    call helper#plug('ervandew/supertab')
+    call helper#plug('SirVer/ultisnips')
+    call helper#plug('honza/vim-snippets')
     call helper#plug('neomake/neomake')
-    call helper#plug('chiel92/vim-autoformat')
     call helper#plug('prabirshrestha/async.vim')
     call helper#plug('prabirshrestha/vim-lsp')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    call helper#manual('Shougo/deoplete.nvim')
+    let g:deoplete#enable_at_startup = 1
+    call helper#manual('lighttiger2505/deoplete-vim-lsp')
 else
     " Disable neomakelist on vim
     let g:loaded_neomakelist = v:true
@@ -223,11 +233,23 @@ nnoremap <c-w>2 :Accordion 2<CR>
 nnoremap <c-w>3 :Accordion 3<CR>
 nnoremap <c-w>4 :Accordion 4<CR>
 
+nnoremap <leader>q :Bdelete<CR>
+
+noremap <leader>f :Autoformat<CR>
+
 " Ctrl+K to search for cursor text and show in quickfix
 nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
 
 " }}}
 " Autocmds & Plugin Configuration {{{
+
+"let g:UltiSnipsExpandTrigger = has('nvim') ? '<C-Space>' : '<nul>'
+"let g:UltiSnipsJumpForwardTrigger = '<C-N>'
+"let g:UltiSnipsJumpBackwardTrigger = '<C-P>'
+"let g:UltiSnipsEditSplit = 'vertical'
 
 "augroup vimrc_help
 "    autocmd!
@@ -243,6 +265,8 @@ let g:git_messenger_max_popup_height = 8
 let g:conflict_marker_enable_mappings = 0
 
 let g:formatterpath = [$HOME.'/.local/bin']
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
 
 augroup vimrc
     autocmd!
@@ -254,14 +278,14 @@ if executable('ag')
     set grepformat=%f:%l:%c%m
 endif
 
-let g:multi_cursor_use_default_mapping=0
+"let g:multi_cursor_use_default_mapping=0
 
-let g:SuperTabContextTextMembersPatterns = ['\.', '>\?::', '->', ':', ' ']
-let g:SuperTabDefaultCompletionType = 'context'
-let g:SuperTabNoCompleteAfter = ['^ *', '\t']
-if has('nvim')
-    let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
-endif
+"let g:SuperTabContextTextMembersPatterns = ['\.', '>\?::', '->', ':', ' ']
+"let g:SuperTabDefaultCompletionType = 'context'
+"let g:SuperTabNoCompleteAfter = ['^ *', '\t']
+"if has('nvim')
+"    let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
+"endif
 
 let g:indentguides_spacechar = '🮌'
 let g:indentguides_tabchar = '░'
@@ -336,7 +360,7 @@ let s:lsp_map = {}
 augroup NeovimIDE
     autocmd!
     " Autoformat on save
-    autocmd BufWrite * silent! Autoformat
+"    autocmd BufWrite * silent! Autoformat
     if executable('clangd')
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'clangd',
@@ -399,7 +423,7 @@ function! s:on_lsp_buffer_enabled() abort
     augroup END
     let b:statuslime_right = s:lsp_map[&filetype]
 endfunction
-
+    
 augroup lsp_install
     autocmd!
     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()

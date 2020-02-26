@@ -9,3 +9,4 @@ pip3 install --user pyls-isort
 pip3 install --user cmake_format
 pip3 install --user vim-vint
 pip3 install --user yapf
+pip3 install --user msgpack

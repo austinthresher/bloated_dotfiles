@@ -1,6 +1,9 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 unset -f command_not_found_handle
 
+# Ignore legacy scroll lock on <C-S> and <C-Q>
+stty -ixon
+
 if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
 else

@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Downloads and installs binaries for a general development environment
-# on Ubuntu 18.04
+# on Ubuntu 18.04 or OSX
+
+function osx {
+    [[ $OSTYPE == *darwin* ]]
+}
 
 # Set PATH
 PREFIX=${PREFIX:-"$HOME/.local"}
@@ -19,19 +23,27 @@ for x in "${REQUIRED[@]}"; do
 done
 
 # package urls
-NVIM=nvim-linux64
+osx \
+    && NVIM=nvim-macos \
+    || NVIM=nvim-linux64
 NVIM_EXT=.tar.gz
 NVIM_URL="https://github.com/neovim/neovim/releases/download/v0.4.3/$NVIM$NVIM_EXT"
 
-LLVM=clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04
+osx \
+    && LLVM=clang+llvm-9.0.0-x86_64-darwin-apple \
+    || LLVM=clang+llvm-9.0.0-x86_64-linux-gnu-ubuntu-18.04
 LLVM_EXT=.tar.xz
 LLVM_URL="http://releases.llvm.org/9.0.0/$LLVM$LLVM_EXT"
 
-CMAKE=cmake-3.16.3-Linux-x86_64
+osx \
+    && CMAKE=cmake-3.16.3-Darwin-x86_64 \
+    || CMAKE=cmake-3.16.3-Linux-x86_64
 CMAKE_EXT=.tar.gz
 CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.16.3/$CMAKE$CMAKE_EXT"
 
-SHELLCHECK=shellcheck-stable.linux.x86_64
+osx \
+    && SHELLCHECK=shellcheck-stable.darwin.x86_64 \
+    || SHELLCHECK=shellcheck-stable.linux.x86_64
 SHELLCHECK_EXT=.tar.xz
 SHELLCHECK_URL="https://storage.googleapis.com/shellcheck/$SHELLCHECK$SHELLCHECK_EXT"
 
@@ -82,20 +94,18 @@ if [ -d "$TMP" ]; then
 
     # get shellcheck
     dl_and_install $SHELLCHECK $SHELLCHECK_URL $SHELLCHECK_EXT
+    # os extract dir is inconsistent
     [ -f shellcheck ] && cp shellcheck "$PREFIX/bin/"
     [ -f shellcheck-stable ] && cp shellcheck-stable "$PREFIX/bin/shellcheck"
     [ -d shellcheck-stable ] && cp shellcheck-stable/shellcheck "$PREFIX/bin/shellcheck"
 
     # vim-plug
-    VIMAUTO="$HOME/.config/nvim/autoload"
-    mkdir -p "$VIMAUTO"
-    pushd "$VIMAUTO" &> /dev/null
-    git clone https://github.com/junegunn/vim-plug
-    mv vim-plug/plug.vim .
-    rm -rf vim-plug
-    popd &> /dev/null
-    VIMPLUG="$HOME/.config/nvim/repos"
-    mkdir -p "$VIMPLUG"
+    for VIM in ( "$HOME/.config/nvim" "$HOME/.vim" ); do
+        mkdir -p "$VIM/autoload"
+        mkdir -p "$VIM/repos"
+        git clone https://github.com/junegunn/vim-plug "$VIM/repos/vim-plug"
+        ln -s "$VIM/repos/vim-plug/plug.vim" "$VIM/autoload/plug.vim"
+    done
 
     popd &> /dev/null
     rm -rf "$TMP"
