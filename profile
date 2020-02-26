@@ -26,3 +26,7 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+if [ -d "$HOME/homebrew/bin" ] ; then
+    PATH="$HOME/homebrew/bin:$PATH"
+fi
+
