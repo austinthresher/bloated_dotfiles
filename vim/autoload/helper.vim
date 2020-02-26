@@ -51,7 +51,7 @@ function! helper#begin() abort
 endfunction
 
 " Wraps vim-plug's Plug command and tracks plugin repos
-" in an internal list
+" in an internal list. Returns if the directory exists.
 function! helper#plug(repo) abort
     try
         call plug#(a:repo)
@@ -59,6 +59,7 @@ function! helper#plug(repo) abort
     catch
         echoerr 'helper#plug failed for plugin '.a:repo
     endtry
+    return isdirectory(g:helper_plug_path.'/'.split(a:repo, '/')[1])
 endfunction
 
 " If you need to use any of the advanced features of vim-plug,

@@ -59,8 +59,8 @@ set path+=**
 set wildmenu
 " Don't scroll near borders, use an autocmd to do that
 set scrolloff=0
-set sidescrolloff=0
-set sidescroll=80
+"set sidescrolloff=0
+"set sidescroll=80
 " Allow windows to collapse completely
 set winminwidth=1
 set winminheight=1
@@ -79,16 +79,136 @@ endif
 filetype plugin indent on
 try
     let g:lyra_string_bg = v:false
-    let g:lyra_use_system_colors = v:true
+    let g:lyra_use_system_colors = v:false
     colorscheme lyra
 endtry
 " }}}
-" Functions {{{
-" FIXME this should go somewhere else
-let b:statuslime_right = has('nvim') ? 'N' : 'V'
-func! SetStatusLime()
-    if has('nvim')
-        try
+
+let g:ide = has('nvim')
+let g:nproc = 1
+try
+    let g:nproc = str2nr(system('nproc'))
+endtry
+
+" Plugins {{{
+
+let g:helper_plug_path = $HOME.(has('nvim')?'/.config/nvim':'/.vim').'/repos'
+
+call helper#begin()
+
+call helper#plug('MarcWeber/vim-addon-mw-utils')
+call helper#plug('bfrg/vim-cpp-modern')
+call helper#plug('ekalinin/dockerfile.vim')
+call helper#plug('google/vim-searchindex')
+call helper#plug('guns/xterm-color-table.vim')
+call helper#plug('junegunn/gv.vim')
+call helper#plug('jvirtanen/vim-octave')
+call helper#plug('machakann/vim-sandwich')
+call helper#plug('mboughaba/i3config.vim')
+call helper#plug('michaeljsmith/vim-indent-object')
+call helper#plug('peterrincker/vim-argumentative')
+call helper#plug('reedes/vim-litecorrect')
+call helper#plug('romainl/vim-qf')
+call helper#plug('roxma/vim-paste-easy')
+call helper#plug('sheerun/vim-polyglot')
+call helper#plug('tbastos/vim-lua')
+call helper#plug('terryma/vim-multiple-cursors')
+call helper#plug('thinca/vim-ref')
+call helper#plug('tomtom/tlib_vim')
+call helper#plug('tpope/vim-abolish')
+call helper#plug('tpope/vim-apathy')
+call helper#plug('tpope/vim-commentary')
+call helper#plug('tpope/vim-eunuch')
+call helper#plug('tpope/vim-fugitive')
+call helper#plug('tpope/vim-markdown')
+call helper#plug('tpope/vim-rsi')
+call helper#plug('tpope/vim-sensible')
+call helper#plug('tpope/vim-unimpaired')
+call helper#plug('tpope/vim-vinegar')
+
+if helper#plug('ap/vim-buftabline')
+    let g:buftabline_indicators = 1
+    let g:buftabline_numbers = 0
+    nmap <leader>1 <Plug>BufTabLine.Go(1)
+    nmap <leader>2 <Plug>BufTabLine.Go(2)
+    nmap <leader>3 <Plug>BufTabLine.Go(3)
+    nmap <leader>4 <Plug>BufTabLine.Go(4)
+    nmap <leader>5 <Plug>BufTabLine.Go(5)
+    nmap <leader>6 <Plug>BufTabLine.Go(6)
+    nmap <leader>7 <Plug>BufTabLine.Go(7)
+    nmap <leader>8 <Plug>BufTabLine.Go(8)
+    nmap <leader>9 <Plug>BufTabLine.Go(9)
+    nmap <leader>0 <Plug>BufTabLine.Go(10)
+endif " buftabline
+
+if helper#plug('junegunn/vim-easy-align')
+    nmap ga <Plug>(EasyAlign)
+    vmap <Enter> <Plug>(EasyAlign)
+endif " easy-align
+
+if helper#plug('rhysd/conflict-marker.vim')
+    let g:conflict_marker_enable_mappings = 0
+    nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
+    nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
+endif " conflict-marker
+
+if helper#plug('rhysd/git-messenger.vim')
+    let g:git_messenger_include_diff = v:true
+    let g:git_messenger_max_popup_height = 8
+    noremap <silent><leader>g :GitMessenger<cr>
+endif " git-messenger
+
+if helper#plug('wellle/visual-split.vim')
+    xmap <leader>p <Plug>(Visual-Split-SplitAbove)
+    xmap <leader>n <Plug>(Visual-Split-Resize)
+    nmap <leader>p <Plug>(Visual-Split-SplitAbove)
+    nmap <leader>n <Plug>(Visual-Split-Resize)
+endif " visual-split
+
+if helper#plug('mattboehm/vim-accordion')
+    autocmd VimEnter * silent! AccordionAll 2 | IndentGuidesToggle
+    nnoremap <leader><pageup> :AccordionZoomOut<CR>
+    nnoremap <leader><pagedown> :AccordionZoomIn<CR>
+    nnoremap <c-w>2 :Accordion 2<CR>
+    nnoremap <c-w>3 :Accordion 3<CR>
+    nnoremap <c-w>4 :Accordion 4<CR>
+endif " accordion
+
+if helper#plug('thaerkh/vim-indentguides')
+    let g:indentguides_spacechar = '🮌'
+    let g:indentguides_tabchar = '░'
+    let g:indentguides_toggleListMode = v:false
+    let g:indentguides_firstlevel = v:true
+endif " indentguides
+
+if helper#plug('haya14busa/incsearch.vim')
+    echom 'mapped incsearch'
+    map /  <Plug>(incsearch-forward)
+    map ?  <Plug>(incsearch-backward)
+    map g/ <Plug>(incsearch-stay)
+endif " incsearch
+
+if helper#plug('chiel92/vim-autoformat')
+    let g:formatterpath = [$HOME.'/.local/bin']
+    let g:autoformat_autoindent = 0
+    let g:autoformat_retab = 0
+    let g:formatters_python = ['yapf']
+    let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
+    noremap <leader>f :Autoformat<CR>
+endif " autoformat
+
+if helper#plug('moll/vim-bbye')
+    nnoremap <leader>q :Bdelete<CR>
+endif " bbye
+
+if g:ide
+    call helper#plug('SirVer/ultisnips')
+    call helper#plug('ervandew/supertab')
+    call helper#plug('honza/vim-snippets')
+    call helper#plug('lighttiger2505/deoplete-vim-lsp')
+    call helper#plug('prabirshrestha/async.vim')
+    if helper#plug('neomake/neomake')
+        func! SetStatusLime()
             let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
                         \ 'use_highlights_with_defaults': 0,
                         \ 'format_running': 'Running {{running_job_names}}…',
@@ -100,10 +220,75 @@ func! SetStatusLime()
                         \ 'format_loclist_type_E': '{{count}} error(s) ',
                         \ 'format_loclist_type_I': '{{count}} message(s) ',
                         \ })
-        endtry
-    endif
-    return ''
-endfunc
+        endfunc
+        let g:neomake_highlight_columns = 0
+        let g:neomake_makers_buffer_output = 0
+        let g:neomake_virtualtext_current_error = 0
+        let g:neomake_info_sign          = { 'text': '▷' }
+        let g:neomake_message_sign       = { 'text': '▶' }
+        let g:neomake_cpp_enabled_makers = executable('clang++') ?
+                    \ ['clangtidy'] : ['gcc']
+        let g:neomake_cpp_clangtidy_maker = {
+                    \ 'exe': '/home/athresher/.local/share/clang/run-clang-tidy.py',
+                    \ 'args': [
+                    \       '-quiet',
+                    \       '-j', string(g:nproc),
+                    \       '-checks=-*,bugprone-*,cppcoreguidelines-*,'
+                    \           .'clang-analyzer*,hicpp-*,misc-*,modernize-*,mpi-*,'
+                    \           .'openmp-*,performance-*,readability-*,portability-*'
+                    \ ],
+                    \ 'postprocess': function('PostprocessClangTidy'),
+                    \ 'errorformat':
+                    \       '%E%f:%l:%c: fatal error: %m,' .
+                    \       '%E%f:%l:%c: error: %m,' .
+                    \       '%W%f:%l:%c: warning: %m,' .
+                    \       '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
+                    \       '%E%m'
+                    \}
+        call add(g:neomake_cpp_enabled_makers, 'cppcheck')
+    endif " neomake
+
+    if helper#plug('prabirshrestha/vim-lsp')
+        let g:lsp_preview_doubletap    = v:false
+        let g:lsp_signs_enabled        = v:false
+        let g:lsp_virtual_text_enabled = v:false
+        let g:lsp_diagnostics_enabled  = v:false
+        function! s:on_lsp_buffer_enabled() abort
+            setlocal omnifunc=lsp#complete
+            nmap <buffer> <leader>D <plug>(lsp-peek-definition)
+            nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
+            nmap <buffer> <leader>R <plug>(lsp-rename)
+            nmap <buffer> <leader>s <plug>(lsp-signature-help)
+            nmap <buffer> <leader>r <plug>(lsp-references)
+            nmap <buffer> <leader>h <plug>(lsp-hover)
+            augroup lsp_enabled
+                autocmd!
+                autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+            augroup END
+            let b:statuslime_right = s:lsp_map[&filetype]
+        endfunction
+        augroup lsp_install
+            autocmd!
+            autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+        augroup END
+    endif " vim-lsp
+
+    if helper#plug('Shougo/deoplete.nvim')
+        if has('nvim')
+            UpdateRemotePlugins
+        endif
+        let g:deoplete#enable_at_startup = 1
+    endif "deoplete.nvim
+else
+    " Disable neomakelist on vim
+    let g:loaded_neomakelist = v:true
+endif
+
+call helper#end()
+
+" }}}
+
+" Functions {{{
 
 " Useful for debugging syntax highlighting
 func! HiAtCur()
@@ -117,76 +302,11 @@ func! HiAtCur()
     endif
 endfunc
 nmap <leader>c :call HiAtCur()<cr>
+
 " }}}
-" Plugins {{{
 
-if has('nvim')
-    let g:helper_plug_path = $HOME.'/.config/nvim/repos'
-else
-    let g:helper_plug_path = $HOME.'/.vim/repos'
-endif
-
-call helper#begin()
-
-call helper#plug('bfrg/vim-cpp-modern')
-call helper#plug('ap/vim-buftabline')
-call helper#plug('ekalinin/dockerfile.vim')
-call helper#plug('google/vim-searchindex')
-call helper#plug('guns/xterm-color-table.vim')
-call helper#plug('junegunn/gv.vim')
-call helper#plug('junegunn/vim-easy-align')
-call helper#plug('machakann/vim-sandwich')
-call helper#plug('mboughaba/i3config.vim')
-call helper#plug('michaeljsmith/vim-indent-object')
-call helper#plug('peterrincker/vim-argumentative')
-call helper#plug('reedes/vim-litecorrect')
-call helper#plug('rhysd/conflict-marker.vim')
-call helper#plug('rhysd/git-messenger.vim')
-call helper#plug('roxma/vim-paste-easy')
-call helper#plug('sheerun/vim-polyglot')
-call helper#plug('tbastos/vim-lua')
-call helper#plug('thinca/vim-ref')
-call helper#plug('tpope/vim-abolish')
-call helper#plug('tpope/vim-commentary')
-call helper#plug('tpope/vim-eunuch')
-call helper#plug('tpope/vim-fugitive')
-call helper#plug('tpope/vim-rsi')
-call helper#plug('tpope/vim-sensible')
-call helper#plug('tpope/vim-unimpaired')
-call helper#plug('tpope/vim-vinegar')
-call helper#plug('tpope/vim-apathy')
-call helper#plug('tpope/vim-markdown')
-call helper#plug('wellle/visual-split.vim')
-call helper#plug('jvirtanen/vim-octave')
-call helper#plug('mattboehm/vim-accordion')
-call helper#plug('terryma/vim-multiple-cursors')
-call helper#plug('romainl/vim-qf')
-call helper#plug('thaerkh/vim-indentguides')
-call helper#plug('haya14busa/incsearch.vim')
-call helper#plug('MarcWeber/vim-addon-mw-utils')
-call helper#plug('tomtom/tlib_vim')
-call helper#plug('chiel92/vim-autoformat')
-call helper#plug('moll/vim-bbye')
-
-if has('nvim') " IDE-style features for nvim
-    call helper#plug('ervandew/supertab')
-    call helper#plug('SirVer/ultisnips')
-    call helper#plug('honza/vim-snippets')
-    call helper#plug('neomake/neomake')
-    call helper#plug('prabirshrestha/async.vim')
-    call helper#plug('prabirshrestha/vim-lsp')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-    call helper#manual('Shougo/deoplete.nvim')
-    let g:deoplete#enable_at_startup = 1
-    call helper#manual('lighttiger2505/deoplete-vim-lsp')
-else
-    " Disable neomakelist on vim
-    let g:loaded_neomakelist = v:true
-endif
-
-call helper#end()
-" }}}
 " Maps {{{
+
 if has('terminal')
     " Navigate out of terminal mode more easily
     tnoremap <esc> <c-\><c-n>
@@ -196,82 +316,16 @@ endif
 nnoremap <leader>V :source $MYVIMRC<cr>
 " Clear search with <C-L>
 nnoremap <c-l> :noh<cr><c-l>
-
 " Use ` as optional wincmd prefix
 nnoremap ` <c-w>
 nnoremap <c-w>` `
-
-nmap <leader>1 <Plug>BufTabLine.Go(1)
-nmap <leader>2 <Plug>BufTabLine.Go(2)
-nmap <leader>3 <Plug>BufTabLine.Go(3)
-nmap <leader>4 <Plug>BufTabLine.Go(4)
-nmap <leader>5 <Plug>BufTabLine.Go(5)
-nmap <leader>6 <Plug>BufTabLine.Go(6)
-nmap <leader>7 <Plug>BufTabLine.Go(7)
-nmap <leader>8 <Plug>BufTabLine.Go(8)
-nmap <leader>9 <Plug>BufTabLine.Go(9)
-nmap <leader>0 <Plug>BufTabLine.Go(10)
-
 nmap <silent><leader>? <Plug>(helper-toggle)
-noremap <silent><leader>g :GitMessenger<cr>
-
-nmap ga <Plug>(EasyAlign)
-vmap <Enter> <Plug>(EasyAlign)
-
-nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
-nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
-
-xmap <leader>p <Plug>(Visual-Split-SplitAbove)
-xmap <leader>n <Plug>(Visual-Split-Resize)
-nmap <leader>p <Plug>(Visual-Split-SplitAbove)
-nmap <leader>n <Plug>(Visual-Split-Resize)
-
-nnoremap <leader><pageup> :AccordionZoomOut<CR>
-nnoremap <leader><pagedown> :AccordionZoomIn<CR>
-
-nnoremap <c-w>2 :Accordion 2<CR>
-nnoremap <c-w>3 :Accordion 3<CR>
-nnoremap <c-w>4 :Accordion 4<CR>
-
-nnoremap <leader>q :Bdelete<CR>
-
-noremap <leader>f :Autoformat<CR>
-
 " Ctrl+K to search for cursor text and show in quickfix
 nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
 
 " }}}
+
 " Autocmds & Plugin Configuration {{{
-
-"let g:UltiSnipsExpandTrigger = has('nvim') ? '<C-Space>' : '<nul>'
-"let g:UltiSnipsJumpForwardTrigger = '<C-N>'
-"let g:UltiSnipsJumpBackwardTrigger = '<C-P>'
-"let g:UltiSnipsEditSplit = 'vertical'
-
-"augroup vimrc_help
-"    autocmd!
-"    autocmd BufEnter *.txt if &buftype == 'help' | wincmd L | endif
-"augroup END
-
-let g:buftabline_indicators = 1
-let g:buftabline_numbers = 0
-
-let g:git_messenger_include_diff = v:true
-let g:git_messenger_max_popup_height = 8
-
-let g:conflict_marker_enable_mappings = 0
-
-let g:formatterpath = [$HOME.'/.local/bin']
-let g:autoformat_autoindent = 0
-let g:autoformat_retab = 0
-
-augroup vimrc
-    autocmd!
-    autocmd VimEnter * silent! AccordionAll 2 | IndentGuidesToggle
-augroup END
 
 if executable('ag')
     set grepprg=ag\ --nogroup\ --nocolor\ --column
@@ -287,16 +341,13 @@ endif
 "    let g:SuperTabContextDefaultCompletionType = '<c-x><c-o>'
 "endif
 
-let g:indentguides_spacechar = '🮌'
-let g:indentguides_tabchar = '░'
-let g:indentguides_toggleListMode = v:false
-let g:indentguides_firstlevel = v:true
-
 " }}}
-" Neovim IDE Setup {{{
-if !has('nvim') | finish | endif
 
-"set termguicolors
+" IDE Setup {{{
+
+if !g:ide
+    finish
+endif
 
 call neomake#configure#automake({
             \ 'TextChanged': {},
@@ -304,12 +355,6 @@ call neomake#configure#automake({
             \ 'BufWritePost': {'delay': 0},
             \ 'BufWinEnter': {},
             \}, 500)
-
-let g:neomake_highlight_columns = 0
-let g:neomake_makers_buffer_output = 0
-let g:neomake_virtualtext_current_error = 0
-let g:neomake_info_sign          = { 'text': '▷' }
-let g:neomake_message_sign       = { 'text': '▶' }
 call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
 call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
 
@@ -327,40 +372,10 @@ function PostprocessClangTidy(entry)
     endtry
 endfunction
 
-try
-    let g:nproc = str2nr(system('nproc'))
-catch
-    let g:nproc = 1
-endtry
-
-let g:neomake_cpp_enabled_makers = executable('clang++') ?
-            \ ['clangtidy'] : ['gcc']
-call add(g:neomake_cpp_enabled_makers, 'cppcheck')
-let g:neomake_cpp_clangtidy_maker = {
-            \ 'exe': '/home/athresher/.local/share/clang/run-clang-tidy.py',
-            \ 'args': [
-            \       '-quiet',
-            \       '-j', string(g:nproc),
-            \       '-checks=-*,bugprone-*,cppcoreguidelines-*,'
-            \           .'clang-analyzer*,hicpp-*,misc-*,modernize-*,mpi-*,'
-            \           .'openmp-*,performance-*,readability-*,portability-*'
-            \ ],
-            \ 'postprocess': function('PostprocessClangTidy'),
-            \ 'errorformat':
-            \       '%E%f:%l:%c: fatal error: %m,' .
-            \       '%E%f:%l:%c: error: %m,' .
-            \       '%W%f:%l:%c: warning: %m,' .
-            \       '%-G%\m%\%%(LLVM ERROR:%\|No compilation database found%\)%\@!%.%#,' .
-            \       '%E%m'
-            \}
-
-let g:formatters_python = ['yapf']
-let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
 let s:lsp_map = {}
 augroup NeovimIDE
     autocmd!
     " Autoformat on save
-"    autocmd BufWrite * silent! Autoformat
     if executable('clangd')
         autocmd User lsp_setup call lsp#register_server({
                     \ 'name': 'clangd',
@@ -404,28 +419,4 @@ augroup NeovimIDE
     endif
 augroup END
 
-let g:lsp_preview_doubletap    = v:false
-let g:lsp_signs_enabled        = v:false
-let g:lsp_virtual_text_enabled = v:false
-let g:lsp_diagnostics_enabled  = v:false
-
-function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    nmap <buffer> <leader>D <plug>(lsp-peek-definition)
-    nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
-    nmap <buffer> <leader>R <plug>(lsp-rename)
-    nmap <buffer> <leader>s <plug>(lsp-signature-help)
-    nmap <buffer> <leader>r <plug>(lsp-references)
-    nmap <buffer> <leader>h <plug>(lsp-hover)
-    augroup lsp_enabled
-        autocmd!
-        autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-    augroup END
-    let b:statuslime_right = s:lsp_map[&filetype]
-endfunction
-    
-augroup lsp_install
-    autocmd!
-    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-augroup END
 " }}}
