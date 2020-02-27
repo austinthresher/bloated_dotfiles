@@ -10,3 +10,9 @@ pip3 install --user cmake_format
 pip3 install --user vim-vint
 pip3 install --user yapf
 pip3 install --user msgpack
+
+VINT="$HOME/.local/bin/vint"
+if [ ! -f "$VINT" ]; then
+    echo -e "#!/usr/bin/env python3\nimport vint\nvint.main()" > "$VINT"
+    chmod +x "$VINT"
+fi

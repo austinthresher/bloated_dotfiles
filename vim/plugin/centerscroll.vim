@@ -26,10 +26,10 @@ let g:loaded_centerscroll = v:true
 
 " Emacs style scrolling where the view re-centers on cursor
 func! centerscroll#update()
-    if exists('b:last_topline') == v:false
+    if !exists('b:last_topline')
         let b:last_topline = 1
     endif
-    if exists('b:last_curline') == v:false
+    if !exists('b:last_curline')
         let b:last_curline = 1
     endif
     let l:topline = winsaveview()['topline']
@@ -42,5 +42,6 @@ func! centerscroll#update()
     let b:last_topline = l:topline
     let b:last_curline = l:curline
 endfunc
+
 autocmd! WinEnter * let b:last_topline = winsaveview()['topline'] | let b:last_curline = line('.')
 au CursorMoved,CursorMovedI * call centerscroll#update()

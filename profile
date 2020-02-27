@@ -26,7 +26,13 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-if [ -d "$HOME/homebrew/bin" ] ; then
-    PATH="$HOME/homebrew/bin:$PATH"
+if command -v brew &>/dev/null; then
+    BREWPATH="$(brew --prefix)"
+else
+    BREWPATH="$HOME/homebrew"
+fi
+
+if [ -d "$BREWPATH/bin" ] ; then
+    PATH="$BREWPATH/bin:$PATH"
 fi
 

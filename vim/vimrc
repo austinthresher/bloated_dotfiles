@@ -1,5 +1,4 @@
 set encoding=utf-8 | scriptencoding utf-8
-
 function! g:Options()
     " Allow folding in files
     set foldenable
@@ -97,7 +96,11 @@ endfunction
 call g:Globals()
 
 function! g:Plugins()
-    let g:helper_plug_path = $HOME.(has('nvim')?'/.config/nvim':'/.vim').'/repos'
+    if has('nvim')
+        let g:helper_plug_path = $HOME.'/.config/nvim/repos'
+    else
+        let g:helper_plug_path = $HOME.'/.vim/repos'
+    endif
 
     call helper#begin()
 
@@ -112,7 +115,6 @@ function! g:Plugins()
     call helper#plug('mboughaba/i3config.vim')
     call helper#plug('michaeljsmith/vim-indent-object')
     call helper#plug('peterrincker/vim-argumentative')
-    call helper#plug('reedes/vim-litecorrect')
     call helper#plug('romainl/vim-qf')
     call helper#plug('roxma/vim-paste-easy')
     call helper#plug('sheerun/vim-polyglot')
@@ -130,14 +132,6 @@ function! g:Plugins()
     call helper#plug('tpope/vim-sensible')
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
-    call helper#plug('arecarn/vim-fold-cycle')
-
-    if helper#plug('pseewald/vim-anyfold')
-        augroup anyfold
-            autocmd!
-            autocmd FileType * AnyFoldActivate
-        augroup END
-    endif " anyfold
 
     if helper#plug('ap/vim-buftabline')
         let g:buftabline_indicators = 1
@@ -194,12 +188,6 @@ function! g:Plugins()
         let g:indentguides_firstlevel = v:true
     endif " indentguides
 
-    if helper#plug('haya14busa/incsearch.vim')
-        map /  <Plug>(incsearch-forward)
-        map ?  <Plug>(incsearch-backward)
-        map g/ <Plug>(incsearch-stay)
-    endif " incsearch
-
     if helper#plug('chiel92/vim-autoformat')
         let g:formatterpath = [$HOME.'/.local/bin']
         let g:autoformat_autoindent = 0
@@ -215,7 +203,7 @@ function! g:Plugins()
 
     if g:ide
         call helper#plug('SirVer/ultisnips')
-        call helper#plug('ervandew/supertab')
+"        call helper#plug('ervandew/supertab')
         call helper#plug('honza/vim-snippets')
         call helper#plug('lighttiger2505/deoplete-vim-lsp')
         call helper#plug('prabirshrestha/async.vim')
@@ -223,7 +211,7 @@ function! g:Plugins()
             func! SetStatusLime()
                 let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
                             \ 'use_highlights_with_defaults': 0,
-                            \ 'format_running': 'Running {{running_job_names}}…',
+                            \ 'format_running': '{{running_job_names}}',
                             \ 'format_loclist_ok': '✓',
                             \ 'format_loclist_issues': '%s',
                             \ 'format_quickfix_ok': '',
@@ -271,6 +259,7 @@ function! g:Plugins()
                         \       '%E%m'
                         \}
             call add(g:neomake_cpp_enabled_makers, 'cppcheck')
+
         endif " neomake
 
         if helper#plug('prabirshrestha/vim-lsp')
@@ -344,6 +333,7 @@ function! g:Maps()
     nmap <silent><leader>? <Plug>(helper-toggle)
     " Ctrl+K to search for cursor text and show in quickfix
     nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+    "nnoremap <c-e> <c-e>j
 endfunction
 call g:Maps()
 
@@ -359,50 +349,64 @@ function! g:IDE()
 
     let s:lsp_map = {}
 
+    let s:bin_paths = [
+                \ $HOME.'/.local/bin',
+                \ $HOME.'/homebrew/bin',
+                \ $HOME.'/.yarn/bin',
+                \ '/usr/local/bin',
+                \ '/usr/bin'
+                \ ]
+    function g:FindBin(fname)
+        for path in s:bin_paths
+            let l:abspath = path.'/'.a:fname
+            if executable(l:abspath)
+                return l:abspath
+            endif
+        endfor
+        return ''
+    endfunction
+
     augroup NeovimIDE
         autocmd!
-        " Autoformat on save
-        if executable('clangd')
-            autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'clangd',
-                        \ 'cmd': {server_info->['clangd']},
-                        \ 'whitelist': ['cpp', 'c']
-                        \ })
-            let s:lsp_map['c']   = 'clangd'
-            let s:lsp_map['cpp'] = 'clangd'
-        endif
-        if executable('pyls')
-            autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'pyls',
-                        \ 'cmd': {server_info->['pyls']},
-                        \ 'whitelist': ['python'],
-                        \ })
-            let s:lsp_map['python'] = 'pyls'
-        endif
-        if executable($HOME.'/.local/bin/bash-language-server')
-            autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'bash-language-server',
-                        \ 'cmd': {server_info->[$HOME.'/.local/bin/bash-language-server', 'start']},
-                        \ 'whitelist': ['sh'],
-                        \ })
-            let s:lsp_map['sh'] = 'bls'
-        endif
-        if executable($HOME.'/.local/bin/docker-langserver')
-            autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'docker-langserver',
-                        \ 'cmd': {server_info->[$HOME.'/.local/bin/docker-langserver', '--stdio']},
-                        \ 'whitelist': ['Dockerfile'],
-                        \ })
-            let s:lsp_map['Dockerfile'] = 'dls'
-        endif
-        if executable($HOME.'/.yarn/bin/vim-language-server')
-            autocmd User lsp_setup call lsp#register_server({
-                        \ 'name': 'vim-language-server',
-                        \ 'cmd': {server_info->[$HOME.'/.yarn/bin/vim-language-server', '--stdio']},
-                        \ 'whitelist': ['vim'],
-                        \ })
-            let s:lsp_map['vim'] = 'vls'
-        endif
+        let g:lsp_servers = {}
+        let g:lsp_servers['clangd'] = {
+                        \ 'args': [],
+                        \ 'ft': ['c', 'cpp']
+                        \ }
+        let g:lsp_servers['pyls'] = {
+                        \ 'args': [],
+                        \ 'ft': ['py']
+                        \ }
+        let g:lsp_servers['bash-language-server'] = {
+                        \ 'args': ['start'],
+                        \ 'ft': ['sh']
+                        \ }
+        let g:lsp_servers['docker-langserver'] = {
+                        \ 'args': ['--stdio'],
+                        \ 'ft': ['Dockerfile']
+                        \ }
+        let g:lsp_servers['vim-language-server'] = {
+                        \ 'args': ['--stdio'],
+                        \ 'ft': ['vim']
+                        \ }
+        let g:lsp_servers['javascript-typescript-stdio'] = {
+                        \ 'args': [],
+                        \ 'ft': ['js', 'ts', 'tsx']
+                        \ }
+        for server in keys(g:lsp_servers)
+            let g:lsp_servers[server]['bin'] = FindBin(server)
+            if !empty(g:lsp_servers[server]['bin'])
+                let l:cmd = join(["autocmd User lsp_setup call lsp#register_server({",
+                        \ "'name': '".server."',",
+                        \ "'cmd': [g:lsp_servers['".server."']['bin']] + g:lsp_servers['".server."']['args'],",
+                        \ "'whitelist': g:lsp_servers['".server."']['ft'],",
+                        \ "})" ], '')
+                exec l:cmd
+                for ft in g:lsp_servers[server]['ft']
+                    let s:lsp_map[ft] = server
+                endfor
+            endif
+        endfor
     augroup END
 endfunction
 if g:ide | call g:IDE() | endif
