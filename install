@@ -46,7 +46,9 @@ function dl_if_missing {
 }
 
 mkdir -p "$HOME/.vim"
-mkdir -p "$HOME/.config/{i3,nvim,kitty}"
+mkdir -p "$HOME/.config/i3"
+mkdir -p "$HOME/.config/vim"
+mkdir -p "$HOME/.config/kitty"
 
 prompt_to_replace profile       "$HOME/.profile"
 prompt_to_replace bashrc        "$HOME/.bashrc"
