@@ -181,12 +181,14 @@ function! g:Plugins()
         nnoremap <c-w>4 :Accordion 4<CR>
     endif " accordion
 
-    if helper#plug('thaerkh/vim-indentguides')
-        let g:indentguides_spacechar = '🮌'
-        let g:indentguides_tabchar = '░'
-        let g:indentguides_toggleListMode = v:false
-        let g:indentguides_firstlevel = v:true
-    endif " indentguides
+    if $WSL_DISTRO_NAME ==# ''
+        if helper#plug('thaerkh/vim-indentguides')
+            let g:indentguides_spacechar = '🮌'
+            let g:indentguides_tabchar = '░'
+            let g:indentguides_toggleListMode = v:false
+            let g:indentguides_firstlevel = v:true
+        endif " indentguides
+    endif
 
     if helper#plug('chiel92/vim-autoformat')
         let g:formatterpath = [$HOME.'/.local/bin']
