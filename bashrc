@@ -39,10 +39,13 @@ PROMPT_COLOR=2
 if [ ! -z "$SSH_CLIENT" ]; then
     PROMPT_COLOR=$(expr $PROMPT_COLOR \+ 1)
 fi
-if [ ! -z "$TMUX" ]; then
-    PROMPT_COLOR=$(expr $PROMPT_COLOR \+ 2)
+if [ -z "$TMUX" ]; then
+    TMUX_PROMPT_COLOR=$PROMPT_COLOR
+    PROMPT_COLOR=$(expr $PROMPT_COLOR \- 1)
+else
+    TMUX_PROMPT_COLOR=$(expr $PROMPT_COLOR \- 1)
 fi
-case "$PROMPT_COLOR" in
+case "$TMUX_PROMPT_COLOR" in
     0) export TMUX_COLOR=black ;;
     1) export TMUX_COLOR=red ;;
     2) export TMUX_COLOR=green ;;
