@@ -135,6 +135,12 @@ if [ -d "$TMP" ]; then
         fi
     done
 
+    for VIM in vim nvim; do
+        if command -v $VIM &> /dev/null ; then
+            $VIM -c 'PlugInstall | PlugClean! | qa!'
+        fi
+    done
+
     popd &> /dev/null
 else
     echo "Failed to create temporary directory"
