@@ -181,12 +181,14 @@ function! g:Plugins()
         nnoremap <c-w>4 :Accordion 4<CR>
     endif " accordion
 
-    if helper#plug('thaerkh/vim-indentguides')
-        let g:indentguides_spacechar = '🮌'
-        let g:indentguides_tabchar = '░'
-        let g:indentguides_toggleListMode = v:false
-        let g:indentguides_firstlevel = v:true
-    endif " indentguides
+    if $WSL_DISTRO_NAME ==# ''
+        if helper#plug('thaerkh/vim-indentguides')
+            let g:indentguides_spacechar = '🮌'
+            let g:indentguides_tabchar = '░'
+            let g:indentguides_toggleListMode = v:false
+            let g:indentguides_firstlevel = v:true
+        endif " indentguides
+    endif
 
     if helper#plug('chiel92/vim-autoformat')
         let g:formatterpath = [$HOME.'/.local/bin']
@@ -202,14 +204,39 @@ function! g:Plugins()
     endif " bbye
 
     if g:ide
-        call helper#plug('SirVer/ultisnips')
-"        call helper#plug('ervandew/supertab')
+        if helper#plug('neoclide/coc.nvim')
+            set hidden
+            set nobackup nowritebackup
+            set updatetime=250
+            set shortmess+=c
+            set signcolumn=yes
+            inoremap <silent><expr> <Tab>
+                        \ pumvisible() ? "\<C-n>" :
+                        \ <SID>check_back_space() ? "\<Tab>" :
+                        \ coc#refresh()
+            inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+            function s:check_back_space() abort
+                let col = col('.') - 1
+                return !col || getline('.')[col - 1] =~# '\s'
+            endfunction
+
+            inoremap <silent><expr> <c-space> coc#refresh()
+            if has('patch8.1.1068')
+                inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<cr>"
+            else
+                imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<cr>"
+            endif
+
+            nmap <silent> gd <Plug>(coc-definition)
+            nmap <silent> gy <Plug>(coc-type-definition)
+            nmap <silent> gi <Plug>(coc-implementation)
+            nmap <silent> gr <Plug>(coc-references)
+        endif
         call helper#plug('honza/vim-snippets')
-        call helper#plug('lighttiger2505/deoplete-vim-lsp')
-        call helper#plug('prabirshrestha/async.vim')
         if helper#plug('neomake/neomake')
             func! SetStatusLime()
-                let b:statuslime_left = neomake#statusline#get(bufnr('%'), {
+                let b:statuslime_right = neomake#statusline#get(bufnr('%'), {
                             \ 'use_highlights_with_defaults': 0,
                             \ 'format_running': '{{running_job_names}}',
                             \ 'format_loclist_ok': '✓',
@@ -220,6 +247,7 @@ function! g:Plugins()
                             \ 'format_loclist_type_E': '{{count}} error(s) ',
                             \ 'format_loclist_type_I': '{{count}} message(s) ',
                             \ })
+                let b:statuslime_left = coc#status()
             endfunc
             " Don't report issues inside system headers
             function PostprocessClangTidy(entry)
@@ -234,6 +262,7 @@ function! g:Plugins()
                     endif
                 endtry
             endfunction
+            let g:neomake_open_list = 2
             let g:neomake_highlight_columns = 0
             let g:neomake_makers_buffer_output = 0
             let g:neomake_virtualtext_current_error = 0
@@ -262,40 +291,37 @@ function! g:Plugins()
 
         endif " neomake
 
-        if helper#plug('prabirshrestha/vim-lsp')
-            let g:lsp_preview_doubletap    = v:false
-            let g:lsp_signs_enabled        = v:false
-            let g:lsp_virtual_text_enabled = v:false
-            let g:lsp_diagnostics_enabled  = v:false
-            function! s:on_lsp_buffer_enabled() abort
-                setlocal omnifunc=lsp#complete
-                nmap <buffer> <leader>D <plug>(lsp-peek-definition)
-                nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
-                nmap <buffer> <leader>R <plug>(lsp-rename)
-                nmap <buffer> <leader>s <plug>(lsp-signature-help)
-                nmap <buffer> <leader>r <plug>(lsp-references)
-                nmap <buffer> <leader>h <plug>(lsp-hover)
-                augroup lsp_enabled
-                    autocmd!
-                    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-                augroup END
-                let b:statuslime_right = s:lsp_map[&filetype]
-            endfunction
-            augroup lsp_install
-                autocmd!
-                autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-            augroup END
-        endif " vim-lsp
+"        if helper#plug('prabirshrestha/vim-lsp')
+"            let g:lsp_preview_doubletap    = v:false
+"            let g:lsp_signs_enabled        = v:false
+"            let g:lsp_virtual_text_enabled = v:false
+"            let g:lsp_diagnostics_enabled  = v:false
+"            function! s:on_lsp_buffer_enabled() abort
+"                setlocal omnifunc=lsp#complete
+"                nmap <buffer> <leader>D <plug>(lsp-peek-definition)
+"                nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
+"                nmap <buffer> <leader>R <plug>(lsp-rename)
+"                nmap <buffer> <leader>s <plug>(lsp-signature-help)
+"                nmap <buffer> <leader>r <plug>(lsp-references)
+"                nmap <buffer> <leader>h <plug>(lsp-hover)
+"                augroup lsp_enabled
+"                    autocmd!
+"                    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
+"                augroup END
+"                let b:statuslime_right = s:lsp_map[&filetype]
+"            endfunction
+"            augroup lsp_install
+"                autocmd!
+"                autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+"            augroup END
+"        endif " vim-lsp
 
-        if helper#plug('Shougo/deoplete.nvim')
-            if has('nvim')
-                exec 'norm :UpdateRemotePlugins<CR>'
-            endif
-            let g:deoplete#enable_at_startup = 1
-        endif "deoplete.nvim
-    else
-        " Disable neomakelist on vim
-        let g:loaded_neomakelist = v:true
+"        if helper#plug('Shougo/deoplete.nvim')
+"            if has('nvim')
+"                exec 'norm :UpdateRemotePlugins<CR>'
+"            endif
+"            let g:deoplete#enable_at_startup = 1
+"        endif "deoplete.nvim
     endif
 
     call helper#end()
@@ -338,14 +364,14 @@ endfunction
 call g:Maps()
 
 function! g:IDE()
-    call neomake#configure#automake({
-                \ 'TextChanged': {},
-                \ 'InsertLeave': {},
-                \ 'BufWritePost': {'delay': 0},
-                \ 'BufWinEnter': {},
-                \}, 500)
-    call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
-    call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
+        call neomake#configure#automake({
+                    \ 'TextChanged': {},
+                    \ 'InsertLeave': {},
+                    \ 'BufWritePost': {'delay': 0},
+                    \ 'BufWinEnter': {},
+                    \}, 500)
+        call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
+        call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
 
     let s:lsp_map = {}
 
@@ -366,47 +392,47 @@ function! g:IDE()
         return ''
     endfunction
 
-    augroup NeovimIDE
-        autocmd!
-        let g:lsp_servers = {}
-        let g:lsp_servers['clangd'] = {
-                        \ 'args': [],
-                        \ 'ft': ['c', 'cpp']
-                        \ }
-        let g:lsp_servers['pyls'] = {
-                        \ 'args': [],
-                        \ 'ft': ['py']
-                        \ }
-        let g:lsp_servers['bash-language-server'] = {
-                        \ 'args': ['start'],
-                        \ 'ft': ['sh']
-                        \ }
-        let g:lsp_servers['docker-langserver'] = {
-                        \ 'args': ['--stdio'],
-                        \ 'ft': ['Dockerfile']
-                        \ }
-        let g:lsp_servers['vim-language-server'] = {
-                        \ 'args': ['--stdio'],
-                        \ 'ft': ['vim']
-                        \ }
-        let g:lsp_servers['javascript-typescript-stdio'] = {
-                        \ 'args': [],
-                        \ 'ft': ['js', 'ts', 'tsx']
-                        \ }
-        for server in keys(g:lsp_servers)
-            let g:lsp_servers[server]['bin'] = FindBin(server)
-            if !empty(g:lsp_servers[server]['bin'])
-                let l:cmd = join(["autocmd User lsp_setup call lsp#register_server({",
-                        \ "'name': '".server."',",
-                        \ "'cmd': [g:lsp_servers['".server."']['bin']] + g:lsp_servers['".server."']['args'],",
-                        \ "'whitelist': g:lsp_servers['".server."']['ft'],",
-                        \ "})" ], '')
-                exec l:cmd
-                for ft in g:lsp_servers[server]['ft']
-                    let s:lsp_map[ft] = server
-                endfor
-            endif
-        endfor
-    augroup END
+"    augroup NeovimIDE
+"        autocmd!
+"        let g:lsp_servers = {}
+"        let g:lsp_servers['clangd'] = {
+"                        \ 'args': [],
+"                        \ 'ft': ['c', 'cpp']
+"                        \ }
+"        let g:lsp_servers['pyls'] = {
+"                        \ 'args': [],
+"                        \ 'ft': ['py']
+"                        \ }
+"        let g:lsp_servers['bash-language-server'] = {
+"                        \ 'args': ['start'],
+"                        \ 'ft': ['sh']
+"                        \ }
+"        let g:lsp_servers['docker-langserver'] = {
+"                        \ 'args': ['--stdio'],
+"                        \ 'ft': ['Dockerfile']
+"                        \ }
+"        let g:lsp_servers['vim-language-server'] = {
+"                        \ 'args': ['--stdio'],
+"                        \ 'ft': ['vim']
+"                        \ }
+"        let g:lsp_servers['javascript-typescript-stdio'] = {
+"                        \ 'args': [],
+"                        \ 'ft': ['js', 'ts', 'tsx']
+"                        \ }
+"        for server in keys(g:lsp_servers)
+"            let g:lsp_servers[server]['bin'] = FindBin(server)
+"            if !empty(g:lsp_servers[server]['bin'])
+"                let l:cmd = join(['autocmd User lsp_setup call lsp#register_server({',
+"                        \ "'name': '".server."',",
+"                        \ "'cmd': [g:lsp_servers['".server."']['bin']] + g:lsp_servers['".server."']['args'],",
+"                        \ "'whitelist': g:lsp_servers['".server."']['ft'],",
+"                        \ '})' ], '')
+"                exec l:cmd
+"                for ft in g:lsp_servers[server]['ft']
+"                    let s:lsp_map[ft] = server
+"                endfor
+"            endif
+"        endfor
+"    augroup END
 endfunction
 if g:ide | call g:IDE() | endif

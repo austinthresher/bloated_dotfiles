@@ -8,8 +8,8 @@ if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
 else
     alias ls='ls -F --color=auto'
-    source "$HOME/.dotfiles/scripts/themes.sh"
-    theme_spacedust
+    #source "$HOME/.dotfiles/scripts/themes.sh"
+    #theme_spacedust
 fi
 
 function norm    { printf "\e[0m"; }
@@ -24,9 +24,9 @@ alias more='less'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME $(which st) -e /bin/bash -l'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:1.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME ST=1 $(which st) -e /bin/bash -l'
 else
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 xst'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 $(which st) -e /bin/bash -l'
 fi
 
 export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"

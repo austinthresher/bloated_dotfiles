@@ -131,7 +131,7 @@ if [ -d "$TMP" ]; then
         mkdir -p "$VIM/repos"
         if [ ! -d "$VIM/repos/vim-plug" ]; then
             git clone https://github.com/junegunn/vim-plug "$VIM/repos/vim-plug"
-            ln -s "$VIM/repos/vim-plug/plug.vim" "$VIM/autoload/plug.vim"
+            [ ! -f "$VIM/autoload/plug.vim" ] && ln -s "$VIM/repos/vim-plug/plug.vim" "$VIM/autoload/plug.vim"
         fi
     done
 
