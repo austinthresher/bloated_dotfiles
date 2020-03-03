@@ -5,7 +5,8 @@ exec_always ~/.fehbg
 focus_follows_mouse no
 for_window [class=".*"] border pixel 1
 for_window [class="fontforge"] floating enable
-for_window [class="*display*"] floating enable
+for_window [class="display.*"] floating enable
+for_window [class="feh"] floating enable
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).

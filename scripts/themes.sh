@@ -13,6 +13,8 @@ function rgb_set_col {
 }
 
 rgb_set_bg() {
+    # hack to make this work on st
+    rgb_set_col 256 $1
     case $TERM in
         *tmux*|*screen*)
             echo -ne "\eP\e]11;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
@@ -24,6 +26,8 @@ rgb_set_bg() {
 }
 
 rgb_set_fg() {
+    # hack to make this work on st
+    rgb_set_col 257 $1
     case $TERM in
         *tmux*|*screen*)
             echo -ne "\eP\e]10;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
@@ -565,5 +569,7 @@ function theme_onedark { #{{{
     rgb_set_col 14 56B6C2
     rgb_set_col 15 FFFEFE
     rgb_set_bg 1E2127
-    rgb_set_fg 5C6370
+    rgb_set_fg ABB2BF
 } #}}}
+
+

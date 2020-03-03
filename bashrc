@@ -8,9 +8,10 @@ if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
 else
     alias ls='ls -F --color=auto'
-    #source "$HOME/.dotfiles/scripts/themes.sh"
-    #theme_spacedust
 fi
+
+source "$HOME/.dotfiles/scripts/themes.sh"
+theme_seafoam_pastel
 
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }

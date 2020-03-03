@@ -115,9 +115,13 @@ let s:lightest   = ['#BCBCBC', s:xterm_lightest]
 
 let s:none = ['NONE', 'NONE']
 
-" Highlights
-call s:hi('Normal', s:br_white, s:none, 'NONE')
 
+" Highlights
+if exists('g:lyra_transparent') && g:lyra_transparent
+    call s:hi('Normal', s:br_white, s:none, 'NONE')
+else
+    call s:hi('Normal', s:br_white, s:black, 'NONE')
+endif
 
 for group in ['NonText', 'SpecialKey']
     call s:hi(group, s:light, s:none, 'NONE')
@@ -184,7 +188,7 @@ call s:hi('cIncluded',    s:br_cyan,    s:none,       'italic')
 call s:hi('Function',     s:magenta,    s:none,       'NONE')
 call s:hi('Macro',        s:br_red,     s:none,       'NONE')
 call s:hi('Folded',       s:white,      s:black,      'NONE')
-call s:hi('SignColumn',   s:white,      s:none,       'NONE')
+call s:hi('SignColumn',   s:white,      s:hard_black, 'NONE')
 call s:hi('LineNr',       s:white,      s:darkest,    'NONE')
 call s:hi('CursorLineNr', s:darkest,    s:br_black,   'NONE')
 call s:hi('StatusLineNC', s:dark,       s:darkest,    'NONE')

@@ -1,3 +1,7 @@
+" TODO: Highlighting for yml that shows grouping
+" TODO: Figure out what remapped Enter in insert mode
+" TODO: Find that plugin that autofolds licenses
+
 set encoding=utf-8 | scriptencoding utf-8
 function! g:Options()
     " Allow folding in files
@@ -84,7 +88,8 @@ call g:Options()
 function! g:Globals()
     try
         let g:lyra_string_bg = v:false
-        let g:lyra_use_system_colors = v:false
+        let g:lyra_use_system_colors = v:true
+        let g:lyra_transparent = v:true
         colorscheme lyra
     endtry
 
@@ -132,6 +137,23 @@ function! g:Plugins()
     call helper#plug('tpope/vim-sensible')
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
+    call helper#plug('tpope/vim-git')
+    call helper#plug('tpope/vim-endwise')
+    call helper#plug('chrisbra/csv.vim')
+    call helper#plug('pboettch/vim-cmake-syntax')
+    call helper#plug('vim-scripts/std_c.zip')
+    call helper#plug('triglav/vim-visual-increment')
+
+    if helper#plug('szw/vim-g')
+        nmap <leader>G :Googlef<cr>
+        vmap <leader>G :Googlef<cr>
+    endif
+
+    if helper#plug('vhdirk/vim-cmake')
+        nmap <leader>c :CMake<cr>
+        nmap <leader>C :CMakeClean<cr>
+    endif
+    
 
     if helper#plug('ap/vim-buftabline')
         let g:buftabline_indicators = 1
@@ -160,6 +182,7 @@ function! g:Plugins()
     endif " conflict-marker
 
     if helper#plug('rhysd/git-messenger.vim')
+        let g:git_messenger_no_default_mappings = v:true
         let g:git_messenger_include_diff = v:true
         let g:git_messenger_max_popup_height = 8
         noremap <silent><leader>g :GitMessenger<cr>
@@ -173,7 +196,10 @@ function! g:Plugins()
     endif " visual-split
 
     if helper#plug('mattboehm/vim-accordion')
-        autocmd VimEnter * silent! AccordionAll 2 | IndentGuidesToggle
+        augroup Accordion
+            autocmd!
+            autocmd VimEnter * silent! AccordionAll 2
+        augroup END
         nnoremap <leader><pageup> :AccordionZoomOut<CR>
         nnoremap <leader><pagedown> :AccordionZoomIn<CR>
         nnoremap <c-w>2 :Accordion 2<CR>
@@ -183,13 +209,18 @@ function! g:Plugins()
 
     if $WSL_DISTRO_NAME ==# ''
         if helper#plug('thaerkh/vim-indentguides')
+            augroup IndentGuides
+                autocmd!
+                autocmd VimEnter * silent! IndentGuidesToggle
+            augroup END
             let g:indentguides_spacechar = '🮌'
             let g:indentguides_tabchar = '░'
             let g:indentguides_toggleListMode = v:false
-            let g:indentguides_firstlevel = v:true
+            let g:indentguides_firstlevel = v:false
         endif " indentguides
     endif
 
+    " TODO: try neoformat
     if helper#plug('chiel92/vim-autoformat')
         let g:formatterpath = [$HOME.'/.local/bin']
         let g:autoformat_autoindent = 0
@@ -209,7 +240,7 @@ function! g:Plugins()
             set nobackup nowritebackup
             set updatetime=250
             set shortmess+=c
-            set signcolumn=yes
+            "set signcolumn=yes
             inoremap <silent><expr> <Tab>
                         \ pumvisible() ? "\<C-n>" :
                         \ <SID>check_back_space() ? "\<Tab>" :
@@ -290,38 +321,6 @@ function! g:Plugins()
             call add(g:neomake_cpp_enabled_makers, 'cppcheck')
 
         endif " neomake
-
-"        if helper#plug('prabirshrestha/vim-lsp')
-"            let g:lsp_preview_doubletap    = v:false
-"            let g:lsp_signs_enabled        = v:false
-"            let g:lsp_virtual_text_enabled = v:false
-"            let g:lsp_diagnostics_enabled  = v:false
-"            function! s:on_lsp_buffer_enabled() abort
-"                setlocal omnifunc=lsp#complete
-"                nmap <buffer> <leader>D <plug>(lsp-peek-definition)
-"                nmap <buffer> <leader>d <plug>(lsp-peek-declaration)
-"                nmap <buffer> <leader>R <plug>(lsp-rename)
-"                nmap <buffer> <leader>s <plug>(lsp-signature-help)
-"                nmap <buffer> <leader>r <plug>(lsp-references)
-"                nmap <buffer> <leader>h <plug>(lsp-hover)
-"                augroup lsp_enabled
-"                    autocmd!
-"                    autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-"                augroup END
-"                let b:statuslime_right = s:lsp_map[&filetype]
-"            endfunction
-"            augroup lsp_install
-"                autocmd!
-"                autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-"            augroup END
-"        endif " vim-lsp
-
-"        if helper#plug('Shougo/deoplete.nvim')
-"            if has('nvim')
-"                exec 'norm :UpdateRemotePlugins<CR>'
-"            endif
-"            let g:deoplete#enable_at_startup = 1
-"        endif "deoplete.nvim
     endif
 
     call helper#end()
@@ -340,7 +339,6 @@ function! g:Functions()
             exec 'hi '.l:name
         endif
     endfunc
-    nmap <leader>c :call HiAtCur()<cr>
 endfunction
 call g:Functions()
 
@@ -359,7 +357,12 @@ function! g:Maps()
     nmap <silent><leader>? <Plug>(helper-toggle)
     " Ctrl+K to search for cursor text and show in quickfix
     nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-    "nnoremap <c-e> <c-e>j
+
+    nnoremap <leader>c :call HiAtCur()<cr>
+
+    " Makes * select the cursor word but not jump to next match
+    nnoremap * *N
+
 endfunction
 call g:Maps()
 

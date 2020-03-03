@@ -21,7 +21,7 @@
 " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-if exists("g:loaded_centerscroll") | finish | endif
+if exists('g:loaded_centerscroll') | finish | endif
 let g:loaded_centerscroll = v:true
 
 " Emacs style scrolling where the view re-centers on cursor
@@ -35,7 +35,7 @@ func! centerscroll#update()
     let l:topline = winsaveview()['topline']
     let l:curline = line('.')
     if l:topline != b:last_topline && l:curline != b:last_curline
-        noa norm zz
+        noa norm! zz
         let l:topline = winsaveview()['topline']
         let l:curline = line('.')
     endif
@@ -43,5 +43,12 @@ func! centerscroll#update()
     let b:last_curline = l:curline
 endfunc
 
-autocmd! WinEnter * let b:last_topline = winsaveview()['topline'] | let b:last_curline = line('.')
-au CursorMoved,CursorMovedI * call centerscroll#update()
+" Don't let the cursor jump when scrolling with C-E/Y
+nnoremap <silent> <C-E> <C-E>:let b:last_curline+=1<cr>gj:let b:last_topline = winsaveview()['topline']<cr>
+nnoremap <silent> <C-Y> <C-Y>:let b:last_curline-=1<cr>gk:let b:last_topline = winsaveview()['topline']<cr>
+
+augroup CenterScroll
+    autocmd!
+    autocmd! WinEnter * let b:last_topline = winsaveview()['topline'] | let b:last_curline = line('.')
+    autocmd! CursorMoved,CursorMovedI * call centerscroll#update()
+augroup END
