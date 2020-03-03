@@ -14,7 +14,7 @@ function rgb_set_col {
 
 rgb_set_bg() {
     # hack to make this work on st
-    rgb_set_col 256 $1
+    rgb_set_col 256 "$1"
     case $TERM in
         *tmux*|*screen*)
             echo -ne "\eP\e]11;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
@@ -27,7 +27,7 @@ rgb_set_bg() {
 
 rgb_set_fg() {
     # hack to make this work on st
-    rgb_set_col 257 $1
+    rgb_set_col 257 "$1"
     case $TERM in
         *tmux*|*screen*)
             echo -ne "\eP\e]10;rgb:${1:0:2}/${1:2:2}/${1:4:2}\a\e\\"
@@ -378,7 +378,7 @@ function theme_freya { #{{{
     rgb_set_col 12 268bd2
     rgb_set_col 13 d33682
     rgb_set_col 14 2aa198
-    rgb_set_col 15 6c71c4
+    rgb_set_col 15 B4C3C5 #6c71c4
     rgb_set_bg 252e32
     rgb_set_fg 94a3a5
 } #}}}
@@ -572,4 +572,24 @@ function theme_onedark { #{{{
     rgb_set_fg ABB2BF
 } #}}}
 
+function theme_nova {
+    rgb_set_col 0   263238
+    rgb_set_col 1   EF5350
+    rgb_set_col 2   66BB6A
+    rgb_set_col 3   FFCA28
+    rgb_set_col 4   42A5F5
+    rgb_set_col 5   7E57C2
+    rgb_set_col 6   26A69A
+    rgb_set_col 7   B0BEC5
+    rgb_set_col 8   37474F
+    rgb_set_col 9   FF7043 
+    rgb_set_col 10  9CCC65
+    rgb_set_col 11  FFEE58
+    rgb_set_col 12  29B6F6
+    rgb_set_col 13  EC407A
+    rgb_set_col 14  26C6DA
+    rgb_set_col 15  ECEFF1
+    rgb_set_bg 263238
+    rgb_set_fg ECEFF1
+}
 

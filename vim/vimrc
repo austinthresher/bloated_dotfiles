@@ -143,6 +143,7 @@ function! g:Plugins()
     call helper#plug('pboettch/vim-cmake-syntax')
     call helper#plug('vim-scripts/std_c.zip')
     call helper#plug('triglav/vim-visual-increment')
+    call helper#plug('vim-scripts/armasm')
 
     if helper#plug('szw/vim-g')
         nmap <leader>G :Googlef<cr>
