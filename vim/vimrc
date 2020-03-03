@@ -138,12 +138,27 @@ function! g:Plugins()
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
     call helper#plug('tpope/vim-git')
-    call helper#plug('tpope/vim-endwise')
     call helper#plug('chrisbra/csv.vim')
     call helper#plug('pboettch/vim-cmake-syntax')
     call helper#plug('vim-scripts/std_c.zip')
     call helper#plug('triglav/vim-visual-increment')
     call helper#plug('vim-scripts/armasm')
+    call helper#plug('kana/vim-niceblock')
+    call helper#plug('pedrohdz/vim-yaml-folds')
+
+    if helper#plug('lmeijvogel/vim-yaml-helper')
+        let g:vim_yaml_helper#auto_display_path = v:true
+    endif
+
+    if helper#plug('ctrlpvim/ctrlp.vim')
+        let g:ctrlp_map = '<leader>f'
+        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+        let g:ctrlp_extensions = []
+    endif
+
+    if helper#plug('suy/vim-ctrlp-commandline')
+        let g:ctrlp_extensions += ['commandline']
+    endif
 
     if helper#plug('szw/vim-g')
         nmap <leader>G :Googlef<cr>
@@ -154,7 +169,7 @@ function! g:Plugins()
         nmap <leader>c :CMake<cr>
         nmap <leader>C :CMakeClean<cr>
     endif
-    
+
 
     if helper#plug('ap/vim-buftabline')
         let g:buftabline_indicators = 1
@@ -228,7 +243,7 @@ function! g:Plugins()
         let g:autoformat_retab = 0
         let g:formatters_python = ['yapf']
         let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
-        noremap <leader>f :Autoformat<CR>
+        noremap <leader>F :Autoformat<CR>
     endif " autoformat
 
     if helper#plug('moll/vim-bbye')
