@@ -51,7 +51,7 @@ alias more='less'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
 if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:1.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME ST=1 $(which st) -e /bin/bash -l'
+    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 WSL_DISTRO_NAME=$WSL_DISTRO_NAME ST=1 $(which st) -e /bin/bash -l'
 else
     alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=:0.0 $(which st) -e /bin/bash -l'
 fi
