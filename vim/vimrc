@@ -138,6 +138,7 @@ function! g:Plugins()
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
     call helper#plug('tpope/vim-git')
+    call helper#plug('tpope/vim-obsession')
     call helper#plug('chrisbra/csv.vim')
     call helper#plug('pboettch/vim-cmake-syntax')
     call helper#plug('vim-scripts/std_c.zip')
@@ -410,48 +411,5 @@ function! g:IDE()
         endfor
         return ''
     endfunction
-
-"    augroup NeovimIDE
-"        autocmd!
-"        let g:lsp_servers = {}
-"        let g:lsp_servers['clangd'] = {
-"                        \ 'args': [],
-"                        \ 'ft': ['c', 'cpp']
-"                        \ }
-"        let g:lsp_servers['pyls'] = {
-"                        \ 'args': [],
-"                        \ 'ft': ['py']
-"                        \ }
-"        let g:lsp_servers['bash-language-server'] = {
-"                        \ 'args': ['start'],
-"                        \ 'ft': ['sh']
-"                        \ }
-"        let g:lsp_servers['docker-langserver'] = {
-"                        \ 'args': ['--stdio'],
-"                        \ 'ft': ['Dockerfile']
-"                        \ }
-"        let g:lsp_servers['vim-language-server'] = {
-"                        \ 'args': ['--stdio'],
-"                        \ 'ft': ['vim']
-"                        \ }
-"        let g:lsp_servers['javascript-typescript-stdio'] = {
-"                        \ 'args': [],
-"                        \ 'ft': ['js', 'ts', 'tsx']
-"                        \ }
-"        for server in keys(g:lsp_servers)
-"            let g:lsp_servers[server]['bin'] = FindBin(server)
-"            if !empty(g:lsp_servers[server]['bin'])
-"                let l:cmd = join(['autocmd User lsp_setup call lsp#register_server({',
-"                        \ "'name': '".server."',",
-"                        \ "'cmd': [g:lsp_servers['".server."']['bin']] + g:lsp_servers['".server."']['args'],",
-"                        \ "'whitelist': g:lsp_servers['".server."']['ft'],",
-"                        \ '})' ], '')
-"                exec l:cmd
-"                for ft in g:lsp_servers[server]['ft']
-"                    let s:lsp_map[ft] = server
-"                endfor
-"            endif
-"        endfor
-"    augroup END
 endfunction
 if g:ide | call g:IDE() | endif
