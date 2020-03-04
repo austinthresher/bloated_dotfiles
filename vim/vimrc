@@ -147,6 +147,23 @@ function! g:Plugins()
     call helper#plug('kana/vim-niceblock')
     call helper#plug('pedrohdz/vim-yaml-folds')
 
+    if helper#plug('rhysd/reply.vim')
+        let g:reply_termwin_max_height = 8
+        let g:reply_termwin_max_width = 64
+        nmap <leader>R :Repl<cr>
+        nmap <leader>e :ReplSend<cr>
+        vmap <leader>e :ReplSend<cr>
+    endif
+
+    if helper#plug('noahfrederick/vim-skeleton')
+        if has('nvim')
+            let g:skeleton_template_dir = $HOME.'/.config/nvim/templates'
+        else
+            let g:skeleton_template_dir = $HOME.'/.vim/templates'
+        endif
+
+    endif
+
     if helper#plug('lmeijvogel/vim-yaml-helper')
         let g:vim_yaml_helper#auto_display_path = v:true
     endif
@@ -170,7 +187,6 @@ function! g:Plugins()
         nmap <leader>c :CMake<cr>
         nmap <leader>C :CMakeClean<cr>
     endif
-
 
     if helper#plug('ap/vim-buftabline')
         let g:buftabline_indicators = 1
@@ -392,24 +408,5 @@ function! g:IDE()
                     \}, 500)
         call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
         call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
-
-    let s:lsp_map = {}
-
-    let s:bin_paths = [
-                \ $HOME.'/.local/bin',
-                \ $HOME.'/homebrew/bin',
-                \ $HOME.'/.yarn/bin',
-                \ '/usr/local/bin',
-                \ '/usr/bin'
-                \ ]
-    function g:FindBin(fname)
-        for path in s:bin_paths
-            let l:abspath = path.'/'.a:fname
-            if executable(l:abspath)
-                return l:abspath
-            endif
-        endfor
-        return ''
-    endfunction
 endfunction
 if g:ide | call g:IDE() | endif
