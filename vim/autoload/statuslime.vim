@@ -28,7 +28,7 @@ let g:autoloaded_statuslime = v:true
 " FIXME: Prune this list to what's actually used
 for m in ['Normal', 'Visual', 'Insert', 'Replace', 'Terminal', 'Command',
             \ 'Shell', 'Preview', 'Help', 'Other', 'File', 'Error',
-            \ 'Right', 'Left', 'InactiveBar', 'InactiveMode' ]
+            \ 'Right', 'Left', 'InactiveBar', 'InactiveMode', 'Row', 'Col' ]
     if hlexists('Lime'.m) == 0
         exe 'hi link Lime'.m.' StatusLine'
     endif
@@ -41,34 +41,45 @@ func! statuslime#filename() abort
     return '  '.filename.modified.ro.' '
 endfunc
 
-func! statuslime#ruler()
+function! statuslime#row() abort
     let lchars = strlen(line('$'))
-    return '  '.printf('%'.lchars.'d / %'.lchars.'d',
-                \ line('.'), line('$')).' : '.virtcol('.').' '
-endfunc
+    return Pad(printf(' %-'.lchars.'d', line('.')))
+endfunction
+
+function! statuslime#col() abort
+    return Pad(printf(' %-2d', virtcol('.')))
+endfunction
 
 func! Pad(str)
     return '  '.a:str.' '
 endfunc
 
 func! s:add_state(condition, hlname, text)
-    exe 'setlocal statusline+=%#'
-                \ .a:hlname.'#%{('.a:condition.')?Pad('''.a:text.'''):''''}'
+    exe 'setlocal statusline+=%#'.a:hlname.'#'
+                \.'%{('.a:condition.')?Pad('''.a:text.'''):''''}'
 endfunc
 
-func! statuslime#left()
+func! statuslime#left() abort
     if exists("b:statuslime_left")
         return Pad(b:statuslime_left)
     endif
     return ''
 endfunc
 
-func! statuslime#right()
+func! statuslime#right() abort
     if exists("b:statuslime_right")
         return Pad(b:statuslime_right)
     endif
     return ''
 endfunc
+
+function! statuslime#qflen() abort
+    if !empty(getloclist(winnr()))
+        return Pad(len(getloclist(winnr())).' entries')
+    else
+        return Pad(len(getqflist()).' entries')
+    endif 
+endfunction
 
 " User should define a function called SetStatusLime()
 " that updates the values of g:statuslime_left and
@@ -89,6 +100,10 @@ func! statuslime#focused() abort
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'qf'
+        call s:add_state('!empty(getloclist(winnr()))', 'LimePreview', 'LOCATION')
+        call s:add_state('empty(getloclist(winnr()))', 'LimePreview', 'QUICKFIX')
+        setlocal statusline+=%#LimeFile#
+        setlocal statusline+=%{statuslime#qflen()}
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'help'
@@ -107,14 +122,15 @@ func! statuslime#focused() abort
         call s:add_state('mode()[0]==#''r''', 'LimeOther', 'CONTINUE')
         call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
         call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
-        setlocal statusline+=%<
         setlocal statusline+=%#LimeFile#%{statuslime#filename()}
         setlocal statusline+=%*
+        setlocal statusline+=%<
         setlocal statusline+=%#LimeLeft#%{statuslime#left()}
         setlocal statusline+=%*
         setlocal statusline+=%=
         setlocal statusline+=%#LimeRight#%{statuslime#right()}
-        setlocal statusline+=%#LimeRuler#%{statuslime#ruler()}
+        setlocal statusline+=%#LimeCol#%{statuslime#col()}
+        setlocal statusline+=%#LimeRow#%{statuslime#row()}
     endif
 endfunc
 
@@ -133,6 +149,10 @@ func! statuslime#unfocused()
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'qf'
+        call s:add_state('!empty(getloclist(winnr()))', 'LimeInactiveFT', 'LOCATION')
+        call s:add_state('empty(getloclist(winnr()))', 'LimeInactiveFT', 'QUICKFIX')
+        setlocal statusline+=%#LimeInactiveBar#
+        setlocal statusline+=%{statuslime#qflen()}
         setlocal statusline+=%<
         setlocal statusline+=%*
     elseif &filetype is# 'help'
@@ -141,10 +161,11 @@ func! statuslime#unfocused()
         setlocal statusline+=%*
     else
         call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
-        setlocal statusline+=%<
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
+        setlocal statusline+=%<
         setlocal statusline+=%*
         setlocal statusline+=%=
-        setlocal statusline+=%#LimeInactiveBar#%{statuslime#ruler()}
+        setlocal statusline+=%#LimeInactiveBar#%{statuslime#col()}
+        setlocal statusline+=%#LimeInactiveBar#%{statuslime#row()}
     endif
 endfunc

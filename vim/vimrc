@@ -145,12 +145,10 @@ function! g:Plugins()
     call helper#plug('triglav/vim-visual-increment')
     call helper#plug('vim-scripts/armasm')
     call helper#plug('kana/vim-niceblock')
-    call helper#plug('pedrohdz/vim-yaml-folds')
+"    call helper#plug('pedrohdz/vim-yaml-folds')
 
     if helper#plug('rhysd/reply.vim')
-        let g:reply_termwin_max_height = 8
-        let g:reply_termwin_max_width = 64
-        nmap <leader>R :Repl<cr>
+        nmap <leader>R :Repl bash<cr><c-w>J<c-w>p
         nmap <leader>e :ReplSend<cr>
         vmap <leader>e :ReplSend<cr>
     endif
@@ -164,9 +162,9 @@ function! g:Plugins()
 
     endif
 
-    if helper#plug('lmeijvogel/vim-yaml-helper')
-        let g:vim_yaml_helper#auto_display_path = v:true
-    endif
+"    if helper#plug('lmeijvogel/vim-yaml-helper')
+"        let g:vim_yaml_helper#auto_display_path = v:true
+"    endif
 
     if helper#plug('ctrlpvim/ctrlp.vim')
         let g:ctrlp_map = '<leader>f'
@@ -378,7 +376,21 @@ call g:Functions()
 function! g:Maps()
     " Navigate out of terminal mode more easily
     tnoremap <esc> <c-\><c-n>
-    tnoremap <c-w> <c-\><c-n><c-w>
+    tnoremap <c-w>H <c-\><c-n><c-w>H
+    tnoremap <c-w>J <c-\><c-n><c-w>J
+    tnoremap <c-w>K <c-\><c-n><c-w>K
+    tnoremap <c-w>L <c-\><c-n><c-w>L
+    tnoremap <c-w>h <c-\><c-n><c-w>h
+    tnoremap <c-w>j <c-\><c-n><c-w>j
+    tnoremap <c-w>k <c-\><c-n><c-w>k
+    tnoremap <c-w>l <c-\><c-n><c-w>l
+    tnoremap <c-w>p <c-\><c-n><c-w>p
+
+    " Automatically enter insert mode when selecting terminal window
+    augroup Terminal
+        autocmd!
+        autocmd BufEnter * if mode() ==# 'n' | exec 'norm i' | endif
+    augroup END
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>
@@ -405,7 +417,7 @@ function! g:IDE()
                     \ 'InsertLeave': {},
                     \ 'BufWritePost': {'delay': 0},
                     \ 'BufWinEnter': {},
-                    \}, 500)
+                    \}, 100)
         call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
         call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
 endfunction
