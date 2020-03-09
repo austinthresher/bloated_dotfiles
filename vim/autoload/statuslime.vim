@@ -98,18 +98,18 @@ func! statuslime#focused() abort
     if &previewwindow
         call s:add_state('v:true', 'LimePreview', 'PREVIEW')
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
     elseif &filetype is# 'qf'
         call s:add_state('!empty(getloclist(winnr()))', 'LimePreview', 'LOCATION')
         call s:add_state('empty(getloclist(winnr()))', 'LimePreview', 'QUICKFIX')
         setlocal statusline+=%#LimeFile#
         setlocal statusline+=%{statuslime#qflen()}
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
     elseif &filetype is# 'help'
         call s:add_state('v:true', 'LimeHelp', 'HELP')
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
     else
         call s:add_state('mode()[0]==#''n''', 'LimeNormal', 'NORMAL')
         call s:add_state('mode()[0]==#''i''', 'LimeInsert', 'INSERT')
@@ -123,10 +123,10 @@ func! statuslime#focused() abort
         call s:add_state('mode()[0]==#''!''', 'LimeOther', 'SHELL')
         call s:add_state('mode()==#''no''', 'LimeNormal', 'PENDING')
         setlocal statusline+=%#LimeFile#%{statuslime#filename()}
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
         setlocal statusline+=%<
         setlocal statusline+=%#LimeLeft#%{statuslime#left()}
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
         setlocal statusline+=%=
         setlocal statusline+=%#LimeRight#%{statuslime#right()}
         setlocal statusline+=%#LimeCol#%{statuslime#col()}
@@ -154,16 +154,18 @@ func! statuslime#unfocused()
         setlocal statusline+=%#LimeInactiveBar#
         setlocal statusline+=%{statuslime#qflen()}
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
     elseif &filetype is# 'help'
         call s:add_state('v:true', 'LimeInactiveFT', 'HELP')
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
     else
-        call s:add_state('v:true', 'LimeInactiveMode', 'NORMAL')
+        call s:add_state('&buftype!=#''terminal''', 'LimeInactiveMode', 'NORMAL')
+        call s:add_state('&buftype==#''terminal''', 'LimeInactiveMode', 'TERMINAL')
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#filename()}
         setlocal statusline+=%<
-        setlocal statusline+=%*
+        setlocal statusline+=%#StatusLine#
+        setlocal statusline+=%#LimeInactiveBar#
         setlocal statusline+=%=
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#col()}
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#row()}

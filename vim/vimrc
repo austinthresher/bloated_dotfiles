@@ -158,12 +158,6 @@ function! g:Plugins()
         let g:cpp_concepts_highlight = v:true
     endif
 
-    if helper#plug('rhysd/reply.vim')
-        nmap <leader>R :Repl bash<cr><c-w>J<c-w>p
-        nmap <leader>e :ReplSend<cr>
-        vmap <leader>e :ReplSend<cr>
-    endif
-
     if helper#plug('noahfrederick/vim-skeleton')
         if has('nvim')
             let g:skeleton_template_dir = $HOME.'/.config/nvim/templates'
@@ -172,7 +166,6 @@ function! g:Plugins()
         endif
 
     endif
-
 
     if helper#plug('ctrlpvim/ctrlp.vim')
         let g:ctrlp_map = '<leader>f'
@@ -397,7 +390,8 @@ function! g:Maps()
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
         autocmd!
-        autocmd BufEnter * if &buftype ==# 'terminal' && mode() ==# 'n' | exec 'norm i' | endif
+        autocmd TermOpen * startinsert
+"        autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
     augroup END
 
     " Quick reload of vimrc
