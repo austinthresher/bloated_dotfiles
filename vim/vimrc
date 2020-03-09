@@ -1,7 +1,3 @@
-" TODO: Highlighting for yml that shows grouping
-" TODO: Figure out what remapped Enter in insert mode
-" TODO: Find that plugin that autofolds licenses
-
 set encoding=utf-8 | scriptencoding utf-8
 function! g:Options()
     " Allow folding in files
@@ -143,9 +139,15 @@ function! g:Plugins()
     call helper#plug('vim-scripts/std_c.zip')
     call helper#plug('triglav/vim-visual-increment')
     call helper#plug('vim-scripts/armasm')
-    call helper#plug('kana/vim-niceblock')
-    call helper#plug('pedrohdz/vim-yaml-folds')
-"    call helper#plug('bfrg/vim-cpp-modern')
+
+    if helper#plug('pseewald/vim-anyfold')
+        augroup Anyfold
+            autocmd!
+            autocmd Filetype * AnyFoldActivate
+            autocmd Filetype * exec 'norm! zR'
+        augroup END
+        let g:anyfold_fold_comments = v:true
+    endif
 
     if helper#plug('octol/vim-cpp-enhanced-highlight')
         let g:cpp_class_scope_highlight = v:true
@@ -171,9 +173,6 @@ function! g:Plugins()
 
     endif
 
-"    if helper#plug('lmeijvogel/vim-yaml-helper')
-"        let g:vim_yaml_helper#auto_display_path = v:true
-"    endif
 
     if helper#plug('ctrlpvim/ctrlp.vim')
         let g:ctrlp_map = '<leader>f'
@@ -398,7 +397,7 @@ function! g:Maps()
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
         autocmd!
-        autocmd BufEnter * if mode() ==# 'n' | exec 'norm i' | endif
+        autocmd BufEnter * if &buftype ==# 'terminal' && mode() ==# 'n' | exec 'norm i' | endif
     augroup END
 
     " Quick reload of vimrc

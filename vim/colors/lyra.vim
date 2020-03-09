@@ -141,7 +141,7 @@ hi! link vCursor Cursor
 hi! link iCursor Cursor
 hi! link lCursor Cursor
 
-call s:hi('Visual', s:br_white, s:blue, 'NONE')
+call s:hi('Visual', s:hard_black, s:blue, 'NONE')
 hi! link VisualNOS Visual
 
 call s:hi('Search', s:hard_black, s:light, 'NONE')
@@ -155,7 +155,7 @@ else
     call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
 endif
 
-call s:hi('Pmenu',        s:hard_black, s:br_black,   'NONE')
+call s:hi('Pmenu',        s:white,      s:br_black,   'NONE')
 call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
 
 call s:hi('Operator',     s:white,      s:none,       'NONE')
@@ -165,7 +165,7 @@ call s:hi('StatusLine',   s:br_white,   s:darkest,    'NONE')
 call s:hi('VertSplit',    s:br_white,   s:none,       'NONE')
 call s:hi('WildMenu',     s:blue,       s:black,      'bold')
 call s:hi('ErrorMsg',     s:br_white,   s:red,        'NONE')
-call s:hi('Directory',    s:blue,      s:none,       'bold')
+call s:hi('Directory',    s:blue,       s:none,       'bold')
 call s:hi('Title',        s:br_yellow,  s:none,       'bold')
 call s:hi('MoreMsg',      s:yellow,     s:none,       'bold')
 call s:hi('Question',     s:br_yellow,  s:none,       'bold')
@@ -178,7 +178,7 @@ call s:hi('Type',         s:br_blue,    s:none,       'NONE')
 call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
 call s:hi('Typedef',      s:br_blue,    s:none,       'NONE')
 call s:hi('Structure',    s:br_blue,    s:none,       'NONE')
-call s:hi('Delimiter',    s:br_black,   s:none,       'NONE')
+call s:hi('Delimiter',    s:white,      s:none,       'NONE')
 call s:hi('Identifier',   s:br_white,   s:none,       'NONE')
 call s:hi('PreProc',      s:yellow,     s:none,       'NONE')
 call s:hi('Include',      s:yellow,     s:none,       'NONE')
