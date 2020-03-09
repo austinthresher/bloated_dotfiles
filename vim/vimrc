@@ -110,7 +110,6 @@ function! g:Plugins()
     call helper#begin()
 
     call helper#plug('MarcWeber/vim-addon-mw-utils')
-    call helper#plug('bfrg/vim-cpp-modern')
     call helper#plug('ekalinin/dockerfile.vim')
     call helper#plug('google/vim-searchindex')
     call helper#plug('guns/xterm-color-table.vim')
@@ -145,7 +144,17 @@ function! g:Plugins()
     call helper#plug('triglav/vim-visual-increment')
     call helper#plug('vim-scripts/armasm')
     call helper#plug('kana/vim-niceblock')
-"    call helper#plug('pedrohdz/vim-yaml-folds')
+    call helper#plug('pedrohdz/vim-yaml-folds')
+"    call helper#plug('bfrg/vim-cpp-modern')
+
+    if helper#plug('octol/vim-cpp-enhanced-highlight')
+        let g:cpp_class_scope_highlight = v:true
+        let g:cpp_member_variable_highlight = v:true
+        let g:cpp_class_decl_highlight = v:true
+        let g:cpp_posix_standard = v:true
+        let g:cpp_experimental_template_highlight = v:true
+        let g:cpp_concepts_highlight = v:true
+    endif
 
     if helper#plug('rhysd/reply.vim')
         nmap <leader>R :Repl bash<cr><c-w>J<c-w>p
