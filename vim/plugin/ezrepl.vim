@@ -27,23 +27,15 @@ let g:loaded_ezrepl = v:true
 if !has('nvim')
     function! s:init_repl() abort
         if exists('b:repl_initialized') && b:repl_initialized
-            if empty(getbufinfo(b:repl_buf))
-                " Old REPL is gone, needs a new buf + win
+            if empty(getbufinfo(b:repl_buf)) || empty(getwininfo(b:repl_win))
                 let b:repl_initialized = v:false
-            elseif empty(getwininfo(b:repl_win))
-                " Old REPL is still around, but needs new win
-                split
-                exec 'norm :b '.b:repl_buf
-                let l:repl_win = winnr()
-                wincmd p
-                let b:repl_win = l:repl_win
             endif
         endif
         if !exists('b:repl_initialized') || !b:repl_initialized
             " Make a new split for this window's REPL
             noautocmd terminal ++rows=8
             " Store info about the new window to carry back
-            let l:repl_buf = bufnr('%')
+            let l:repl_buf = bufnr('%') " TODO: set buflisted = false
             let l:repl_win = winnr()
             " Return to starting window
             wincmd p
@@ -67,12 +59,52 @@ if !has('nvim')
         redraw!
     endfunction
 
-    function! g:ReplExecLine() abort
-        call Repl(getline('.'))
+else " has('nvim')
+    function! s:init_repl() abort
+        if exists('b:repl_initialized') && b:repl_initialized
+            if empty(getbufinfo(b:repl_buf)) || empty(getwininfo(b:repl_win))
+                let b:repl_initialized = v:false
+            endif
+        endif
+        if !exists('b:repl_initialized') || !b:repl_initialized
+            new
+            noautocmd terminal
+            let l:repl_buf = bufnr('%')
+            let l:repl_win = winnr()
+            exec 'norm! <c-\><c-n>'
+            wincmd p
+            let b:repl_buf = l:repl_buf
+            let b:repl_win = l:repl_win
+            let b:repl_initialized = v:true
+        endif
     endfunction
 
-    command -nargs=* Repl call Repl('<args>')
+    function! s:get_my_channel(jobid) abort
+        for chan in nvim_list_chans()
+            if chan.id ==# a:jobid
+                return chan
+            endif
+        endfor
+    endfunction
 
-    nnoremap <Plug>ReplExecLine :call ReplExecLine()<cr>
-else " has('nvim')
+    function! g:Repl(...) abort
+        call s:init_repl()
+        let l:jobid = getbufinfo(b:repl_buf)[0].variables.terminal_job_id
+        let l:chan = s:get_my_channel(l:jobid)
+        if empty(l:chan.pty)
+            let b:repl_initialized = v:false
+            call s:init_repl()
+            let l:jobid = getbufinfo(b:repl_buf)[0].variables.terminal_job_id
+        endif
+        if !empty(a:000)
+            call jobsend(l:jobid, join(a:000)."\n")
+        endif 
+    endfunction
 endif
+
+function! g:ReplExecLine() abort
+    call Repl(getline('.'))
+endfunction
+
+command -nargs=* Repl call Repl('<args>')
+nnoremap <Plug>ReplExecLine :call ReplExecLine()<cr>

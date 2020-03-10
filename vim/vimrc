@@ -128,7 +128,7 @@ function! g:Plugins()
     call helper#plug('tpope/vim-eunuch')
     call helper#plug('tpope/vim-fugitive')
     call helper#plug('tpope/vim-markdown')
-    call helper#plug('tpope/vim-rsi')
+"    call helper#plug('tpope/vim-rsi')
     call helper#plug('tpope/vim-sensible')
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
@@ -397,7 +397,9 @@ function! g:Maps()
         endif
     augroup END
 
-    nmap <leader>e <Plug>ReplExecLine
+    nmap <leader>R :Repl<space>
+    nmap <c-x> <Plug>ReplExecLine
+    imap <c-x> <c-o>:call ReplExecLine()<cr>
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>
