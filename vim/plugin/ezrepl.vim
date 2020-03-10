@@ -24,15 +24,55 @@
 if exists('g:loaded_ezrepl') | finish | endif
 let g:loaded_ezrepl = v:true
 
-" WIP
-let g:repl_win = -1
-let g:repl_buf = -1
-function! g:ReplStart(exe) abort
-    if g:repl_win != -1
-    endif
-    sp
-    noa terminal 
-    let g:repl_buf = bufnr()
-    let g:repl_win = winnr()
-    wincmd p
-endfunction
+if !has('nvim')
+    function! s:init_repl() abort
+        if exists('b:repl_initialized') && b:repl_initialized
+            if empty(getbufinfo(b:repl_buf))
+                " Old REPL is gone, needs a new buf + win
+                let b:repl_initialized = v:false
+            elseif empty(getwininfo(b:repl_win))
+                " Old REPL is still around, but needs new win
+                split
+                exec 'norm :b '.b:repl_buf
+                let l:repl_win = winnr()
+                wincmd p
+                let b:repl_win = l:repl_win
+            endif
+        endif
+        if !exists('b:repl_initialized') || !b:repl_initialized
+            " Make a new split for this window's REPL
+            noautocmd terminal ++rows=8
+            " Store info about the new window to carry back
+            let l:repl_buf = bufnr('%')
+            let l:repl_win = winnr()
+            " Return to starting window
+            wincmd p
+            let b:repl_buf = l:repl_buf
+            let b:repl_win = l:repl_win
+            let b:repl_initialized = v:true
+        endif
+    endfunction
+
+    function! g:Repl(...) abort
+        if !exists('b:repl_initialized') || !b:repl_initialized
+           call s:init_repl()
+        endif
+        let l:repl_ch = job_getchannel(term_getjob(b:repl_buf))
+        if ch_status(l:repl_ch) !=# 'open'
+            let b:repl_initialized = v:false
+            call s:init_repl()
+            let l:repl_ch = job_getchannel(term_getjob(b:repl_buf))
+        endif
+        call ch_evalraw(l:repl_ch, join(a:000)."\n")
+        redraw!
+    endfunction
+
+    function! g:ReplExecLine() abort
+        call Repl(getline('.'))
+    endfunction
+
+    command -nargs=* Repl call Repl('<args>')
+
+    nnoremap <Plug>ReplExecLine :call ReplExecLine()<cr>
+else " has('nvim')
+endif

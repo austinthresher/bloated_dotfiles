@@ -390,9 +390,14 @@ function! g:Maps()
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
         autocmd!
-        autocmd TermOpen * startinsert
-"        autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
+        if has('nvim')
+            autocmd TermOpen * startinsert
+        else
+            autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
+        endif
     augroup END
+
+    nmap <leader>e <Plug>ReplExecLine
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>
