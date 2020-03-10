@@ -26,7 +26,7 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
-if command -v brew &>/dev/null; then
+if command -v brew 2>&1 > /dev/null; then
     BREWPATH="$(brew --prefix)"
 else
     BREWPATH="$HOME/homebrew"
@@ -36,3 +36,6 @@ if [ -d "$BREWPATH/bin" ] ; then
     PATH="$BREWPATH/bin:$PATH"
 fi
 
+if command -v clear 2>&1 > /dev/null; then
+    clear
+fi
