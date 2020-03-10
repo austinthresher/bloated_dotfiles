@@ -33,10 +33,11 @@ if !has('nvim')
         endif
         if !exists('b:repl_initialized') || !b:repl_initialized
             " Make a new split for this window's REPL
-            noautocmd terminal ++rows=8
+            noautocmd terminal ++rows=8 ++close
             " Store info about the new window to carry back
-            let l:repl_buf = bufnr('%') " TODO: set buflisted = false
+            let l:repl_buf = bufnr('%')
             let l:repl_win = winnr()
+            setlocal nobuflisted
             " Return to starting window
             wincmd p
             let b:repl_buf = l:repl_buf
@@ -56,7 +57,7 @@ if !has('nvim')
             let l:repl_ch = job_getchannel(term_getjob(b:repl_buf))
         endif
         call ch_evalraw(l:repl_ch, join(a:000)."\n")
-        redraw!
+        redraw
     endfunction
 
 else " has('nvim')
