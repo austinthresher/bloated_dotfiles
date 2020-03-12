@@ -145,6 +145,7 @@ function! g:Plugins()
             autocmd!
             autocmd Filetype * AnyFoldActivate
             autocmd Filetype * exec 'norm! zR'
+            autocmd Filetype * set foldlevel=99
         augroup END
         let g:anyfold_fold_comments = v:true
     endif
@@ -239,18 +240,17 @@ function! g:Plugins()
         nnoremap <c-w>4 :Accordion 4<CR>
     endif " accordion
 
-    if $WSL_DISTRO_NAME ==# ''
-        if helper#plug('thaerkh/vim-indentguides')
-            augroup IndentGuides
-                autocmd!
-                autocmd VimEnter * silent! IndentGuidesToggle
-            augroup END
+    if helper#plug('thaerkh/vim-indentguides')
+        if $WSL_DISTRO_NAME ==# ''
             let g:indentguides_spacechar = '🮌'
             let g:indentguides_tabchar = '░'
-            let g:indentguides_toggleListMode = v:false
-            let g:indentguides_firstlevel = v:false
-        endif " indentguides
-    endif
+        else
+            let g:indentguides_spacechar = '|'
+            let g:indentguides_tabchar = '>'
+        endif
+        let g:indentguides_toggleListMode = v:false
+        let g:indentguides_firstlevel = v:false
+    endif " indentguides
 
     " TODO: try neoformat
     if helper#plug('chiel92/vim-autoformat')
