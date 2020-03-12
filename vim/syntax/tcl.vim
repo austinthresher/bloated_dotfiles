@@ -36,7 +36,7 @@ let s:tcl_sqlite_active = 1
 " let s:tcl_critcl_active = 1
 " let s:tcl_togl_active = 1
 " let s:tcl_itcl_active = 1
-" let s:tcl_ttk_active = 1
+let s:tcl_ttk_active = 1
 
 " one more highlight than the law allows
 if exists("s:tcl_highlight_bookends")
@@ -892,7 +892,7 @@ HiLink tclIfComment      Comment
 HiLink tclIfCommentStart Comment
 HiLink tclSpecial        Special
 HiLink tclTodo           Todo
-HiLink tclExpand         Underlined
+HiLink tclExpand         Macro
 HiLink tclREClassGroup   Special
 HiLink tclREClass        Special
 " ------------------
@@ -904,7 +904,7 @@ if exists("s:tcl_highlight_primary")
     HiLink tclRepeat         Repeat
     HiLink tclException      Exception
     HiLink tclLabel          Label
-    HiLink tkWidget          Underlined
+    HiLink tkWidget          Type
 endif
 " ------------------
 if exists("s:tcl_highlight_lcs_are_warnings")
