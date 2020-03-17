@@ -17,6 +17,8 @@ grid rowconfigure . 0 -weight 1
 grid rowconfigure . 1 -weight 1
 grid columnconfigure . 0 -weight 1
 
+focus .input
+
 proc put_stdout {str} {
     .term configure -state normal
     .term insert end "$str\n"
@@ -34,14 +36,14 @@ proc readevent {ch} {
     }
 }
 
-set ch [open {|/bin/sh -il} RDWR]
-fconfigure $ch -blocking false -buffering none
-fileevent $ch readable "readevent $ch"
+set ::ch [open {|/bin/sh -il} RDWR]
+fconfigure $::ch -blocking false -buffering none
+fileevent $::ch readable "readevent $::ch"
 
-proc userinput {ch} {
+proc userinput {} {
     set cmd $::input
     set ::input {}
-    puts $ch "$cmd\n"
+    puts $::ch "$cmd\n"
 }
 
-bind . <Return> {userinput $ch}
+bind . <Return> userinput
