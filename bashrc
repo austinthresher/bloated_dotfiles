@@ -85,6 +85,7 @@ case $HASH in
     8d94e1*) PROMPT_COLOR_IDX=13 ;;
     075baf*) PROMPT_COLOR_IDX=12 ;;
     a1ec7c*) PROMPT_COLOR_IDX=9  ;;
+    9677b4*) PROMPT_COLOR_IDX=11 ;;
     *)
         # Randomize color based on hostname for all else
         PROMPT_COLOR_IDX=$(expr ${SEED:1:4} % 12 + 1)
