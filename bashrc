@@ -80,8 +80,8 @@ SEED=$(echo $HASH | sed 's/[^0-9]//g')
 
 # Predefined colors for specific hosts
 case $HASH in
-    938d55*) PROMPT_COLOR_IDX=4  ;;
-    cbccc7*) PROMPT_COLOR_IDX=2  ;;
+    938d55*) PROMPT_COLOR_IDX=7  ;;
+    cbccc7*) PROMPT_COLOR_IDX=4  ;;
     8d94e1*) PROMPT_COLOR_IDX=13 ;;
     075baf*) PROMPT_COLOR_IDX=12 ;;
     a1ec7c*) PROMPT_COLOR_IDX=9  ;;
