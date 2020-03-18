@@ -50,6 +50,7 @@ fi
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
 function reverse { printf "\e[7m"; }
+function noreverse { printf "\e[27m"; }
 function under   { printf "\e[4m"; }
 function colorfg { printf "\e[3$1m"; }
 function colorbg { printf "\e[4$1m"; }
@@ -105,26 +106,88 @@ export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
 
+HASH=$(hostname | shasum)
+SEED=$(echo $HASH | sed 's/[^0-9]//g')
 
-PROMPT_COLOR=2
-if [ ! -z "$SSH_CLIENT" ]; then
-    PROMPT_COLOR=$(expr $PROMPT_COLOR \+ 1)
-fi
-if [ -z "$TMUX" ]; then
-    TMUX_PROMPT_COLOR=$PROMPT_COLOR
-    PROMPT_COLOR=$(expr $PROMPT_COLOR \- 1)
-else
-    TMUX_PROMPT_COLOR=$(expr $PROMPT_COLOR \- 1)
-fi
-case "$TMUX_PROMPT_COLOR" in
-    0) export TMUX_COLOR=black ;;
-    1) export TMUX_COLOR=red ;;
-    2) export TMUX_COLOR=green ;;
-    3) export TMUX_COLOR=yellow ;;
-    4) export TMUX_COLOR=blue ;;
-    5) export TMUX_COLOR=magenta ;;
-    6) export TMUX_COLOR=cyan ;;
-    7) export TMUX_COLOR=white ;;
-    *) ;;
+# Predefined colors for specific hosts
+case $HASH in
+    938d55*)
+        PROMPT_COLOR_IDX=4
+        ;;
+    cbccc7*)
+        PROMPT_COLOR_IDX=2
+        ;;
+    *)
+        # Randomize color based on hostname for all else
+        PROMPT_COLOR_IDX=$(expr ${SEED:1:4} % 12 + 1)
+        ;;
 esac
-export PS1="\[$(reverse)$(colorfg $PROMPT_COLOR)\] \w \[$(norm)\] "
+
+# Map color index to escape sequences
+case "$PROMPT_COLOR_IDX" in
+    0)
+        export TMUX_COLOR=black
+        export PROMPT_COLOR=$(colorfg 0)
+        ;;
+    1)
+        export TMUX_COLOR=red
+        export PROMPT_COLOR=$(colorfg 1)
+        ;;
+    2)
+        export TMUX_COLOR=green
+        export PROMPT_COLOR=$(colorfg 2)
+        ;;
+    3)
+        export TMUX_COLOR=yellow
+        export PROMPT_COLOR=$(colorfg 3)
+        ;;
+    4)
+        export TMUX_COLOR=blue
+        export PROMPT_COLOR=$(colorfg 4)
+        ;;
+    5)
+        export TMUX_COLOR=magenta
+        export PROMPT_COLOR=$(colorfg 5)
+        ;;
+    6)
+        export TMUX_COLOR=cyan
+        export PROMPT_COLOR=$(colorfg 6)
+        ;;
+    7)
+        export TMUX_COLOR=white
+        export PROMPT_COLOR=$(colorfg 7)
+        ;;
+    8)
+        export TMUX_COLOR=colour8
+        export PROMPT_COLOR=$(brightfg 0)
+        ;;
+    9)
+        export TMUX_COLOR=colour9
+        export PROMPT_COLOR=$(brightfg 1)
+        ;;
+    10)
+        export TMUX_COLOR=colour10
+        export PROMPT_COLOR=$(brightfg 2)
+        ;;
+    11)
+        export TMUX_COLOR=colour11
+        export PROMPT_COLOR=$(brightfg 3)
+        ;;
+    12)
+        export TMUX_COLOR=colour12
+        export PROMPT_COLOR=$(brightfg 4)
+        ;;
+    13)
+        export TMUX_COLOR=colour13
+        export PROMPT_COLOR=$(brightfg 5)
+        ;;
+    14)
+        export TMUX_COLOR=colour14
+        export PROMPT_COLOR=$(brightfg 6)
+        ;;
+    15|*)
+        export TMUX_COLOR=colour15
+        export PROMPT_COLOR=$(brightfg 7)
+        ;;
+esac
+export PS1="\[$PROMPT_COLOR\]\h \[$(reverse)\] \w \[$(norm)\] "
