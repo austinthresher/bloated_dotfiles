@@ -1,4 +1,6 @@
 
+set $mod Mod1
+
 # i3-helper uses i3-msg to set gaps based on res and launches conky and compton
 exec_always ~/.dotfiles/scripts/i3-helper.sh
 exec_always ~/.fehbg
@@ -15,7 +17,7 @@ font pango:Iosevka\ Term 12
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
-bindsym Mod4+End exec i3lock -c 000000 --image=$HOME/.i3lockimg
+bindsym $mod+End exec i3lock -c 000000 --image=$HOME/.i3lockimg
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
@@ -35,72 +37,72 @@ set $down j
 set $left h
 set $right l
 
-# use Mouse+Mod4 to drag floating windows to their wanted position
-floating_modifier Mod4
+# use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
 
 # start a terminal
-bindsym Mod4+Return exec st
+bindsym $mod+Return exec st
 
 # kill focused window
-bindsym Mod4+Shift+q kill
+bindsym $mod+Shift+q kill
 
 
 # change focus
-bindsym Mod4+$left focus left
-bindsym Mod4+$down focus down
-bindsym Mod4+$up focus up
-bindsym Mod4+$right focus right
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
 
 # alternatively, you can use the cursor keys:
-bindsym Mod4+Left focus left
-bindsym Mod4+Down focus down
-bindsym Mod4+Up focus up
-bindsym Mod4+Right focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
 
 # move focused window
-bindsym Mod4+Shift+$left move left
-bindsym Mod4+Shift+$down move down
-bindsym Mod4+Shift+$up move up
-bindsym Mod4+Shift+$right move right
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
 
 # alternatively, you can use the cursor keys:
-bindsym Mod4+Shift+Left move left
-bindsym Mod4+Shift+Down move down
-bindsym Mod4+Shift+Up move up
-bindsym Mod4+Shift+Right move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym Mod4+s split h
+bindsym $mod+s split h
 
 # split in vertical orientation
-bindsym Mod4+v split v
+bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
-bindsym Mod4+f fullscreen toggle
+bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-bindsym Mod4+t layout stacking
-bindsym Mod4+w layout tabbed
-bindsym Mod4+e layout toggle split
+bindsym $mod+t layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym Mod4+Shift+space floating toggle
+bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym Mod4+space focus mode_toggle
+bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym Mod4+a focus parent
+bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym Mod4+d focus child
+#bindsym $mod+d focus child
 
 # move the currently focused window to the scratchpad
-bindsym Mod4+Shift+minus move scratchpad
+bindsym $mod+Shift+minus move scratchpad
 
 # Show the next scratchpad window or hide the focused scratchpad window.
 # If there are multiple scratchpad windows, this command cycles through them.
-bindsym Mod4+minus scratchpad show
+bindsym $mod+minus scratchpad show
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -116,36 +118,36 @@ set $ws9 "9"
 set $ws10 "10"
 
 # switch to workspace
-bindsym Mod4+1 workspace number $ws1
-bindsym Mod4+2 workspace number $ws2
-bindsym Mod4+3 workspace number $ws3
-bindsym Mod4+4 workspace number $ws4
-bindsym Mod4+5 workspace number $ws5
-bindsym Mod4+6 workspace number $ws6
-bindsym Mod4+7 workspace number $ws7
-bindsym Mod4+8 workspace number $ws8
-bindsym Mod4+9 workspace number $ws9
-bindsym Mod4+0 workspace number $ws10
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
 
 # move focused container to workspace
-bindsym Mod4+Shift+1 move container to workspace number $ws1
-bindsym Mod4+Shift+2 move container to workspace number $ws2
-bindsym Mod4+Shift+3 move container to workspace number $ws3
-bindsym Mod4+Shift+4 move container to workspace number $ws4
-bindsym Mod4+Shift+5 move container to workspace number $ws5
-bindsym Mod4+Shift+6 move container to workspace number $ws6
-bindsym Mod4+Shift+7 move container to workspace number $ws7
-bindsym Mod4+Shift+8 move container to workspace number $ws8
-bindsym Mod4+Shift+9 move container to workspace number $ws9
-bindsym Mod4+Shift+0 move container to workspace number $ws10
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # reload the configuration file
-bindsym Mod4+Shift+c reload
+bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym Mod4+Shift+r restart
+bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-#bindsym Mod4+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-bindsym Mod4+Shift+e exec i3-msg exit
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec i3-msg exit
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -166,13 +168,13 @@ mode "resize" {
         bindsym Up          resize shrink height 10 px or 10 ppt
         bindsym Right       resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or Mod4+r
+        # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
-        bindsym Mod4+r mode "default"
+        bindsym $mod+r mode "default"
 }
 
-bindsym Mod4+r mode "resize"
+bindsym $mod+r mode "resize"
 
 client.focused_inactive #458588 #83A598 #FBF1C7 #458588 #83A598
 client.focused          #d65d0e #fe8019 #3C3836 #d65d0e #fe8019
@@ -182,20 +184,20 @@ client.placeholder      #282828 #0C0C0C #FFFFFF #000000 #0C0C0C
 
 client.background       #1D2021
 
-# bar {
-#   colors {
-#     background #000000
-#     statusline #FFFFFF
-#     separator  #666666
-# 
-#     focused_workspace  #458588 #83A598 #FBF1C7
-#     active_workspace   #98971A #B8BB26 #3C3836
-#     inactive_workspace #689D6A #8EC07C #3C3836
-#     urgent_workspace   #CC241D #FB4934 #FBF1C7
-#     binding_mode       #B16286 #D3869B #3C3836
-#   }
-# }
+bar {
+  colors {
+    background #000000
+    statusline #FFFFFF
+    separator  #666666
 
-bindsym Mod4+d exec "dmenu_run -nf '#A89984' -nb '#665C54' -sb '#D65D0E' -sf '#FBF1C7' -fn 'monospace-10' -p '>'"
+    focused_workspace  #458588 #83A598 #FBF1C7
+    active_workspace   #98971A #B8BB26 #3C3836
+    inactive_workspace #689D6A #8EC07C #3C3836
+    urgent_workspace   #CC241D #FB4934 #FBF1C7
+    binding_mode       #B16286 #D3869B #3C3836
+  }
+}
 
-# bindsym Mod4+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+d exec "dmenu_run -nf '#A89984' -nb '#665C54' -sb '#D65D0E' -sf '#FBF1C7' -fn 'monospace-10' -p '>'"
+
+# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
