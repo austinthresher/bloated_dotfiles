@@ -14,37 +14,6 @@ if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
 else
     alias ls='ls -F --color=auto'
-
-    if [[ $(hostname) == *wraeclast* ]]; then
-        source "$HOME/.dotfiles/scripts/themes.sh"
-        HOUR=$(date +%H)
-        case $HOUR in
-            05|06|07)
-                # Early theme
-                theme_zenburn
-                ;;
-            08|09|10)
-                # Morning theme
-                theme_seafoam_pastel
-                ;;
-            11|12|13)
-                # Midday theme
-                theme_espresso
-                ;;
-            14|15|16|17)
-                # Afternoon theme
-                theme_nord
-                ;;
-            18|19|20|21)
-                # Evening theme
-                theme_onedark
-                ;;
-            22|23|01|02|03|04)
-                # Night theme
-                theme_terminix
-                ;;
-        esac
-    fi
 fi
 
 function norm    { printf "\e[0m"; }
@@ -111,12 +80,13 @@ SEED=$(echo $HASH | sed 's/[^0-9]//g')
 
 # Predefined colors for specific hosts
 case $HASH in
-    938d55*)
-        PROMPT_COLOR_IDX=4
-        ;;
-    cbccc7*)
-        PROMPT_COLOR_IDX=2
-        ;;
+    938d55*) PROMPT_COLOR_IDX=4  ;;
+    cbccc7*) PROMPT_COLOR_IDX=2  ;;
+    8d94e1*) PROMPT_COLOR_IDX=13 ;;
+    075baf*) PROMPT_COLOR_IDX=12 ;;
+    a1ec7c*) PROMPT_COLOR_IDX=9  ;;
+    9677b4*) PROMPT_COLOR_IDX=11 ;;
+    54363a*) PROMPT_COLOR_IDX=5 ;;
     *)
         # Randomize color based on hostname for all else
         PROMPT_COLOR_IDX=$(expr ${SEED:1:4} % 12 + 1)
