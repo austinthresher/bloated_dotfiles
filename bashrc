@@ -32,7 +32,7 @@ function colortest {
     local WIDTH=$(expr 8 \* ${#TEXT})
     printf "%-${WIDTH}s" "Normal on Normal"
     printf "$SEP"
-    printf "%-${WIDTH}s" "Bright on Normal"
+    printf "%-${WIDTH}s" "Normal on Bright"
     printf "\n"
     for n in {0..7}; do
         for m in {0..7}; do
@@ -40,17 +40,17 @@ function colortest {
         done
         printf "$SEP"
         for m in {0..7}; do
-            echo -n "$(colorbg $n)$(brightfg $m)${TEXT}"
+            echo -n "$(brightbg $n)$(colorfg $m)${TEXT}"
         done
         echo "$(norm)"
     done
-    printf "%-${WIDTH}s" "Normal on Bright"
+    printf "%-${WIDTH}s" "Bright on Normal"
     printf "$SEP"
     printf "%-${WIDTH}s" "Bright on Bright"
     printf "\n"
     for n in {0..7}; do
         for m in {0..7}; do
-            echo -n "$(brightbg $n)$(colorfg $m)${TEXT}"
+            echo -n "$(colorbg $n)$(brightfg $m)${TEXT}"
         done
         printf "$SEP"
         for m in {0..7}; do
