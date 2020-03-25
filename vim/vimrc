@@ -399,7 +399,7 @@ function! g:Maps()
 
     nmap <leader>R :Repl<space>
     nmap <c-x> <Plug>ReplExecLine
-    imap <c-x> <c-o>:call ReplExecLine()<cr>
+    imap <c-x>e <c-o>:call ReplExecLine()<cr>
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>

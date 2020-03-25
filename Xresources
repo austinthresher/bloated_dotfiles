@@ -1,6 +1,6 @@
 st.termname: xterm-256color
 st.shell: /bin/bash
-st.font: Iosevka Term Slab:size=12
+!st.font: Iosevka Term Slab:size=12
 st.borderpx: 24
 st.cursorshape: 2
 st.xfps: 120
