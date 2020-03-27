@@ -53,10 +53,10 @@ function! g:Options()
     set path+=**
     " Tab completion menu
     set wildmenu
-    " Don't scroll near borders, use an autocmd to do that
+    " Scroll options
+    set sidescroll=1
     set scrolloff=0
-    "set sidescrolloff=0
-    "set sidescroll=80
+    set sidescrolloff=1
     " Allow windows to collapse completely
     set winminwidth=1
     set winminheight=1
@@ -371,6 +371,18 @@ function! g:Functions()
             exec 'hi '.l:name
         endif
     endfunc
+
+    function! ViewSnap()
+        let l:view = winsaveview()
+        let l:left = l:view['leftcol']
+        let l:col = l:view['col']
+        let l:linelen = strwidth(getline('.'))
+        let l:winlen = winwidth(0)
+        if l:left > 0 && l:linelen < l:winlen
+            let l:view['leftcol'] = 0
+            call winrestview(l:view)
+        endif
+    endfunction
 endfunction
 call g:Functions()
 
@@ -386,6 +398,12 @@ function! g:Maps()
     tnoremap <c-w>k <c-\><c-n><c-w>k
     tnoremap <c-w>l <c-\><c-n><c-w>l
     tnoremap <c-w>p <c-\><c-n><c-w>p
+
+    " Snap view to left if line length is <= win width
+    augroup ViewSnapAU
+        autocmd!
+        autocmd CursorMoved,CursorMovedI * call ViewSnap()
+    augroup END
 
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
