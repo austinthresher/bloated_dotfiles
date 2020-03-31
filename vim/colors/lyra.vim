@@ -169,11 +169,11 @@ call s:hi('Directory',    s:blue,       s:none,       'bold')
 call s:hi('Title',        s:br_yellow,  s:none,       'bold')
 call s:hi('MoreMsg',      s:yellow,     s:none,       'bold')
 call s:hi('Question',     s:br_yellow,  s:none,       'bold')
-call s:hi('Warning',      s:red,        s:none,       'bold')
+call s:hi('Warning',      s:yellow,     s:none,       'NONE')
 call s:hi('Special',      s:yellow,     s:none,       'NONE')
 call s:hi('Comment',      s:br_green,   s:none,       'italic')
 call s:hi('Todo',         s:br_yellow,  s:black,      'bold')
-call s:hi('Error',        s:br_red,     s:none,       'italic')
+call s:hi('Error',        s:br_red,     s:none,       'bold')
 call s:hi('Type',         s:br_blue,    s:none,       'NONE')
 call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
 call s:hi('Typedef',      s:br_blue,    s:none,       'NONE')
@@ -208,6 +208,18 @@ endif
 if has('terminal')
     call s:hi('Terminal', s:br_white, s:hard_black, 'NONE')
 endif
+
+call s:hi('QuickFixLine', s:none, s:black, 'none')
+augroup QuickFixColors
+    autocmd!
+    autocmd Syntax qf syntax match qfWarning "warning" contained nextGroup=qfSeparator
+    autocmd Syntax qf syntax match qfLineNr "[^|]*" contained contains=qfError,qfWarning
+    autocmd Syntax qf syntax match clangTidyCheck "\[.*\]$"
+    autocmd Syntax qf highlight link clangTidyCheck Conceal
+    autocmd Syntax qf highlight link qfFileName cIncluded
+    autocmd Syntax qf highlight link qfWarning Warning 
+    autocmd Syntax qf highlight link qfSeparator Normal
+augroup END
 
 " statuslime colors
 call s:hi('LimeNormal',       s:hard_black, s:white,      'bold')

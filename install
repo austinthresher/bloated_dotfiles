@@ -79,7 +79,3 @@ else
     cp fonts/*.ttf "$HOME/.local/share/fonts/"
     rm -rf fonts
 fi
-
-if command -v xrdb &> /dev/null; then
-    xrdb -load ~/.Xresources
-fi

@@ -78,6 +78,12 @@ function! g:Options()
         set grepprg=ag\ --nogroup\ --nocolor\ --column
         set grepformat=%f:%l:%c%m
     endif
+
+    " Simplify quickfix by ignoring any line that isn't an error or warning
+    set errorformat=%f:%l:%c:\ %trror:\ %m
+    set errorformat+=%f:%l:%c:\ %tarning:\ %m
+    set errorformat+=%-G%.%#
+
 endfunc
 call g:Options()
 
@@ -88,7 +94,7 @@ function! g:Globals()
         let g:lyra_transparent = v:true
         colorscheme lyra
     endtry
-
+    let g:cmake_build_dir = 'build'
     let g:ide = has('nvim')
     let g:nproc = 1
     try | let g:nproc = str2nr(system('nproc')) | endtry
@@ -181,11 +187,6 @@ function! g:Plugins()
     if helper#plug('szw/vim-g')
         nmap <leader>G :Googlef<cr>
         vmap <leader>G :Googlef<cr>
-    endif
-
-    if helper#plug('vhdirk/vim-cmake')
-        nmap <leader>c :CMake<cr>
-        nmap <leader>C :CMakeClean<cr>
     endif
 
     if helper#plug('ap/vim-buftabline')
@@ -372,6 +373,53 @@ function! g:Functions()
         endif
     endfunc
 
+    function! CMakeBuildDir()
+        return exists('b:cmake_build_dir') ? 
+                    \ b:cmake_build_dir :
+                    \ (exists('g:cmake_build_dir') ?
+                        \ g:cmake_build_dir : 'build')
+    endfunction
+
+    function! RunCMake()
+        if filereadable('CMakeLists.txt')
+            let l:build = CMakeBuildDir()
+            exec '!cmake -B '.CMakeBuildDir().' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S $(pwd)'
+        endif
+    endfunction
+
+    function! RunMake()
+        if filereadable('CMakeLists.txt')
+            exec 'make -C '.CMakeBuildDir()
+        else
+            exec 'make'
+        endif
+    endfunction
+
+    function! RunMakeClean()
+        if filereadable('CMakeLists.txt')
+            exec '!make -C '.CMakeBuildDir().' clean'
+        else
+            exec '!make clean'
+        endif
+    endfunction
+
+    function! RunTests()
+        if filereadable(CMakeBuildDir().'/tests')
+            exec '!./'.CMakeBuildDir().'/tests'
+        endif
+    endfunction
+
+    " Show and jump to quickfix, close quickfix when in the list
+    function! ToggleQuickfix()
+        if &buftype ==# 'quickfix'
+            wincmd p
+            exec 'cclose'
+        else
+            exec 'copen'
+        endif
+    endfunction
+
+    " Snaps view to left when line < window width
     function! ViewSnap()
         let l:view = winsaveview()
         let l:left = l:view['leftcol']
@@ -405,6 +453,14 @@ function! g:Maps()
         autocmd CursorMoved,CursorMovedI * call ViewSnap()
     augroup END
 
+    nnoremap <silent> Q :call ToggleQuickfix()<cr>
+    nmap <leader>Q :q<cr>
+    nmap <leader>l :copen<cr>
+    nmap <silent> <leader>t :call RunTests()<cr>
+    nmap <silent> <leader>m :call RunMake()<cr>
+    nmap <silent> <leader>C :call RunMakeClean()<cr>
+    nmap <silent> <leader>c :call RunCMake()<cr>
+
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
         autocmd!
@@ -414,10 +470,6 @@ function! g:Maps()
             autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
         endif
     augroup END
-
-    nmap <leader>R :Repl<space>
-    nmap <c-x> <Plug>ReplExecLine
-    imap <c-x>e <c-o>:call ReplExecLine()<cr>
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>
@@ -430,7 +482,7 @@ function! g:Maps()
     " Ctrl+K to search for cursor text and show in quickfix
     nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
-    nnoremap <leader>c :call HiAtCur()<cr>
+    nnoremap <leader>h :call HiAtCur()<cr>
 
     " Makes * select the cursor word but not jump to next match
     nnoremap * *N
