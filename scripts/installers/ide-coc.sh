@@ -6,7 +6,7 @@ if [ ! -d "coc.nvim" ]; then
 fi
 cd coc.nvim
 git checkout release
-
+git pull
 EXTENSIONS='coc-json coc-tsserver coc-yaml coc-python coc-highlight '
 EXTENSIONS+='coc-snippets coc-lists coc-yank coc-vimlsp coc-clangd '
 

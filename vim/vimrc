@@ -82,7 +82,9 @@ function! g:Options()
     " Simplify quickfix by ignoring any line that isn't an error or warning
     set errorformat=%f:%l:%c:\ %trror:\ %m
     set errorformat+=%f:%l:%c:\ %tarning:\ %m
+    set errorformat+=%f:(%.%#):\ %m
     set errorformat+=%-G%.%#
+    " TODO: display link errors
 
 endfunc
 call g:Options()
@@ -156,14 +158,14 @@ function! g:Plugins()
         let g:anyfold_fold_comments = v:true
     endif
 
-    if helper#plug('octol/vim-cpp-enhanced-highlight')
-        let g:cpp_class_scope_highlight = v:true
-        let g:cpp_member_variable_highlight = v:true
-        let g:cpp_class_decl_highlight = v:true
-        let g:cpp_posix_standard = v:true
-        let g:cpp_experimental_template_highlight = v:true
-        let g:cpp_concepts_highlight = v:true
-    endif
+"    if helper#plug('octol/vim-cpp-enhanced-highlight')
+"        let g:cpp_class_scope_highlight = v:true
+"        let g:cpp_member_variable_highlight = v:true
+"        let g:cpp_class_decl_highlight = v:true
+"        let g:cpp_posix_standard = v:true
+"        let g:cpp_experimental_template_highlight = v:true
+"        let g:cpp_concepts_highlight = v:true
+"    endif
 
     if helper#plug('noahfrederick/vim-skeleton')
         if has('nvim')
@@ -264,7 +266,7 @@ function! g:Plugins()
     endif " autoformat
 
     if helper#plug('moll/vim-bbye')
-        nnoremap <leader>q :Bdelete<CR>
+        nnoremap <leader>Q :Bdelete<CR>
     endif " bbye
 
     if g:ide
@@ -380,33 +382,30 @@ function! g:Functions()
                         \ g:cmake_build_dir : 'build')
     endfunction
 
-    function! RunCMake()
+    function! RunCMakeAndMake(args)
         if filereadable('CMakeLists.txt')
             let l:build = CMakeBuildDir()
-            exec '!cmake -B '.CMakeBuildDir().' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S $(pwd)'
-        endif
-    endfunction
-
-    function! RunMake()
-        if filereadable('CMakeLists.txt')
-            exec 'make -C '.CMakeBuildDir()
+            let l:cmd = '!cmake -B '.CMakeBuildDir().' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S $(pwd) '.a:args
+            silent exec l:cmd
+            silent exec 'make -C '.CMakeBuildDir()
+            redraw!
+            echom l:cmd
         else
-            exec 'make'
+            silent exec 'make'
+            redraw!
+            echom 'make'
         endif
     endfunction
 
     function! RunMakeClean()
         if filereadable('CMakeLists.txt')
-            exec '!make -C '.CMakeBuildDir().' clean'
+            let l:cmd = 'make -C '.CMakeBuildDir().' clean'
         else
-            exec '!make clean'
+            let l:cmd = 'make clean'
         endif
-    endfunction
-
-    function! RunTests()
-        if filereadable(CMakeBuildDir().'/tests')
-            exec '!./'.CMakeBuildDir().'/tests'
-        endif
+        silent exec l:cmd
+        redraw!
+        echom l:cmd
     endfunction
 
     " Show and jump to quickfix, close quickfix when in the list
@@ -415,7 +414,7 @@ function! g:Functions()
             wincmd p
             exec 'cclose'
         else
-            exec 'copen'
+            exec 'copen 5'
         endif
     endfunction
 
@@ -454,12 +453,11 @@ function! g:Maps()
     augroup END
 
     nnoremap <silent> Q :call ToggleQuickfix()<cr>
-    nmap <leader>Q :q<cr>
+    nmap <leader>q :q<cr>
     nmap <leader>l :copen<cr>
-    nmap <silent> <leader>t :call RunTests()<cr>
-    nmap <silent> <leader>m :call RunMake()<cr>
     nmap <silent> <leader>C :call RunMakeClean()<cr>
-    nmap <silent> <leader>c :call RunCMake()<cr>
+    nmap <silent> <leader>M :call RunCMakeAndMake('-DCMAKE_CXX_CLANG_TIDY=clang-tidy')<cr>
+    nmap <silent> <leader>m :call RunCMakeAndMake('-UCMAKE_CXX_CLANG_TIDY=')<cr>
 
     " Automatically enter insert mode when selecting terminal window
     augroup Terminal
