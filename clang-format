@@ -11,11 +11,12 @@ SpaceBeforeParens: ControlStatements
 BreakBeforeBraces: Attach
 AlignAfterOpenBracket: AlwaysBreak
 AlignEscapedNewlines: Left
+AlignTrailingComments: false
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortBlocksOnASingleLine: false
-AllowShortCaseLabelsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: Inline
