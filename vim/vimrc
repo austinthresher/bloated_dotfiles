@@ -125,7 +125,6 @@ function! g:Plugins()
     call helper#plug('peterrincker/vim-argumentative')
     call helper#plug('romainl/vim-qf')
     call helper#plug('roxma/vim-paste-easy')
-    call helper#plug('sheerun/vim-polyglot')
     call helper#plug('tbastos/vim-lua')
     call helper#plug('terryma/vim-multiple-cursors')
     call helper#plug('thinca/vim-ref')
@@ -136,7 +135,6 @@ function! g:Plugins()
     call helper#plug('tpope/vim-eunuch')
     call helper#plug('tpope/vim-fugitive')
     call helper#plug('tpope/vim-markdown')
-"    call helper#plug('tpope/vim-rsi')
     call helper#plug('tpope/vim-sensible')
     call helper#plug('tpope/vim-unimpaired')
     call helper#plug('tpope/vim-vinegar')
@@ -147,6 +145,8 @@ function! g:Plugins()
     call helper#plug('vim-scripts/std_c.zip')
     call helper#plug('triglav/vim-visual-increment')
     call helper#plug('vim-scripts/armasm')
+    call helper#plug('jonhiggs/vim-readline')
+    call helper#plug('bfrg/vim-cpp-modern')
 
     if helper#plug('pseewald/vim-anyfold')
         augroup Anyfold
@@ -158,14 +158,6 @@ function! g:Plugins()
         let g:anyfold_fold_comments = v:true
     endif
 
-"    if helper#plug('octol/vim-cpp-enhanced-highlight')
-"        let g:cpp_class_scope_highlight = v:true
-"        let g:cpp_member_variable_highlight = v:true
-"        let g:cpp_class_decl_highlight = v:true
-"        let g:cpp_posix_standard = v:true
-"        let g:cpp_experimental_template_highlight = v:true
-"        let g:cpp_concepts_highlight = v:true
-"    endif
 
     if helper#plug('noahfrederick/vim-skeleton')
         if has('nvim')
