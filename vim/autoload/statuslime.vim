@@ -43,11 +43,11 @@ endfunc
 
 function! statuslime#row() abort
     let lchars = strlen(line('$'))
-    return Pad(printf(' %-'.lchars.'d', line('.')))
+    return Pad(printf('Line %d', line('.')))
 endfunction
 
 function! statuslime#col() abort
-    return Pad(printf(' %-2d', virtcol('.')))
+    return Pad(printf('Col %d', virtcol('.')))
 endfunction
 
 func! Pad(str)
@@ -71,6 +71,10 @@ func! statuslime#right() abort
         return Pad(b:statuslime_right)
     endif
     return ''
+endfunc
+
+function! statuslime#percent() abort
+    return Pad(string(round(100.0 * line('.') / line('$')))[:-3].'%')
 endfunc
 
 function! statuslime#qflen() abort
@@ -131,6 +135,7 @@ func! statuslime#focused() abort
         setlocal statusline+=%#LimeRight#%{statuslime#right()}
         setlocal statusline+=%#LimeCol#%{statuslime#col()}
         setlocal statusline+=%#LimeRow#%{statuslime#row()}
+        setlocal statusline+=%#LimeCol#%{statuslime#percent()}
     endif
 endfunc
 
@@ -169,5 +174,6 @@ func! statuslime#unfocused()
         setlocal statusline+=%=
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#col()}
         setlocal statusline+=%#LimeInactiveBar#%{statuslime#row()}
+        setlocal statusline+=%#LimeCol#%{statuslime#percent()}
     endif
 endfunc
