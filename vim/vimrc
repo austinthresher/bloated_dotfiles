@@ -148,6 +148,17 @@ function! g:Plugins()
     call helper#plug('jonhiggs/vim-readline')
     call helper#plug('bfrg/vim-cpp-modern')
 
+    if helper#plug('scrooloose/nerdtree')
+        nnoremap <leader>n :NERDTree<CR>
+        " Open NERDTree when vim runs with no files
+        augroup Nerdtree
+            autocmd!
+            autocmd StdinReadPre * let s:std_in = 1
+            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+        augroup END
+        call helper#plug('Xuyuanp/nerdtree-git-plugin')
+    endif
+
     if helper#plug('pseewald/vim-anyfold')
         augroup Anyfold
             autocmd!
@@ -217,22 +228,20 @@ function! g:Plugins()
     endif " git-messenger
 
     if helper#plug('wellle/visual-split.vim')
-        xmap <leader>p <Plug>(Visual-Split-SplitAbove)
-        xmap <leader>n <Plug>(Visual-Split-Resize)
-        nmap <leader>p <Plug>(Visual-Split-SplitAbove)
-        nmap <leader>n <Plug>(Visual-Split-Resize)
+        "        TODO: These mappings weren't working
+"        xmap <leader>p <Plug>(Visual-Split-SplitAbove)
+"        xmap <leader>n <Plug>(Visual-Split-Resize)
+"        nmap <leader>p <Plug>(Visual-Split-SplitAbove)
+"        nmap <leader>n <Plug>(Visual-Split-Resize)
     endif " visual-split
 
     if helper#plug('mattboehm/vim-accordion')
-        augroup Accordion
-            autocmd!
-            autocmd VimEnter * silent! AccordionAll 2
-        augroup END
         nnoremap <leader><pageup> :AccordionZoomOut<CR>
         nnoremap <leader><pagedown> :AccordionZoomIn<CR>
         nnoremap <c-w>2 :Accordion 2<CR>
         nnoremap <c-w>3 :Accordion 3<CR>
         nnoremap <c-w>4 :Accordion 4<CR>
+        nnoremap <c-w>0 :AccordionStop<CR>
     endif " accordion
 
     if helper#plug('thaerkh/vim-indentguides')
@@ -350,6 +359,8 @@ function! g:Plugins()
         endif " neomake
     endif
 
+    call helper#plug('ryanoasis/vim-devicons')
+
     call helper#end()
 endfunction
 call g:Plugins()
@@ -368,7 +379,7 @@ function! g:Functions()
     endfunc
 
     function! CMakeBuildDir()
-        return exists('b:cmake_build_dir') ? 
+        return exists('b:cmake_build_dir') ?
                     \ b:cmake_build_dir :
                     \ (exists('g:cmake_build_dir') ?
                         \ g:cmake_build_dir : 'build')

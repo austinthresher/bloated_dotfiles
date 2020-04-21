@@ -114,6 +114,10 @@ func! statuslime#focused() abort
         call s:add_state('v:true', 'LimeHelp', 'HELP')
         setlocal statusline+=%<
         setlocal statusline+=%#StatusLine#
+    elseif &filetype is# 'nerdtree'
+        call s:add_state('v:true', 'LimePreview', 'NERDTREE')
+        setlocal statusline+=%<
+        setlocal statusline+=%#StatusLine#
     else
         call s:add_state('mode()[0]==#''n''', 'LimeNormal', 'NORMAL')
         call s:add_state('mode()[0]==#''i''', 'LimeInsert', 'INSERT')
@@ -162,6 +166,10 @@ func! statuslime#unfocused()
         setlocal statusline+=%#StatusLine#
     elseif &filetype is# 'help'
         call s:add_state('v:true', 'LimeInactiveFT', 'HELP')
+        setlocal statusline+=%<
+        setlocal statusline+=%#StatusLine#
+    elseif &filetype is# 'nerdtree'
+        call s:add_state('v:true', 'LimeInactiveFT', 'NERDTREE')
         setlocal statusline+=%<
         setlocal statusline+=%#StatusLine#
     else
