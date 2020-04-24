@@ -80,10 +80,10 @@ function! g:Options()
     endif
 
     " Simplify quickfix by ignoring any line that isn't an error or warning
-    set errorformat=%f:%l:%c:\ %trror:\ %m
-    set errorformat+=%f:%l:%c:\ %tarning:\ %m
-    set errorformat+=%f:(%.%#):\ %m
-    set errorformat+=%-G%.%#
+    "set errorformat=%f:%l:%c:\ %trror:\ %m
+    "set errorformat+=%f:%l:%c:\ %tarning:\ %m
+    "set errorformat+=%f:(%.%#):\ %m
+    "set errorformat+=%-G%.%#
     " TODO: display link errors
 
 endfunc
@@ -137,27 +137,14 @@ function! g:Plugins()
     call helper#plug('tpope/vim-markdown')
     call helper#plug('tpope/vim-sensible')
     call helper#plug('tpope/vim-unimpaired')
-    call helper#plug('tpope/vim-vinegar')
     call helper#plug('tpope/vim-git')
     call helper#plug('tpope/vim-obsession')
     call helper#plug('chrisbra/csv.vim')
     call helper#plug('pboettch/vim-cmake-syntax')
     call helper#plug('vim-scripts/std_c.zip')
     call helper#plug('triglav/vim-visual-increment')
-    call helper#plug('vim-scripts/armasm')
     call helper#plug('jonhiggs/vim-readline')
     call helper#plug('bfrg/vim-cpp-modern')
-
-    if helper#plug('scrooloose/nerdtree')
-        nnoremap <leader>n :NERDTree<CR>
-        " Open NERDTree when vim runs with no files
-        augroup Nerdtree
-            autocmd!
-            autocmd StdinReadPre * let s:std_in = 1
-            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-        augroup END
-        call helper#plug('Xuyuanp/nerdtree-git-plugin')
-    endif
 
     if helper#plug('pseewald/vim-anyfold')
         augroup Anyfold
@@ -179,35 +166,20 @@ function! g:Plugins()
 
     endif
 
-    if helper#plug('ctrlpvim/ctrlp.vim')
-        let g:ctrlp_map = '<leader>f'
-        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-        let g:ctrlp_extensions = []
-    endif
+    " LustyJuggler / LustyExplorer
+    if helper#plug('sjbach/lusty')
+        let g:LustyExplorerDefaultMappings = 0
+        let g:LustyJugglerDefaultMappings = 0
 
-    if helper#plug('suy/vim-ctrlp-commandline')
-        let g:ctrlp_extensions += ['commandline']
+        nmap <silent> <c-j> :LustyJuggler<cr>
+        nmap <silent> _ :LustyFilesystemExplorer<cr>
+        nmap <silent> - :LustyFilesystemExplorerFromHere<cr>
+        nmap <silent> <leader>b :LustyBufferExplorer<cr>
+        nmap <silent> ? :LustyBufferGrep<cr>
+        augroup Lusty
+            autocmd!
+            autocmd BufEnter * highlight link LustySelected Question
     endif
-
-    if helper#plug('szw/vim-g')
-        nmap <leader>G :Googlef<cr>
-        vmap <leader>G :Googlef<cr>
-    endif
-
-    if helper#plug('ap/vim-buftabline')
-        let g:buftabline_indicators = 1
-        let g:buftabline_numbers = 0
-        nmap <leader>1 <Plug>BufTabLine.Go(1)
-        nmap <leader>2 <Plug>BufTabLine.Go(2)
-        nmap <leader>3 <Plug>BufTabLine.Go(3)
-        nmap <leader>4 <Plug>BufTabLine.Go(4)
-        nmap <leader>5 <Plug>BufTabLine.Go(5)
-        nmap <leader>6 <Plug>BufTabLine.Go(6)
-        nmap <leader>7 <Plug>BufTabLine.Go(7)
-        nmap <leader>8 <Plug>BufTabLine.Go(8)
-        nmap <leader>9 <Plug>BufTabLine.Go(9)
-        nmap <leader>0 <Plug>BufTabLine.Go(10)
-    endif " buftabline
 
     if helper#plug('junegunn/vim-easy-align')
         nmap ga <Plug>(EasyAlign)
@@ -226,14 +198,6 @@ function! g:Plugins()
         let g:git_messenger_max_popup_height = 8
         noremap <silent><leader>g :GitMessenger<cr>
     endif " git-messenger
-
-    if helper#plug('wellle/visual-split.vim')
-        "        TODO: These mappings weren't working
-"        xmap <leader>p <Plug>(Visual-Split-SplitAbove)
-"        xmap <leader>n <Plug>(Visual-Split-Resize)
-"        nmap <leader>p <Plug>(Visual-Split-SplitAbove)
-"        nmap <leader>n <Plug>(Visual-Split-Resize)
-    endif " visual-split
 
     if helper#plug('mattboehm/vim-accordion')
         nnoremap <leader><pageup> :AccordionZoomOut<CR>
@@ -359,8 +323,6 @@ function! g:Plugins()
         endif " neomake
     endif
 
-    call helper#plug('ryanoasis/vim-devicons')
-
     call helper#end()
 endfunction
 call g:Plugins()
@@ -481,6 +443,7 @@ function! g:Maps()
     nnoremap <c-w>` `
     nmap <silent><leader>? <Plug>(helper-toggle)
     " Ctrl+K to search for cursor text and show in quickfix
+    " why doesn't this work?
     nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
     nnoremap <leader>h :call HiAtCur()<cr>
