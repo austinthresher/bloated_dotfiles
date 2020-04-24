@@ -9,5 +9,5 @@ git checkout release
 git pull
 EXTENSIONS='coc-json coc-tsserver coc-yaml coc-python coc-highlight '
 EXTENSIONS+='coc-snippets coc-lists coc-yank coc-vimlsp coc-clangd '
-
+EXTENSIONS+='coc-go'
 nvim -c "CocInstall -sync ${EXTENSIONS} |q"
