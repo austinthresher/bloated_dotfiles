@@ -204,9 +204,8 @@ function! g:Plugins()
         nmap <silent> <c-k> :MBEbf<cr>
         nmap <silent> <leader>Q :MBEbd<cr>
         let g:miniBufExplUseSingleClick = 1
-        let g:miniBufExplShowBufNumbers = 0
+        "let g:miniBufExplShowBufNumbers = 0
         let g:miniBufExplBRSplit = 0
-        let g:miniBufExplSortBy = 'mru'
         let g:miniBufExplCycleArround = 1 " [sic]
         let g:did_minibufexplorer_syntax_inits = 1
     endif
