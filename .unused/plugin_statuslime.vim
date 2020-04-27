@@ -26,6 +26,6 @@ let g:loaded_statuslime = v:true
 
 augroup StatusLime
     au!
-    au VimEnter,WinEnter,BufWinEnter * call statuslime#focused()
-    au WinLeave,BufWinLeave * call statuslime#unfocused()
+    au VimEnter,WinEnter * call statuslime#focused()
+    au WinLeave * call statuslime#unfocused()
 augroup END

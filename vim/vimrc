@@ -166,20 +166,51 @@ function! g:Plugins()
 
     endif
 
-    " LustyJuggler / LustyExplorer
-    if helper#plug('sjbach/lusty')
-        let g:LustyExplorerDefaultMappings = 0
-        let g:LustyJugglerDefaultMappings = 0
-
-        nmap <silent> <c-j> :LustyJuggler<cr>
-        nmap <silent> _ :LustyFilesystemExplorer<cr>
-        nmap <silent> - :LustyFilesystemExplorerFromHere<cr>
-        nmap <silent> <leader>b :LustyBufferExplorer<cr>
-        nmap <silent> ? :LustyBufferGrep<cr>
-        augroup Lusty
+"    if has("ruby")
+"        " LustyJuggler / LustyExplorer
+"        if helper#plug('sjbach/lusty')
+"            let g:LustyExplorerDefaultMappings = 0
+"            let g:LustyJugglerDefaultMappings = 0
+"
+"            nmap <silent> <c-j> :LustyJuggler<cr>
+"            nmap <silent> _ :LustyFilesystemExplorer<cr>
+"            nmap <silent> - :LustyFilesystemExplorerFromHere<cr>
+"            nmap <silent> <leader>b :LustyBufferExplorer<cr>
+"            nmap <silent> ? :LustyBufferGrep<cr>
+"            augroup Lusty
+"                autocmd!
+"                autocmd BufEnter * highlight link LustySelected Question
+"        endif
+"    else
+    if helper#plug('scrooloose/nerdtree')
+        augroup NERDTree
             autocmd!
-            autocmd BufEnter * highlight link LustySelected Question
+            autocmd StdinReadPre * let s:std_in = 1
+            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+            autocmd VimEnter * if argc() == 1 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
+        augroup END
+        nmap <silent> <leader>n :NERDTreeFocus<CR>
+        let g:NERDTreeIgnore = ['\~$', '\.swp.*$']
+        let g:NERDTreeSortOrder = ['\/$', '*', '[[extension]]']
+        let g:NERDTreeMinimalUI = 1
+        let g:NERDTreeDirArrowExpandable = '+'
+        let g:NERDTreeDirArrowCollapsible = '-'
     endif
+
+    if helper#plug('weynhamz/vim-plugin-minibufexpl')
+        nmap <silent> <leader>b :MBEOpen<cr>:MBEFocus<cr>
+        nmap <silent> <leader>B :MBEClose<cr>
+        nmap <silent> <c-j> :MBEbb<cr>
+        nmap <silent> <c-k> :MBEbf<cr>
+        nmap <silent> <leader>Q :MBEbd<cr>
+        let g:miniBufExplUseSingleClick = 1
+        let g:miniBufExplShowBufNumbers = 0
+        let g:miniBufExplBRSplit = 0
+        let g:miniBufExplSortBy = 'mru'
+        let g:miniBufExplCycleArround = 1 " [sic]
+        let g:did_minibufexplorer_syntax_inits = 1
+    endif
+"    endif
 
     if helper#plug('junegunn/vim-easy-align')
         nmap ga <Plug>(EasyAlign)
@@ -229,10 +260,6 @@ function! g:Plugins()
         let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
         noremap <leader>F :Autoformat<CR>
     endif " autoformat
-
-    if helper#plug('moll/vim-bbye')
-        nnoremap <leader>Q :Bdelete<CR>
-    endif " bbye
 
     if g:ide
         if helper#plug('neoclide/coc.nvim')
@@ -444,7 +471,7 @@ function! g:Maps()
     nmap <silent><leader>? <Plug>(helper-toggle)
     " Ctrl+K to search for cursor text and show in quickfix
     " why doesn't this work?
-    nnoremap <c-k> :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+    " nnoremap <c-k> :grep! \b<C-R><C-W>\b<CR>:cw<CR>
 
     nnoremap <leader>h :call HiAtCur()<cr>
 
