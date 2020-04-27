@@ -190,7 +190,7 @@ function! g:Plugins()
             autocmd VimEnter * if argc() == 1 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
         augroup END
         nmap <silent> <leader>n :NERDTreeFocus<CR>
-        let g:NERDTreeIgnore = ['\~$', '\.swp.*$']
+        let g:NERDTreeIgnore = ['\~$', '\.swp.*$[[file]]', '^__pycache__$[[dir]]']
         let g:NERDTreeSortOrder = ['\/$', '*', '[[extension]]']
         let g:NERDTreeMinimalUI = 1
         let g:NERDTreeDirArrowExpandable = '+'
