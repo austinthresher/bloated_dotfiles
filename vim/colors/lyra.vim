@@ -155,8 +155,10 @@ else
     call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
 endif
 
-call s:hi('Pmenu',        s:white,      s:br_black,   'NONE')
+call s:hi('Pmenu',        s:white,      s:hard_black,   'NONE')
 call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
+
+call s:hi('CursorLine', s:hard_black, s:green, 'bold')
 
 call s:hi('Operator',     s:white,      s:none,       'NONE')
 call s:hi('MatchParen',   s:br_magenta, s:none,       'bold')

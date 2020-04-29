@@ -166,49 +166,46 @@ function! g:Plugins()
 
     endif
 
-"    if has("ruby")
-"        " LustyJuggler / LustyExplorer
-"        if helper#plug('sjbach/lusty')
-"            let g:LustyExplorerDefaultMappings = 0
-"            let g:LustyJugglerDefaultMappings = 0
-"
-"            nmap <silent> <c-j> :LustyJuggler<cr>
-"            nmap <silent> _ :LustyFilesystemExplorer<cr>
-"            nmap <silent> - :LustyFilesystemExplorerFromHere<cr>
-"            nmap <silent> <leader>b :LustyBufferExplorer<cr>
-"            nmap <silent> ? :LustyBufferGrep<cr>
-"            augroup Lusty
-"                autocmd!
-"                autocmd BufEnter * highlight link LustySelected Question
-"        endif
-"    else
     if helper#plug('scrooloose/nerdtree')
+        function! NerdFollow()
+            let l:fullpath = expand('%:p')
+            if strlen(l:fullpath) > 0 && filereadable(l:fullpath) && &modifiable && &buftype ==# ''
+                NERDTreeFind
+                wincmd p
+            endif
+        endfunction
         augroup NERDTree
             autocmd!
             autocmd StdinReadPre * let s:std_in = 1
             autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
             autocmd VimEnter * if argc() == 1 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
+            autocmd BufEnter * call NerdFollow()
         augroup END
         nmap <silent> <leader>n :NERDTreeFocus<CR>
         let g:NERDTreeIgnore = ['\~$', '\.swp.*$[[file]]', '^__pycache__$[[dir]]']
-        let g:NERDTreeSortOrder = ['\/$', '*', '[[extension]]']
+        "let g:NERDTreeSortOrder = ['\/$', '*', '[[extension]]']
         let g:NERDTreeMinimalUI = 1
         let g:NERDTreeDirArrowExpandable = '+'
         let g:NERDTreeDirArrowCollapsible = '-'
     endif
 
-    if helper#plug('weynhamz/vim-plugin-minibufexpl')
-        nmap <silent> <leader>b :MBEOpen<cr>:MBEFocus<cr>
-        nmap <silent> <leader>B :MBEClose<cr>
-        nmap <silent> <c-j> :MBEbb<cr>
-        nmap <silent> <c-k> :MBEbf<cr>
-        nmap <silent> <leader>Q :MBEbd<cr>
-        let g:miniBufExplUseSingleClick = 1
-        "let g:miniBufExplShowBufNumbers = 0
-        let g:miniBufExplBRSplit = 0
-        let g:miniBufExplCycleArround = 1 " [sic]
-        let g:did_minibufexplorer_syntax_inits = 1
+    if helper#plug('bling/vim-bufferline')
+        let g:bufferline_show_bufnr = 0
     endif
+
+
+"    if helper#plug('weynhamz/vim-plugin-minibufexpl')
+"        nmap <silent> <leader>b :MBEOpen<cr>:MBEFocus<cr>
+"        nmap <silent> <leader>B :MBEClose<cr>
+"        nmap <silent> <c-j> :MBEbp<cr>
+"        nmap <silent> <c-k> :MBEbn<cr>
+"        nmap <silent> <leader>Q :MBEbd<cr>
+"        let g:miniBufExplUseSingleClick = 1
+"        "let g:miniBufExplShowBufNumbers = 0
+"        let g:miniBufExplBRSplit = 0
+"        let g:miniBufExplCycleArround = 1 " [sic]
+"        let g:did_minibufexplorer_syntax_inits = 1
+"    endif
 "    endif
 
     if helper#plug('junegunn/vim-easy-align')
@@ -437,6 +434,10 @@ function! g:Maps()
     tnoremap <c-w>l <c-\><c-n><c-w>l
     tnoremap <c-w>p <c-\><c-n><c-w>p
 
+    " Cycle through buffers
+    nmap <silent> <c-k> :bprev<cr>
+    nmap <silent> <c-j> :bnext<cr>
+    
     " Snap view to left if line length is <= win width
     augroup ViewSnapAU
         autocmd!
