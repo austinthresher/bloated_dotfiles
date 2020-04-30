@@ -16,6 +16,8 @@ else
     alias ls='ls -F --color=auto'
 fi
 
+alias vi='vim -u ~/.virc'
+
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
 function reverse { printf "\e[7m"; }

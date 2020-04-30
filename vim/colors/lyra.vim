@@ -43,7 +43,7 @@ if &t_Co || &termguicolors
         let s:grays = [0, 0, 0, 0, 0, 7, 7, 7, 7]
     elseif &t_Co < 256
         let s:pal = range(0, 15)
-        let s:grays = [0, 0, 0, 8, 8, 7, 7, 15, 15]
+        let s:grays = [0, 8, 8, 8, 7, 7, 7, 7, 15]
     else
         if exists('g:lyra_use_system_colors') && g:lyra_use_system_colors
             let s:pal = [   0,   1,   2,   3,   4,   5,   6,   7,

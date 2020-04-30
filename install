@@ -63,6 +63,7 @@ prompt_to_replace yapf          "$HOME/.style.yapf"
 prompt_to_replace clang-format  "$HOME/.clang-format"
 prompt_to_replace kitty.conf    "$HOME/.config/kitty/kitty.conf"
 prompt_to_replace coc-settings.json    "$HOME/.config/nvim/coc-settings.json"
+prompt_to_replace virc          "$HOME/.virc"
 
 for f in vim/*; do
     bf=$(basename $f)

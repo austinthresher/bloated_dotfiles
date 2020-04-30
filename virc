@@ -1,0 +1,43 @@
+" Basic no-plugins config for lo-tech editing
+set nocompatible
+set noerrorbells
+set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
+set autoindent
+set showmatch
+set matchtime=1
+set backspace=indent,eol,start
+set hidden
+set equalalways
+set eadirection=both
+set path+=**
+set wildmenu
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set cindent
+set incsearch
+set ruler
+filetype plugin indent on
+
+nmap <silent> <c-k> :bprev<cr>
+nmap <silent> <c-j> :bnext<cr>
+nnoremap <c-l> :noh<cr><c-l>
+nnoremap * *N
+nmap <leader>b :ls<cr>:b
+
+" Snap view to left if line length is <= win width
+function! ViewSnap()
+    let l:view = winsaveview()
+    let l:left = l:view['leftcol']
+    let l:col = l:view['col']
+    let l:linelen = strwidth(getline('.'))
+    let l:winlen = winwidth(0)
+    if l:left > 0 && l:linelen < l:winlen
+        let l:view['leftcol'] = 0
+        call winrestview(l:view)
+    endif
+endfunction
+augroup Snap
+    autocmd!
+    autocmd CursorMoved,CursorMovedI * call ViewSnap()
+augroup END

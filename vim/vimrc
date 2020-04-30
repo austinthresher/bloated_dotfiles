@@ -93,7 +93,7 @@ function! g:Globals()
     try
         let g:lyra_string_bg = v:false
         let g:lyra_use_system_colors = v:true
-        let g:lyra_transparent = v:true
+        let g:lyra_transparent = v:false
         colorscheme lyra
     endtry
     let g:cmake_build_dir = 'build'
@@ -375,13 +375,13 @@ function! g:Functions()
             let l:build = CMakeBuildDir()
             let l:cmd = '!cmake -B '.CMakeBuildDir().' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S $(pwd) '.a:args
             silent exec l:cmd
-            silent exec 'make -C '.CMakeBuildDir()
+            silent exec 'make -j -C '.CMakeBuildDir()
             redraw!
             echom l:cmd
         else
-            silent exec 'make'
+            silent exec 'make -j'
             redraw!
-            echom 'make'
+            echom 'make -j'
         endif
     endfunction
 
