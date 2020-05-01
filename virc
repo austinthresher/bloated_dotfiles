@@ -19,6 +19,10 @@ set incsearch
 set ruler
 filetype plugin indent on
 
+nnoremap <tab> >>
+nnoremap <s-tab> << 
+xnoremap <tab> >
+xnoremap <s-tab> <
 nmap <silent> <c-k> :bprev<cr>
 nmap <silent> <c-j> :bnext<cr>
 nnoremap <c-l> :noh<cr><c-l>

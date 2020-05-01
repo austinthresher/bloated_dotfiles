@@ -73,19 +73,6 @@ function! g:Options()
     endif
     " Use filetype-based plugin and indent scripts
     filetype plugin indent on
-    " Use ag instead of grep if present
-    if executable('ag')
-        set grepprg=ag\ --nogroup\ --nocolor\ --column
-        set grepformat=%f:%l:%c%m
-    endif
-
-    " Simplify quickfix by ignoring any line that isn't an error or warning
-    "set errorformat=%f:%l:%c:\ %trror:\ %m
-    "set errorformat+=%f:%l:%c:\ %tarning:\ %m
-    "set errorformat+=%f:(%.%#):\ %m
-    "set errorformat+=%-G%.%#
-    " TODO: display link errors
-
 endfunc
 call g:Options()
 
@@ -437,6 +424,12 @@ function! g:Maps()
     " Cycle through buffers
     nmap <silent> <c-k> :bprev<cr>
     nmap <silent> <c-j> :bnext<cr>
+
+    " Quick indent
+    nnoremap <tab> >>
+    nnoremap <s-tab> << 
+    xnoremap <tab> >
+    xnoremap <s-tab> <
     
     " Snap view to left if line length is <= win width
     augroup ViewSnapAU
