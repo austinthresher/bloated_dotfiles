@@ -80,7 +80,7 @@ function! g:Globals()
     try
         let g:lyra_string_bg = v:false
         let g:lyra_use_system_colors = v:true
-        let g:lyra_transparent = v:false
+        let g:lyra_transparent = v:true
         colorscheme lyra
     endtry
     let g:cmake_build_dir = 'build'
@@ -152,48 +152,6 @@ function! g:Plugins()
         endif
 
     endif
-
-    if helper#plug('scrooloose/nerdtree')
-        function! NerdFollow()
-            let l:fullpath = expand('%:p')
-            if strlen(l:fullpath) > 0 && filereadable(l:fullpath) && &modifiable && &buftype ==# ''
-                NERDTreeFind
-                wincmd p
-            endif
-        endfunction
-        augroup NERDTree
-            autocmd!
-            autocmd StdinReadPre * let s:std_in = 1
-            autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-            autocmd VimEnter * if argc() == 1 && !exists("s:std_in") && v:this_session == "" | NERDTree | endif
-            autocmd BufEnter * call NerdFollow()
-        augroup END
-        nmap <silent> <leader>n :NERDTreeFocus<CR>
-        let g:NERDTreeIgnore = ['\~$', '\.swp.*$[[file]]', '^__pycache__$[[dir]]']
-        "let g:NERDTreeSortOrder = ['\/$', '*', '[[extension]]']
-        let g:NERDTreeMinimalUI = 1
-        let g:NERDTreeDirArrowExpandable = '+'
-        let g:NERDTreeDirArrowCollapsible = '-'
-    endif
-
-    if helper#plug('bling/vim-bufferline')
-        let g:bufferline_show_bufnr = 0
-    endif
-
-
-"    if helper#plug('weynhamz/vim-plugin-minibufexpl')
-"        nmap <silent> <leader>b :MBEOpen<cr>:MBEFocus<cr>
-"        nmap <silent> <leader>B :MBEClose<cr>
-"        nmap <silent> <c-j> :MBEbp<cr>
-"        nmap <silent> <c-k> :MBEbn<cr>
-"        nmap <silent> <leader>Q :MBEbd<cr>
-"        let g:miniBufExplUseSingleClick = 1
-"        "let g:miniBufExplShowBufNumbers = 0
-"        let g:miniBufExplBRSplit = 0
-"        let g:miniBufExplCycleArround = 1 " [sic]
-"        let g:did_minibufexplorer_syntax_inits = 1
-"    endif
-"    endif
 
     if helper#plug('junegunn/vim-easy-align')
         nmap ga <Plug>(EasyAlign)
@@ -338,6 +296,40 @@ endfunction
 call g:Plugins()
 
 function! g:Functions()
+    " Easy buffer switching and display
+    function! g:BufSwitchInfo()
+        let l:names = []
+        let l:bufs = getbufinfo({'buflisted':1})
+        " Without this, we get the Press Enter prompt
+        let l:reserved_spaces = 16 + len(l:bufs) * 4
+        let l:chars = (&columns - l:reserved_spaces) / len(l:bufs)
+        for buf in  l:bufs
+    	    let l:name = l:buf['name']
+    	    let l:items = split(l:name, '/')
+    	    if len(l:items) > 0
+    	        let l:name = l:items[len(l:items) - 1]
+    	    endif
+            if empty(l:name)
+                let l:name = 'No Name'
+            endif
+    	    if buf['changed']
+    	        let l:name = '+' . l:name
+    	    endif
+    	    if len(l:name) > l:chars
+    	        let l:name = l:name[:(l:chars-2)].'..'
+    	    endif
+    	    if buf['bufnr'] == bufnr('%')
+    	        let l:name = '['.l:name.']'
+    	    else
+    	        let l:name = ' '.l:name.' '
+    	    endif
+    	    let l:name = printf('%-'.string(l:chars).'s', l:name)
+    	    let l:names = l:names + [l:name]
+        endfor
+        redraw
+        echo join(l:names, '')
+    endfunction
+
     " Useful for debugging syntax highlighting
     func! HiAtCur()
         let l:name = ''
@@ -422,8 +414,12 @@ function! g:Maps()
     tnoremap <c-w>p <c-\><c-n><c-w>p
 
     " Cycle through buffers
-    nmap <silent> <c-k> :bprev<cr>
-    nmap <silent> <c-j> :bnext<cr>
+    nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
+    nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
+    augroup BufSwitch
+	autocmd!
+	autocmd BufEnter * call BufSwitchInfo()
+    augroup END
 
     " Quick indent
     nnoremap <tab> >>

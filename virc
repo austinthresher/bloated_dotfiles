@@ -13,21 +13,73 @@ set path+=**
 set wildmenu
 set shiftwidth=4
 set softtabstop=4
-set expandtab
-set cindent
 set incsearch
 set ruler
 filetype plugin indent on
+
+function! g:ToggleColors()
+    if !exists('g:colors_name') || g:colors_name !=# 'lyra'
+	" Colors are disabled, enable them
+	syntax on
+	colorscheme lyra
+    else
+	syntax off
+	colorscheme ron
+    endif
+endfunction
+nnoremap <leader>c :call ToggleColors()<cr>
 
 nnoremap <tab> >>
 nnoremap <s-tab> << 
 xnoremap <tab> >
 xnoremap <s-tab> <
-nmap <silent> <c-k> :bprev<cr>
-nmap <silent> <c-j> :bnext<cr>
+
+" Easy buffer switching and display
+function! g:BufSwitchInfo()
+    let l:names = []
+    let l:bufs = getbufinfo({'buflisted':1})
+    " Without this, we get the Press Enter prompt
+    let l:reserved_spaces = 16 + len(l:bufs) * 4
+    let l:chars = (&columns - l:reserved_spaces) / len(l:bufs)
+    for buf in  l:bufs
+	    let l:name = l:buf['name']
+	    let l:items = split(l:name, '/')
+	    if len(l:items) > 0
+	        let l:name = l:items[len(l:items) - 1]
+	    endif
+        if empty(l:name)
+            let l:name = 'No Name'
+        endif
+	    if buf['changed']
+	        let l:name = '+' . l:name
+	    endif
+	    if len(l:name) > l:chars
+	        let l:name = l:name[:(l:chars-2)].'..'
+	    endif
+	    if buf['bufnr'] == bufnr('%')
+	        let l:name = '['.l:name.']'
+	    else
+	        let l:name = ' '.l:name.' '
+	    endif
+	    let l:name = printf('%-'.string(l:chars).'s', l:name)
+	    let l:names = l:names + [l:name]
+    endfor
+    redraw
+    echo join(l:names, '')
+endfunction
+
+nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
+nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
+
+augroup BufSwitch
+    autocmd!
+    autocmd BufEnter * call BufSwitchInfo()
+augroup END
+
 nnoremap <c-l> :noh<cr><c-l>
 nnoremap * *N
 nmap <leader>b :ls<cr>:b
+nnoremap <leader>V :source ~/.virc<cr>
 
 " Snap view to left if line length is <= win width
 function! ViewSnap()
@@ -45,3 +97,6 @@ augroup Snap
     autocmd!
     autocmd CursorMoved,CursorMovedI * call ViewSnap()
 augroup END
+
+let g:lyra_use_system_colors = v:true
+let g:lyra_transparent = v:true
