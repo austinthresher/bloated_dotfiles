@@ -40,7 +40,7 @@ else
         i3-msg gaps inner all set 64 &> /dev/null
     else
         conky -y 16 --config="$HOME/.conky.gen" --daemonize
-        i3-msg gaps inner all set 32
-        i3-msg gaps bottom all set 32
+        i3-msg gaps inner all set 8 
+        i3-msg gaps bottom all set 8 
     fi
 fi
