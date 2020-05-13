@@ -115,7 +115,6 @@ let s:lightest   = ['#BCBCBC', s:xterm_lightest]
 
 let s:none = ['NONE', 'NONE']
 
-
 " Highlights
 if exists('g:lyra_transparent') && g:lyra_transparent
     call s:hi('Normal', s:br_white, s:none, 'NONE')
@@ -123,152 +122,128 @@ else
     call s:hi('Normal', s:br_white, s:black, 'NONE')
 endif
 
-for group in ['NonText', 'SpecialKey']
-    call s:hi(group, s:light, s:none, 'NONE')
-endfor
+" We control syntax highlighting ourselves
+syntax on 
 
-for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float']
-    call s:hi(group, s:br_red, s:none, 'NONE')
-endfor
+if exists('g:lyra_no_highlighting') && g:lyra_no_highlighting
+    call s:hi('Comment',      s:green,   s:none,       'NONE')
+    for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float',
+		\ 'Statement', 'Conditional', 'Repeat', 'Label', 'Exception',
+		\ 'Keyword', 'String', 'SpecialChar', 'Operator',
+		\ 'Todo', 'Error', 'Type', 'StorageClass', 'Typedef',
+		\ 'Structure', 'Delimiter', 'Identifier', 'PreProc',
+		\ 'Include', 'Define', 'PreCondit', 'cIncluded', 'Function',
+		\ 'Macro', 'Special' ]
+	call s:hi(group, s:none, s:none, 'NONE')
+    endfor
+else 
+    call s:hi('Comment',      s:br_green,   s:none,       'italic')
+    for group in ['Constant', 'Character', 'Boolean', 'Number', 'Float']
+        call s:hi(group, s:br_red, s:none, 'NONE')
+    endfor
+    
+    for group in ['Statement', 'Conditional', 'Repeat', 'Label',
+                \ 'Exception', 'Keyword']
+        call s:hi(group, s:blue, s:none, 'bold')
+    endfor
+    
+    if exists('g:lyra_string_bg') && g:lyra_string_bg
+        call s:hi('String',       s:cyan,      s:darkest, 'NONE')
+        call s:hi('SpecialChar',  s:br_yellow, s:darkest, 'italic')
+    else
+        call s:hi('String',       s:br_cyan,   s:none, 'NONE')
+        call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
+    endif
+    
+    call s:hi('Operator',     s:white,      s:none,       'NONE')
+    call s:hi('Todo',         s:br_yellow,  s:black,      'bold')
+    call s:hi('Error',        s:br_red,     s:none,       'bold')
+    call s:hi('Type',         s:br_blue,    s:none,       'NONE')
+    call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
+    call s:hi('Typedef',      s:br_blue,    s:none,       'NONE')
+    call s:hi('Structure',    s:br_blue,    s:none,       'NONE')
+    call s:hi('Delimiter',    s:white,      s:none,       'NONE')
+    call s:hi('Identifier',   s:br_white,   s:none,       'NONE')
+    call s:hi('PreProc',      s:yellow,     s:none,       'NONE')
+    call s:hi('Include',      s:yellow,     s:none,       'NONE')
+    call s:hi('Define',       s:yellow,     s:none,       'NONE')
+    call s:hi('PreCondit',    s:yellow,     s:none,       'NONE')
+    call s:hi('cIncluded',    s:br_cyan,    s:none,       'italic')
+    call s:hi('Function',     s:magenta,    s:none,       'NONE')
+    call s:hi('Macro',        s:br_red,     s:none,       'NONE')
+    call s:hi('Special',      s:yellow,     s:none,       'NONE')
+endif 
 
-for group in ['Statement', 'Conditional', 'Repeat', 'Label',
-            \ 'Exception', 'Keyword']
-    call s:hi(group, s:blue, s:none, 'bold')
-endfor
+" Shared between syntax on / off {{{
+    call s:hi('Cursor', s:black, s:yellow, 'NONE')
+    hi! link vCursor Cursor
+    hi! link iCursor Cursor
+    hi! link lCursor Cursor
 
-call s:hi('Cursor', s:black, s:yellow, 'NONE')
-hi! link vCursor Cursor
-hi! link iCursor Cursor
-hi! link lCursor Cursor
+    call s:hi('Visual', s:hard_black, s:blue, 'NONE')
+    hi! link VisualNOS Visual
 
-call s:hi('Visual', s:hard_black, s:blue, 'NONE')
-hi! link VisualNOS Visual
+    call s:hi('Search', s:hard_black, s:light, 'NONE')
+    call s:hi('IncSearch', s:hard_black, s:br_yellow, 'NONE')
 
-call s:hi('Search', s:hard_black, s:light, 'NONE')
-call s:hi('IncSearch', s:hard_black, s:br_yellow, 'NONE')
+    call s:hi('Pmenu',        s:white,      s:hard_black,   'NONE')
+    call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
+    call s:hi('CursorLine', s:hard_black, s:green, 'bold')
 
-if exists('g:lyra_string_bg') && g:lyra_string_bg
-    call s:hi('String',       s:cyan,      s:darkest, 'NONE')
-    call s:hi('SpecialChar',  s:br_yellow, s:darkest, 'italic')
-else
-    call s:hi('String',       s:br_cyan,   s:none, 'NONE')
-    call s:hi('SpecialChar',  s:br_yellow, s:none, 'italic')
-endif
+    call s:hi('MatchParen',   s:br_magenta, s:none,       'bold')
+    call s:hi('Conceal',      s:darker,     s:none,       'NONE')
+    call s:hi('StatusLine',   s:br_white,   s:darkest,    'NONE')
+    call s:hi('StatusLineNC', s:dark,       s:hard_black, 'NONE')
+    call s:hi('VertSplit',    s:br_white,   s:none,       'NONE')
+    call s:hi('WildMenu',     s:blue,       s:black,      'bold')
+    call s:hi('ErrorMsg',     s:br_white,   s:red,        'NONE')
+    call s:hi('Directory',    s:blue,       s:none,       'bold')
+    call s:hi('Title',        s:br_yellow,  s:none,       'bold')
+    call s:hi('MoreMsg',      s:yellow,     s:none,       'bold')
+    call s:hi('Question',     s:br_yellow,  s:none,       'bold,reverse')
+    call s:hi('Warning',      s:yellow,     s:none,       'NONE')
 
-call s:hi('Pmenu',        s:white,      s:hard_black,   'NONE')
-call s:hi('PmenuSel',     s:br_white,   s:magenta,    'bold')
+    call s:hi('Folded',       s:white,      s:black,      'NONE')
+    call s:hi('SignColumn',   s:white,      s:hard_black, 'NONE')
+    call s:hi('LineNr',       s:light,      s:none,       'NONE')
+    call s:hi('CursorLineNr', s:red,        s:none,       'NONE')
+    call s:hi('DiffDelete',   s:none,       s:red,        'none')
+    call s:hi('DiffAdd',      s:none,       s:green,      'none')
+    call s:hi('DiffChange',   s:none,       s:cyan,       'none')
+    call s:hi('DiffText',     s:none,       s:br_yellow,  'none')
+    call s:hi('EndOfBuffer',  s:black,      s:hard_black, 'none')
 
-call s:hi('CursorLine', s:hard_black, s:green, 'bold')
+    " conflict-marker.vim
+    call s:hi('ConflictMarkerBegin',     s:br_cyan, s:none,       'bold')
+    call s:hi('ConflictMarkerOurs',      s:none,    s:darkest,    'NONE')
+    call s:hi('ConflictMarkerSeparator', s:cyan,    s:none,       'bold')
+    call s:hi('ConflictMarkerTheirs',    s:none,    s:hard_black, 'NONE')
+    call s:hi('ConflictMarkerEnd',       s:br_cyan, s:none,       'bold')
 
-call s:hi('Operator',     s:white,      s:none,       'NONE')
-call s:hi('MatchParen',   s:br_magenta, s:none,       'bold')
-call s:hi('Conceal',      s:darker,     s:none,       'NONE')
-call s:hi('StatusLine',   s:br_white,   s:darkest,    'NONE')
-call s:hi('VertSplit',    s:br_white,   s:none,       'NONE')
-call s:hi('WildMenu',     s:blue,       s:black,      'bold')
-call s:hi('ErrorMsg',     s:br_white,   s:red,        'NONE')
-call s:hi('Directory',    s:blue,       s:none,       'bold')
-call s:hi('Title',        s:br_yellow,  s:none,       'bold')
-call s:hi('MoreMsg',      s:yellow,     s:none,       'bold')
-call s:hi('Question',     s:br_yellow,  s:none,       'bold,reverse')
-call s:hi('Warning',      s:yellow,     s:none,       'NONE')
-call s:hi('Special',      s:yellow,     s:none,       'NONE')
-call s:hi('Comment',      s:br_green,   s:none,       'italic')
-call s:hi('Todo',         s:br_yellow,  s:black,      'bold')
-call s:hi('Error',        s:br_red,     s:none,       'bold')
-call s:hi('Type',         s:br_blue,    s:none,       'NONE')
-call s:hi('StorageClass', s:br_blue,    s:none,       'NONE')
-call s:hi('Typedef',      s:br_blue,    s:none,       'NONE')
-call s:hi('Structure',    s:br_blue,    s:none,       'NONE')
-call s:hi('Delimiter',    s:white,      s:none,       'NONE')
-call s:hi('Identifier',   s:br_white,   s:none,       'NONE')
-call s:hi('PreProc',      s:yellow,     s:none,       'NONE')
-call s:hi('Include',      s:yellow,     s:none,       'NONE')
-call s:hi('Define',       s:yellow,     s:none,       'NONE')
-call s:hi('PreCondit',    s:yellow,     s:none,       'NONE')
-call s:hi('cIncluded',    s:br_cyan,    s:none,       'italic')
-call s:hi('Function',     s:magenta,    s:none,       'NONE')
-call s:hi('Macro',        s:br_red,     s:none,       'NONE')
-call s:hi('Folded',       s:white,      s:black,      'NONE')
-call s:hi('SignColumn',   s:white,      s:hard_black, 'NONE')
-call s:hi('LineNr',       s:light,      s:none,       'NONE')
-call s:hi('CursorLineNr', s:red,        s:none,       'NONE')
-call s:hi('StatusLineNC', s:dark,       s:darkest,    'NONE')
-call s:hi('DiffDelete',   s:none,       s:red,        'none')
-call s:hi('DiffAdd',      s:none,       s:green,      'none')
-call s:hi('DiffChange',   s:none,       s:cyan,       'none')
-call s:hi('DiffText',     s:none,       s:br_yellow,  'none')
-call s:hi('EndOfBuffer',  s:black,      s:hard_black, 'none')
+    if has('spell')
+	call s:hi('SpellCap',   s:none, s:magenta, 'underline')
+	call s:hi('SpellBad',   s:none, s:red,     'underline')
+	call s:hi('SpellLocal', s:none, s:yellow,  'underline')
+	call s:hi('SpellRare',  s:none, s:cyan,    'underline')
+    endif
 
-if has('spell')
-    call s:hi('SpellCap',   s:none, s:magenta, 'underline')
-    call s:hi('SpellBad',   s:none, s:red,     'underline')
-    call s:hi('SpellLocal', s:none, s:yellow,  'underline')
-    call s:hi('SpellRare',  s:none, s:cyan,    'underline')
-endif
+    if has('terminal')
+	call s:hi('Terminal', s:br_white, s:hard_black, 'NONE')
+    endif
 
-if has('terminal')
-    call s:hi('Terminal', s:br_white, s:hard_black, 'NONE')
-endif
+    for group in ['NonText', 'SpecialKey']
+        call s:hi(group, s:light, s:none, 'NONE')
+    endfor
 
-call s:hi('QuickFixLine', s:none, s:black, 'none')
-augroup QuickFixColors
-    autocmd!
-    autocmd Syntax qf syntax match qfWarning "warning" contained nextGroup=qfSeparator
-    autocmd Syntax qf syntax match qfLineNr "[^|]*" contained contains=qfError,qfWarning
-    autocmd Syntax qf syntax match clangTidyCheck "\[.*\]$"
-    autocmd Syntax qf highlight link clangTidyCheck Conceal
-    autocmd Syntax qf highlight link qfFileName cIncluded
-    autocmd Syntax qf highlight link qfWarning Warning 
-    autocmd Syntax qf highlight link qfSeparator Normal
-augroup END
-
-" statuslime colors
-call s:hi('LimeNormal',       s:hard_black, s:white,      'bold')
-call s:hi('LimeVisual',       s:hard_black, s:blue,       'bold')
-call s:hi('LimeInsert',       s:hard_black, s:br_yellow,  'bold')
-call s:hi('LimeReplace',      s:hard_black, s:yellow,     'bold')
-call s:hi('LimeTerminal',     s:hard_black, s:green,      'bold')
-call s:hi('LimeCommand',      s:hard_black, s:magenta,    'bold')
-call s:hi('LimeShell',        s:hard_black, s:cyan,       'bold')
-call s:hi('LimeError',        s:br_red,     s:darkest,    'bold')
-call s:hi('LimeFile',         s:br_white,   s:dark,       'NONE')
-call s:hi('LimeCol',          s:light,      s:darker,     'NONE')
-call s:hi('LimeRow',          s:white,      s:dark,       'NONE')
-call s:hi('LimeInactiveBar',  s:black,      s:hard_black, 'NONE')
-call s:hi('LimeInactiveMode', s:hard_black, s:dark,       'NONE')
-call s:hi('LimeInactiveFT',   s:br_black,   s:hard_black, 'NONE')
-call s:hi('LimeLeft',         s:yellow,     s:darkest,    'NONE')
-call s:hi('LimeRight',        s:br_yellow,  s:darkest,    'NONE')
-call s:hi('LimeOther',        s:red,        s:hard_black, 'bold')
-call s:hi('LimeHelp',         s:green,      s:hard_black, 'bold')
-call s:hi('LimePreview',      s:br_green,   s:hard_black, 'bold')
-call s:hi('LimeInactiveUtil', s:blue,       s:black,      'NONE')
-call s:hi('LimeUtil',         s:br_blue,    s:black,      'bold')
-
-" buftabline colors
-call s:hi('BufTabLineCurrent', s:hard_black, s:white,    'bold')
-call s:hi('BufTabLineActive',  s:red,        s:white,    'NONE')
-call s:hi('BufTabLineHidden',  s:lighter,    s:white,    'NONE')
-call s:hi('BufTabLineFill',    s:black,      s:br_black, 'NONE')
-
-" conflict-marker.vim
-call s:hi('ConflictMarkerBegin',     s:br_cyan, s:none,       'bold')
-call s:hi('ConflictMarkerOurs',      s:none,    s:darkest,    'NONE')
-call s:hi('ConflictMarkerSeparator', s:cyan,    s:none,       'bold')
-call s:hi('ConflictMarkerTheirs',    s:none,    s:hard_black, 'NONE')
-call s:hi('ConflictMarkerEnd',       s:br_cyan, s:none,       'bold')
-
-" LustyExplorer
-call s:hi('LustyGrepFileName', s:blue, s:none, 'NONE')
-call s:hi('LustyGrepLineNumber', s:br_blue, s:none, 'NONE')
-call s:hi('LustySelected', s:br_yellow, s:darker, 'bold')
-call s:hi('LustyGrepMatch', s:br_magenta, s:none, 'NONE')
-
-"minibufexpl
-call s:hi('MBENormal',               s:white,      s:black,  'NONE')
-call s:hi('MBEChanged',              s:yellow,     s:black, 'NONE')
-call s:hi('MBEVisibleNormal',        s:white,      s:black,   'NONE')
-call s:hi('MBEVisibleChanged',       s:yellow,     s:black, 'NONE')
-call s:hi('MBEVisibleActiveNormal',  s:hard_black, s:green,   'NONE')
-call s:hi('MBEVisibleActiveChanged', s:hard_black, s:yellow, 'NONE')
+    call s:hi('QuickFixLine', s:none, s:black, 'none')
+    augroup QuickFixColors
+	autocmd!
+	autocmd Syntax qf syntax match qfWarning "warning" contained nextGroup=qfSeparator
+	autocmd Syntax qf syntax match qfLineNr "[^|]*" contained contains=qfError,qfWarning
+	autocmd Syntax qf syntax match clangTidyCheck "\[.*\]$"
+	autocmd Syntax qf highlight link clangTidyCheck Conceal
+	autocmd Syntax qf highlight link qfFileName cIncluded
+	autocmd Syntax qf highlight link qfWarning Warning 
+	autocmd Syntax qf highlight link qfSeparator Normal
+    augroup END
+" }}}

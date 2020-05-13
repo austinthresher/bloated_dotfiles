@@ -1,58 +1,33 @@
-set encoding=utf-8 | scriptencoding utf-8
+source ~/.virc
 function! g:Options()
     " Allow folding in files
     set foldenable
-    " No annoying sounds / flashes
-    set noerrorbells
     " Allow files to customize settings on open
     set modeline
     " Characters used when list=on
     set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
     " Character used to mark wrapped lines
     set showbreak==>\
-    " Copy the indentation from the previous line
-    set autoindent
-    " Short blink when typing matching parens
-    set showmatch
-    set matchtime=1
-    " Allow leaving modified buffers without saving
-    set hidden
-    " Try to keep windows similarly sized
-    set equalalways
-    set eadirection=both
     " Don't show the active mode
     set noshowmode
     " Search as you're typing
-    set incsearch
     set hlsearch
-    " Allow backspacing over everything
-    set backspace=indent,eol,start
     " Enable the mouse
     set mouse=a
     " Set US English for spellcheck
     set spelllang=en_us
-    " Always show statusbar
-    set laststatus=2
     " Don't wrap lines by default
     set nowrap
     " Don't page output
     set more
-    " Default to new windows appearing below current
-    set splitbelow
     " Don't try to set the cursor
-    set guicursor=
-    " Preview window is small
-    "set previewheight=3
+    "set guicursor=
     " CursorHold kicks in after 1/10 second
     set updatetime=100
     " Reduce screen artifacts by delaying redraw
     set lazyredraw
     " Show cmd in progress
     set showcmd
-    " Recursive searching
-    set path+=**
-    " Tab completion menu
-    set wildmenu
     " Scroll options
     set sidescroll=1
     set scrolloff=0
@@ -61,18 +36,10 @@ function! g:Options()
     set winminwidth=1
     set winminheight=1
     set completeopt+=menuone,noinsert,preview,longest
-    " Default tab settings
-    set shiftwidth=4
-    set softtabstop=4
-    set expandtab
     " Use line drawing char for vsp, spaces for folds
     if has('nvim')
         set fillchars=vert:│,fold:\ ,eob:\ ,diff:-
-    else " vim doesn't have the eob option
-        set fillchars=vert:│,fold:\ ,diff:-
     endif
-    " Use filetype-based plugin and indent scripts
-    filetype plugin indent on
 endfunc
 call g:Options()
 
@@ -81,6 +48,7 @@ function! g:Globals()
         let g:lyra_string_bg = v:false
         let g:lyra_use_system_colors = v:true
         let g:lyra_transparent = v:true
+	let g:lyra_no_highlighting = v:false
         colorscheme lyra
     endtry
     let g:cmake_build_dir = 'build'
@@ -142,7 +110,6 @@ function! g:Plugins()
         augroup END
         let g:anyfold_fold_comments = v:true
     endif
-
 
     if helper#plug('noahfrederick/vim-skeleton')
         if has('nvim')
@@ -208,7 +175,6 @@ function! g:Plugins()
             set nobackup nowritebackup
             set updatetime=250
             set shortmess+=c
-            "set signcolumn=yes
             inoremap <silent><expr> <Tab>
                         \ pumvisible() ? "\<C-n>" :
                         \ <SID>check_back_space() ? "\<Tab>" :
@@ -296,40 +262,6 @@ endfunction
 call g:Plugins()
 
 function! g:Functions()
-    " Easy buffer switching and display
-    function! g:BufSwitchInfo()
-        let l:names = []
-        let l:bufs = getbufinfo({'buflisted':1})
-        " Without this, we get the Press Enter prompt
-        let l:reserved_spaces = 16 + len(l:bufs) * 4
-        let l:chars = (&columns - l:reserved_spaces) / len(l:bufs)
-        for buf in  l:bufs
-    	    let l:name = l:buf['name']
-    	    let l:items = split(l:name, '/')
-    	    if len(l:items) > 0
-    	        let l:name = l:items[len(l:items) - 1]
-    	    endif
-            if empty(l:name)
-                let l:name = 'No Name'
-            endif
-    	    if buf['changed']
-    	        let l:name = '+' . l:name
-    	    endif
-    	    if len(l:name) > l:chars
-    	        let l:name = l:name[:(l:chars-2)].'..'
-    	    endif
-    	    if buf['bufnr'] == bufnr('%')
-    	        let l:name = '['.l:name.']'
-    	    else
-    	        let l:name = ' '.l:name.' '
-    	    endif
-    	    let l:name = printf('%-'.string(l:chars).'s', l:name)
-    	    let l:names = l:names + [l:name]
-        endfor
-        redraw
-        echo join(l:names, '')
-    endfunction
-
     " Useful for debugging syntax highlighting
     func! HiAtCur()
         let l:name = ''
@@ -374,86 +306,19 @@ function! g:Functions()
         redraw!
         echom l:cmd
     endfunction
-
-    " Show and jump to quickfix, close quickfix when in the list
-    function! ToggleQuickfix()
-        if &buftype ==# 'quickfix'
-            wincmd p
-            exec 'cclose'
-        else
-            exec 'copen 5'
-        endif
-    endfunction
-
-    " Snaps view to left when line < window width
-    function! ViewSnap()
-        let l:view = winsaveview()
-        let l:left = l:view['leftcol']
-        let l:col = l:view['col']
-        let l:linelen = strwidth(getline('.'))
-        let l:winlen = winwidth(0)
-        if l:left > 0 && l:linelen < l:winlen
-            let l:view['leftcol'] = 0
-            call winrestview(l:view)
-        endif
-    endfunction
 endfunction
 call g:Functions()
 
 function! g:Maps()
-    " Navigate out of terminal mode more easily
-    tnoremap <esc> <c-\><c-n>
-    tnoremap <c-w>H <c-\><c-n><c-w>H
-    tnoremap <c-w>J <c-\><c-n><c-w>J
-    tnoremap <c-w>K <c-\><c-n><c-w>K
-    tnoremap <c-w>L <c-\><c-n><c-w>L
-    tnoremap <c-w>h <c-\><c-n><c-w>h
-    tnoremap <c-w>j <c-\><c-n><c-w>j
-    tnoremap <c-w>k <c-\><c-n><c-w>k
-    tnoremap <c-w>l <c-\><c-n><c-w>l
-    tnoremap <c-w>p <c-\><c-n><c-w>p
 
-    " Cycle through buffers
-    nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
-    nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
-    augroup BufSwitch
-	autocmd!
-	autocmd BufEnter * call BufSwitchInfo()
-    augroup END
-
-    " Quick indent
-    nnoremap <tab> >>
-    nnoremap <s-tab> << 
-    xnoremap <tab> >
-    xnoremap <s-tab> <
-    
-    " Snap view to left if line length is <= win width
-    augroup ViewSnapAU
-        autocmd!
-        autocmd CursorMoved,CursorMovedI * call ViewSnap()
-    augroup END
-
-    nnoremap <silent> Q :call ToggleQuickfix()<cr>
-    nmap <leader>q :q<cr>
     nmap <leader>l :copen<cr>
     nmap <silent> <leader>C :call RunMakeClean()<cr>
     nmap <silent> <leader>M :call RunCMakeAndMake('-DCMAKE_CXX_CLANG_TIDY=clang-tidy')<cr>
     nmap <silent> <leader>m :call RunCMakeAndMake('-UCMAKE_CXX_CLANG_TIDY=')<cr>
 
-    " Automatically enter insert mode when selecting terminal window
-    augroup Terminal
-        autocmd!
-        if has('nvim')
-            autocmd TermOpen * startinsert
-        else
-            autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
-        endif
-    augroup END
 
     " Quick reload of vimrc
     nnoremap <leader>V :source $MYVIMRC<cr>
-    " Clear search with <C-L>
-    nnoremap <c-l> :noh<cr><c-l>
     " Use ` as optional wincmd prefix
     nnoremap ` <c-w>
     nnoremap <c-w>` `
@@ -461,11 +326,7 @@ function! g:Maps()
     " Ctrl+K to search for cursor text and show in quickfix
     " why doesn't this work?
     " nnoremap <c-k> :grep! \b<C-R><C-W>\b<CR>:cw<CR>
-
     nnoremap <leader>h :call HiAtCur()<cr>
-
-    " Makes * select the cursor word but not jump to next match
-    nnoremap * *N
 
 endfunction
 call g:Maps()

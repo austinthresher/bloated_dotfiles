@@ -1,3 +1,5 @@
+set encoding=utf-8 | scriptencoding utf-8
+
 " Basic no-plugins config for lo-tech editing
 set nocompatible
 set noerrorbells
@@ -13,22 +15,20 @@ set path+=**
 set wildmenu
 set shiftwidth=4
 set softtabstop=4
+set expandtab
 set incsearch
 set ruler
+set splitbelow
 filetype plugin indent on
+set fillchars=vert:│,fold:\ ,diff:-
 
-function! g:ToggleColors()
-    if !exists('g:colors_name') || g:colors_name !=# 'lyra'
-	" Colors are disabled, enable them
-	syntax on
-	colorscheme lyra
-    else
-	syntax off
-	colorscheme ron
-    endif
-endfunction
-nnoremap <leader>c :call ToggleColors()<cr>
+let g:lyra_use_system_colors = v:true
+let g:lyra_transparent = v:true
+let g:lyra_no_highlighting = v:true
+colorscheme lyra
+syntax on
 
+" Use tab and shift-tab to indent lines
 nnoremap <tab> >>
 nnoremap <s-tab> << 
 xnoremap <tab> >
@@ -76,9 +76,16 @@ augroup BufSwitch
     autocmd BufEnter * call BufSwitchInfo()
 augroup END
 
+" Delete buffer while keeping window open
+nmap <leader>d bp\bd\ #<cr>
+
+" Clear search with <C-l>
 nnoremap <c-l> :noh<cr><c-l>
+" * Sets word under cursor to search term but doesn't go to the next match
 nnoremap * *N
+" List buffers with <leader>b
 nmap <leader>b :ls<cr>:b
+
 nnoremap <leader>V :source ~/.virc<cr>
 
 " Snap view to left if line length is <= win width
@@ -98,5 +105,36 @@ augroup Snap
     autocmd CursorMoved,CursorMovedI * call ViewSnap()
 augroup END
 
-let g:lyra_use_system_colors = v:true
-let g:lyra_transparent = v:true
+
+" Navigate out of terminal mode more easily
+tnoremap <esc> <c-\><c-n>
+tnoremap <c-w>H <c-\><c-n><c-w>H
+tnoremap <c-w>J <c-\><c-n><c-w>J
+tnoremap <c-w>K <c-\><c-n><c-w>K
+tnoremap <c-w>L <c-\><c-n><c-w>L
+tnoremap <c-w>h <c-\><c-n><c-w>h
+tnoremap <c-w>j <c-\><c-n><c-w>j
+tnoremap <c-w>k <c-\><c-n><c-w>k
+tnoremap <c-w>l <c-\><c-n><c-w>l
+tnoremap <c-w>p <c-\><c-n><c-w>p
+
+" Automatically enter insert mode when selecting terminal window
+augroup Terminal
+    autocmd!
+    if has('nvim')
+        autocmd TermOpen * startinsert
+    else
+        autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
+    endif
+augroup END
+
+" Show and jump to quickfix, close quickfix when in the list
+function! ToggleQuickfix()
+    if &buftype ==# 'quickfix'
+        wincmd p
+        exec 'cclose'
+    else
+        exec 'copen 5'
+    endif
+endfunction
+nnoremap <silent> Q :call ToggleQuickfix()<cr>
