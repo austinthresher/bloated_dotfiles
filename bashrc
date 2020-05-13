@@ -1,5 +1,6 @@
 [ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
 unset -f command_not_found_handle
+export HISTCONTROL=ignoreboth:erasedups
 
 case $- in
     *i*) # Interactive session
