@@ -77,7 +77,7 @@ augroup BufSwitch
 augroup END
 
 " Delete buffer while keeping window open
-nmap <leader>d bp\bd\ #<cr>
+nmap <leader>d :bp\|bd #<cr>
 
 " Clear search with <C-l>
 nnoremap <c-l> :noh<cr><c-l>

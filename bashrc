@@ -83,13 +83,13 @@ SEED=$(echo $HASH | sed 's/[^0-9]//g')
 
 # Predefined colors for specific hosts
 case $HASH in
-    938d55*) PROMPT_COLOR_IDX=7  ;;
+    938d55*) PROMPT_COLOR_IDX=10 ;;
     cbccc7*) PROMPT_COLOR_IDX=4  ;;
     8d94e1*) PROMPT_COLOR_IDX=13 ;;
     075baf*) PROMPT_COLOR_IDX=12 ;;
     a1ec7c*) PROMPT_COLOR_IDX=9  ;;
     9677b4*) PROMPT_COLOR_IDX=11 ;;
-    54363a*) PROMPT_COLOR_IDX=5 ;;
+    54363a*) PROMPT_COLOR_IDX=5  ;;
     *)
         # Randomize color based on hostname for all else
         PROMPT_COLOR_IDX=$(expr ${SEED:1:4} % 12 + 1)

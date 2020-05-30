@@ -46,8 +46,8 @@ call g:Options()
 function! g:Globals()
     try
         let g:lyra_string_bg = v:false
-        let g:lyra_use_system_colors = v:true
-        let g:lyra_transparent = v:true
+        let g:lyra_use_system_colors = v:false
+        let g:lyra_transparent = v:false
 	let g:lyra_no_highlighting = v:false
         colorscheme lyra
     endtry
