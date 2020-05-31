@@ -13,6 +13,7 @@ esac
 
 if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
+    export BASH_SILENCE_DEPRECATION_WARNING=1
 else
     alias ls='ls -F --color=auto'
 fi
@@ -163,4 +164,4 @@ case "$PROMPT_COLOR_IDX" in
         export PROMPT_COLOR=$(brightfg 7)
         ;;
 esac
-export PS1="\[$PROMPT_COLOR\]\h \[$(reverse)\] \w \[$(norm)\] "
+export PS1="\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "

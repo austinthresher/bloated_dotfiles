@@ -8,8 +8,6 @@ function! g:Options()
     set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
     " Character used to mark wrapped lines
     set showbreak==>\
-    " Don't show the active mode
-    set noshowmode
     " Search as you're typing
     set hlsearch
     " Enable the mouse
@@ -160,14 +158,14 @@ function! g:Plugins()
     endif " indentguides
 
     " TODO: try neoformat
-    if helper#plug('chiel92/vim-autoformat')
-        let g:formatterpath = [$HOME.'/.local/bin']
-        let g:autoformat_autoindent = 0
-        let g:autoformat_retab = 0
-        let g:formatters_python = ['yapf']
-        let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
-        noremap <leader>F :Autoformat<CR>
-    endif " autoformat
+"    if helper#plug('chiel92/vim-autoformat')
+"        let g:formatterpath = [$HOME.'/.local/bin']
+"        let g:autoformat_autoindent = 0
+"        let g:autoformat_retab = 0
+"        let g:formatters_python = ['yapf']
+"        let g:formatdef_yapf = '"yapf --style=\"$HOME/.style.yapf\""'
+"        noremap <leader>F :Autoformat<CR>
+"    endif " autoformat
 
     if g:ide
         if helper#plug('neoclide/coc.nvim')
