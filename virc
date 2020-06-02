@@ -43,7 +43,7 @@ function! g:BufSwitchInfo()
     let l:names = []
     let l:bufs = getbufinfo({'buflisted':1})
     " Without this, we get the Press Enter prompt
-    let l:reserved_spaces = 2 
+    let l:reserved_spaces = 4
     let l:total_width = g:TermWidth() - l:reserved_spaces * len(l:bufs)
     let l:chars = l:total_width / len(l:bufs)
     if l:chars < 8 " Minimum 8 char names
@@ -166,7 +166,8 @@ endfunction
 nnoremap <silent> Q :call ToggleQuickfix()<cr>
 
 " clear current line and enter insert mode
-nnoremap di 0d$i
+" actually, just use Di instead
+"nnoremap di 0d$i
 
 " insert before current word
 nnoremap <leader>i bi
