@@ -34,18 +34,13 @@ nnoremap <s-tab> <<
 xnoremap <tab> >
 xnoremap <s-tab> <
 
-function! g:TermWidth()
-    return &co
-endfunction
 
 " Easy buffer switching and display
 function! g:BufSwitchInfo()
     let l:names = []
     let l:bufs = getbufinfo({'buflisted':1})
     " Without this, we get the Press Enter prompt
-    let l:reserved_spaces = 4
-    let l:total_width = g:TermWidth() - l:reserved_spaces * len(l:bufs)
-    let l:chars = l:total_width / len(l:bufs)
+    let l:chars = v:echospace / len(l:bufs)
     if l:chars < 8 " Minimum 8 char names
         let l:chars = 8
     endif
@@ -73,7 +68,7 @@ function! g:BufSwitchInfo()
 	endif
 	let l:name = printf('%-'.string(l:chars).'s', l:name)
 	let l:names = l:names + [l:name]
-        if l:found_current && len(join(l:names, '')) >= l:total_width | break | endif
+        if l:found_current && len(join(l:names, '')) >= v:echospace | break | endif
     endfor
     let l:done = v:false
     while done == v:false
@@ -82,14 +77,14 @@ function! g:BufSwitchInfo()
             if l:val[0] == '[' | break | endif
             let l:count = l:count + len(l:val)
         endfor
-        if l:count > l:total_width
+        if l:count > v:echospace
             let l:names = l:names[1:]
         else
             let l:done = v:true
         endif
     endwhile
     redraw
-    echo join(l:names, '')
+    echo join(l:names, '')[:v:echospace-1]
     
 endfunction
 
