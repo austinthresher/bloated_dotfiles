@@ -19,6 +19,7 @@ else
 fi
 
 alias vi='vim -u ~/.virc'
+alias tmux='tmux -u'
 
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
