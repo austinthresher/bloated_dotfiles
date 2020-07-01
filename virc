@@ -34,67 +34,70 @@ nnoremap <s-tab> <<
 xnoremap <tab> >
 xnoremap <s-tab> <
 
-
-" Easy buffer switching and display
-function! g:BufSwitchInfo()
-    let l:names = []
-    let l:bufs = getbufinfo({'buflisted':1})
-    " Without this, we get the Press Enter prompt
-    let l:chars = v:echospace / len(l:bufs)
-    if l:chars < 8 " Minimum 8 char names
-        let l:chars = 8
-    endif
-    let l:found_current = v:false
-    for buf in l:bufs
-        let l:name = l:buf['name']
-        let l:items = split(l:name, '/')
-        if len(l:items) > 0
-            let l:name = l:items[len(l:items) - 1]
+if has("echospace")
+    " Easy buffer switching and display
+    function! g:BufSwitchInfo()
+        let l:names = []
+        let l:bufs = getbufinfo({'buflisted':1})
+        " Without this, we get the Press Enter prompt
+        let l:chars = v:echospace / len(l:bufs)
+        if l:chars < 8 " Minimum 8 char names
+            let l:chars = 8
         endif
-        if empty(l:name)
-            let l:name = 'No Name'
-        endif
-	if buf['changed']
-	    let l:name = '+' . l:name
-	endif
-	if len(l:name) > l:chars
-	    let l:name = l:name[:(l:chars-2)].'..'
-	endif
-	if buf['bufnr'] == bufnr('%')
-	    let l:name = '['.l:name.']'
-            let l:found_current = v:true
-	else
-	    let l:name = ' '.l:name.' '
-	endif
-	let l:name = printf('%-'.string(l:chars).'s', l:name)
-	let l:names = l:names + [l:name]
-        if l:found_current && len(join(l:names, '')) >= v:echospace | break | endif
-    endfor
-    let l:done = v:false
-    while done == v:false
-        let l:count = 0
-        for val in l:names
-            if l:val[0] == '[' | break | endif
-            let l:count = l:count + len(l:val)
+        let l:found_current = v:false
+        for buf in l:bufs
+            let l:name = l:buf['name']
+            let l:items = split(l:name, '/')
+            if len(l:items) > 0
+                let l:name = l:items[len(l:items) - 1]
+            endif
+            if empty(l:name)
+                let l:name = 'No Name'
+            endif
+            if buf['changed']
+                let l:name = '+' . l:name
+            endif
+            if len(l:name) > l:chars
+                let l:name = l:name[:(l:chars-2)].'..'
+            endif
+            if buf['bufnr'] == bufnr('%')
+                let l:name = '['.l:name.']'
+                let l:found_current = v:true
+            else
+                let l:name = ' '.l:name.' '
+            endif
+            let l:name = printf('%-'.string(l:chars).'s', l:name)
+            let l:names = l:names + [l:name]
+            if l:found_current && len(join(l:names, '')) >= v:echospace | break | endif
         endfor
-        if l:count > v:echospace
-            let l:names = l:names[1:]
-        else
-            let l:done = v:true
-        endif
-    endwhile
-    redraw
-    echo join(l:names, '')[:v:echospace-1]
-    
-endfunction
+        let l:done = v:false
+        while done == v:false
+            let l:count = 0
+            for val in l:names
+                if l:val[0] == '[' | break | endif
+                let l:count = l:count + len(l:val)
+            endfor
+            if l:count > v:echospace
+                let l:names = l:names[1:]
+            else
+                let l:done = v:true
+            endif
+        endwhile
+        redraw
+        echo join(l:names, '')[:v:echospace-1]
+        
+    endfunction
+    nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
+    nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
+    augroup BufSwitch
+        autocmd!
+        autocmd BufEnter * call BufSwitchInfo()
+    augroup END
+else
+    nmap <silent> <c-k> :bprev<cr>
+    nmap <silent> <c-j> :bnext<cr>
+endif
 
-nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
-nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
-
-augroup BufSwitch
-    autocmd!
-    autocmd BufEnter * call BufSwitchInfo()
-augroup END
 
 " Delete buffer while keeping window open
 nmap <leader>d :bp\|bd #<cr>
