@@ -46,7 +46,7 @@ function! g:Globals()
         let g:lyra_string_bg = v:false
         let g:lyra_use_system_colors = v:false
         let g:lyra_transparent = v:false
-	let g:lyra_no_highlighting = v:false
+        let g:lyra_no_highlighting = v:false
         colorscheme lyra
     endtry
     let g:cmake_build_dir = 'build'
@@ -146,12 +146,12 @@ function! g:Plugins()
     endif " accordion
 
     if helper#plug('thaerkh/vim-indentguides')
-        if $WSL_DISTRO_NAME ==# ''
-            let g:indentguides_spacechar = '🮌'
-            let g:indentguides_tabchar = '░'
-        else
+        if $WINDOWS ==# '1'
             let g:indentguides_spacechar = '|'
             let g:indentguides_tabchar = '>'
+        else
+            let g:indentguides_spacechar = '🮌'
+            let g:indentguides_tabchar = '░'
         endif
         let g:indentguides_toggleListMode = v:false
         let g:indentguides_firstlevel = v:false
