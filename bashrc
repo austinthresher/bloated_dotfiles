@@ -25,6 +25,10 @@ if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
     export WINDOWS=1
 fi
 
+if command -v mdvl &> /dev/null; then
+    alias md='mdvl'
+fi
+
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
 function reverse { printf "\e[7m"; }

@@ -82,4 +82,4 @@ else
 fi
 
 # Super Lightweight Terminal Markdown Viewer
-command -v pip && pip -q install mdvl 
+command -v pip3 &> /dev/null && pip3 -q install mdvl 
