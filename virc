@@ -19,6 +19,8 @@ set expandtab
 set incsearch
 set ruler
 set splitbelow
+set ignorecase
+set smartcase
 filetype plugin indent on
 set fillchars=vert:│,fold:\ ,diff:-
 
@@ -34,7 +36,9 @@ nnoremap <s-tab> <<
 xnoremap <tab> >
 xnoremap <s-tab> <
 
-if has("echospace")
+let g:show_buffer_names = v:true
+
+if g:show_buffer_names
     " Easy buffer switching and display
     function! g:BufSwitchInfo()
         let l:names = []
