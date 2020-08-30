@@ -32,7 +32,7 @@ syntax on
 
 " Use tab and shift-tab to indent lines
 nnoremap <tab> >>
-nnoremap <s-tab> << 
+nnoremap <s-tab> <<
 xnoremap <tab> >
 xnoremap <s-tab> <
 
@@ -89,7 +89,7 @@ if g:show_buffer_names
         endwhile
         redraw
         echo join(l:names, '')[:v:echospace-1]
-        
+
     endfunction
     nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
     nmap <silent> <c-j> :bnext<cr>:call BufSwitchInfo()<cr>
@@ -176,3 +176,67 @@ nnoremap <leader>i bi
 
 " append after current word
 nnoremap <leader>a ea
+
+" Automatically set syntax to vim for .virc
+augroup virc_syntax
+    autocmd!
+    autocmd BufEnter *virc set syntax=vim
+augroup END
+
+" Repeatedly join lines until doing so would pass the 80 column limit
+function! JoinTo80()
+    let l:limit = 80 "FIXME: don't hardcode this
+    " If the line is already too long, don't do
+    " anything, otherwise start our Join loop
+    while strwidth(getline('.')) < l:limit
+        " We can't join past the last line of the buffer
+        if line('.') == line('$')
+            return
+        endif
+        let l:lineno = line('.')
+        " Save state of this line and the next
+        let l:current_line = getline(l:lineno)
+        let l:next_line = getline(l:lineno+1)
+        " Do the join instead of calculating length manually
+        " because some filetypes will modify the line during
+        " the join (remove comment characters, whitespace, etc)
+        normal! J
+        if strwidth(getline(l:lineno)) >= l:limit
+            " We're too long, revert our change
+            call setline(l:lineno, l:current_line)
+            if strwidth(l:next_line) > 0
+                call append(l:lineno, l:next_line)
+            endif
+            return
+        endif
+    endwhile
+endfunction
+
+nnoremap <silent> <leader>j :call JoinTo80()<cr>
+
+" Find and highlight trailing whitespace, based on:
+" https://vim.fandom.com/wiki/Remove_unwanted_spaces
+
+function ShowSpaces(...)
+    let @/='\v(\s+$)|( +\ze\t)'
+    let oldhlsearch=&hlsearch
+    if !a:0
+        let &hlsearch=!&hlsearch
+    else
+        let &hlsearch=a:1
+    endif
+    return oldhlsearch
+endfunction
+
+function TrimSpaces() range
+    let oldhlsearch = ShowSpaces(1)
+    execute a:firstline.",".a:lastline."substitute ///gec"
+    let &hlsearch = oldhlsearch
+endfunction
+
+command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+
+nnoremap <leader>s :ShowSpaces 1<cr>
+nnoremap <leader>S m`:TrimSpaces<cr>``
+vnoremap <leader>S :TrimSpaces<CR>
