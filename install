@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # prompt_to_replace <file-in-current-dir> <abs-path-to-replace>
 function prompt_to_replace {

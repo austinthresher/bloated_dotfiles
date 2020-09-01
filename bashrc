@@ -18,7 +18,9 @@ else
     alias ls='ls -F --color=auto'
 fi
 
-alias vi='vim -u ~/.virc'
+if command -v vim &> /dev/null; then
+    alias vi='vim -u ~/.virc'
+fi
 alias tmux='tmux -u'
 
 if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
@@ -83,94 +85,129 @@ else
     alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=${DISPLAY:-:0.0} $(which st) -e /bin/bash -l'
 fi
 
-export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
+export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
 
-HASH=$(hostname | shasum)
-SEED=$(echo $HASH | sed 's/[^0-9]//g')
+# Configure homebrew paths if present
+if command -v brew 2>&1 > /dev/null; then
+    BREWPATH="$(brew --prefix)"
+else
+    BREWPATH="$HOME/homebrew"
+fi
+
+if [ -d "$BREWPATH/bin" ] ; then
+    PATH="$BREWPATH/bin:$PATH"
+fi
+
+# The rest of the file picks a "theme" color for
+# the shell and tmux based on the hostname
+
+# Accepts a single string and writes a hash to stdout
+function simple_hash {
+    # Assign all letters an arbitrary number value
+    local num=$(echo "$1" \
+        | sed -e 's/[^A-Za-z0-9]//g' \
+        | tr ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz \
+             123456789ABCDEF123456789ABCDEF123456789ABCDEF1234567)
+
+    local hashed=1
+    # Ghetto for loop to compute a hash, hash function taken from:
+    # https://stackoverflow.com/a/107657
+    seq ${#num} | while read i; do
+        local digit="${num:$i:1}"
+        if [ ! -z "$digit" ]; then
+            local b16="0x${digit}"
+            hashed=$((hashed * 101 + b16))
+        else
+            echo $hashed
+        fi
+    done
+}
 
 # Predefined colors for specific hosts
-case $HASH in
-    938d55*) PROMPT_COLOR_IDX=10 ;;
-    cbccc7*) PROMPT_COLOR_IDX=4  ;;
-    8d94e1*) PROMPT_COLOR_IDX=13 ;;
-    075baf*) PROMPT_COLOR_IDX=12 ;;
-    a1ec7c*) PROMPT_COLOR_IDX=9  ;;
-    9677b4*) PROMPT_COLOR_IDX=11 ;;
-    54363a*) PROMPT_COLOR_IDX=5  ;;
+case $(simple_hash $(hostname)) in
+    # work
+    "2000859944153293065") PROMPT_COLOR_IDX=10 ;;
+    "4252336200651278864") PROMPT_COLOR_IDX=4  ;;
+    # home
+    "5262292903289373391") PROMPT_COLOR_IDX=1  ;;
+    "1105816367849791686") PROMPT_COLOR_IDX=6  ;; 
+    "7435254907764971302") PROMPT_COLOR_IDX=3  ;;
+    "3634829238533771921") PROMPT_COLOR_IDX=5  ;;
     *)
         # Randomize color based on hostname for all else
-        PROMPT_COLOR_IDX=$(expr ${SEED:1:4} % 12 + 1)
+        PROMPT_COLOR_IDX=$(expr $(simple_hash $(hostname)) % 12 + 1)
         ;;
 esac
 
 # Map color index to escape sequences
 case "$PROMPT_COLOR_IDX" in
-    0)
+    0) # black
         export TMUX_COLOR=black
         export PROMPT_COLOR=$(colorfg 0)
         ;;
-    1)
+    1) # red
         export TMUX_COLOR=red
         export PROMPT_COLOR=$(colorfg 1)
         ;;
-    2)
+    2) # green
         export TMUX_COLOR=green
         export PROMPT_COLOR=$(colorfg 2)
         ;;
-    3)
+    3) # yellow
         export TMUX_COLOR=yellow
         export PROMPT_COLOR=$(colorfg 3)
         ;;
-    4)
+    4) # blue
         export TMUX_COLOR=blue
         export PROMPT_COLOR=$(colorfg 4)
         ;;
-    5)
+    5) # magenta
         export TMUX_COLOR=magenta
         export PROMPT_COLOR=$(colorfg 5)
         ;;
-    6)
+    6) # cyan
         export TMUX_COLOR=cyan
         export PROMPT_COLOR=$(colorfg 6)
         ;;
-    7)
+    7) # white (light grey)
         export TMUX_COLOR=white
         export PROMPT_COLOR=$(colorfg 7)
         ;;
-    8)
+    8) # bright black (dark grey)
         export TMUX_COLOR=colour8
         export PROMPT_COLOR=$(brightfg 0)
         ;;
-    9)
+    9) # bright red
         export TMUX_COLOR=colour9
         export PROMPT_COLOR=$(brightfg 1)
         ;;
-    10)
+    10) # bright green
         export TMUX_COLOR=colour10
         export PROMPT_COLOR=$(brightfg 2)
         ;;
-    11)
+    11) # bright yellow
         export TMUX_COLOR=colour11
         export PROMPT_COLOR=$(brightfg 3)
         ;;
-    12)
+    12) # bright blue
         export TMUX_COLOR=colour12
         export PROMPT_COLOR=$(brightfg 4)
         ;;
-    13)
+    13) # bright magenta
         export TMUX_COLOR=colour13
         export PROMPT_COLOR=$(brightfg 5)
         ;;
-    14)
+    14) # bright cyan
         export TMUX_COLOR=colour14
         export PROMPT_COLOR=$(brightfg 6)
         ;;
-    15|*)
+    15|*) # bright white
         export TMUX_COLOR=colour15
         export PROMPT_COLOR=$(brightfg 7)
         ;;
 esac
 export PS1="\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
+
