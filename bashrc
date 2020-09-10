@@ -25,11 +25,18 @@ alias tmux='tmux -u'
 
 if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
     export WINDOWS=1
+    # If we're on WSL, assume there's an X server running
+    if [ -z "$DISPLAY" ]; then
+        export DISPLAY=0:0
+    fi
 fi
 
 if command -v mdvl &> /dev/null; then
     alias md='mdvl'
 fi
+
+export SCREENDIR="$HOME/.screen"
+[ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR"
 
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
@@ -127,7 +134,7 @@ function simple_hash {
 }
 
 # Predefined colors for specific hosts
-case $(simple_hash $(hostname)) in
+case $(simple_hash $(hostname -f)) in
     # work
     "2000859944153293065") PROMPT_COLOR_IDX=10 ;;
     "4252336200651278864") PROMPT_COLOR_IDX=4  ;;

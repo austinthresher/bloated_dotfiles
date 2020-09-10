@@ -36,6 +36,20 @@ nnoremap <s-tab> <<
 xnoremap <tab> >
 xnoremap <s-tab> <
 
+" Show file format if it doesn't use Unix line endings
+function! ShowFileFormat()
+    if  &fileformat ==# 'dos'
+        return '[dos]'
+    elseif &fileformat ==# 'mac'
+        return '[mac]'
+    elseif &fileformat ==# 'unix'
+        return '[unix]'
+    endif
+    return 'unknown'
+endfunction
+
+set statusline=%<%F\ %h%m%r%=%{ShowFileFormat()}\ %-14.(%l,%c%V%)\ %P
+
 let g:show_buffer_names = v:true
 
 if g:show_buffer_names
