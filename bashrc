@@ -36,7 +36,7 @@ if command -v mdvl &> /dev/null; then
 fi
 
 export SCREENDIR="$HOME/.screen"
-[ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR"
+[ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR" && chmod 700 "$SCREENDIR"
 
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
@@ -216,5 +216,15 @@ case "$PROMPT_COLOR_IDX" in
         export PROMPT_COLOR=$(brightfg 7)
         ;;
 esac
-export PS1="\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
 
+function update_ps1
+{
+    local JOBS=$(jobs | wc -l)
+    if [ "$JOBS" -gt 0 ]; then
+        export PS1="\[$PROMPT_COLOR\]\u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
+    else
+        export PS1="\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
+    fi
+}
+
+export PROMPT_COMMAND=update_ps1
