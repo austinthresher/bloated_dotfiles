@@ -219,11 +219,15 @@ esac
 
 function update_ps1
 {
+    local PREFIX=
+    if [ ! -z "$VIRTUAL_ENV" ]; then
+        PREFIX="[$(basename $VIRTUAL_ENV)] "
+    fi
     local JOBS=$(jobs | wc -l)
     if [ "$JOBS" -gt 0 ]; then
-        export PS1="\[$PROMPT_COLOR\]\u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
+        export PS1="$PREFIX\[$PROMPT_COLOR\] \u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
     else
-        export PS1="\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
+        export PS1="$PREFIX\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
     fi
 }
 
