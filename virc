@@ -197,6 +197,12 @@ augroup virc_syntax
     autocmd BufEnter *virc set syntax=vim
 augroup END
 
+" Automatically set syntax to vim for .virc
+augroup filter_syntax
+    autocmd!
+    autocmd BufRead,BufNewFile *.filter setfiletype filter
+augroup END
+
 " Repeatedly join lines until doing so would pass the 80 column limit
 function! JoinTo80()
     let l:limit = 80 "FIXME: don't hardcode this
