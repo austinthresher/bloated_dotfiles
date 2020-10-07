@@ -1,4 +1,4 @@
-[ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
+[ -e "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 unset -f command_not_found_handle
 export HISTCONTROL=ignoreboth:erasedups
 
