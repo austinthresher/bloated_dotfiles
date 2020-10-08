@@ -1,4 +1,4 @@
-[ -e "$HOME/.proxy" ] && source "$HOME/.proxy"
+[ -e "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 unset -f command_not_found_handle
 export HISTCONTROL=ignoreboth:erasedups
 
@@ -138,6 +138,8 @@ case $(simple_hash $(hostname -f)) in
     # work
     "2000859944153293065") PROMPT_COLOR_IDX=10 ;;
     "4252336200651278864") PROMPT_COLOR_IDX=4  ;;
+    "8056869920325048752") PROMPT_COLOR_IDX=5  ;;
+    "6448036692464193025") PROMPT_COLOR_IDX=11 ;;
     # home
     "5262292903289373391") PROMPT_COLOR_IDX=1  ;;
     "1105816367849791686") PROMPT_COLOR_IDX=6  ;; 

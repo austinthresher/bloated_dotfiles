@@ -52,13 +52,20 @@ set statusline=%<%F\ %h%m%r%=%{ShowFileFormat()}\ %-14.(%l,%c%V%)\ %P
 
 let g:show_buffer_names = v:true
 
+function! EchoSpace()
+    if has('patch1913')
+        return EchoSpace()
+    endif
+    return 80
+endfunction
+
 if g:show_buffer_names
     " Easy buffer switching and display
     function! g:BufSwitchInfo()
         let l:names = []
         let l:bufs = getbufinfo({'buflisted':1})
         " Without this, we get the Press Enter prompt
-        let l:chars = v:echospace / len(l:bufs)
+        let l:chars = EchoSpace() / len(l:bufs)
         if l:chars < 8 " Minimum 8 char names
             let l:chars = 8
         endif
@@ -86,7 +93,7 @@ if g:show_buffer_names
             endif
             let l:name = printf('%-'.string(l:chars).'s', l:name)
             let l:names = l:names + [l:name]
-            if l:found_current && len(join(l:names, '')) >= v:echospace | break | endif
+            if l:found_current && len(join(l:names, '')) >= EchoSpace() | break | endif
         endfor
         let l:done = v:false
         while done == v:false
@@ -95,14 +102,14 @@ if g:show_buffer_names
                 if l:val[0] == '[' | break | endif
                 let l:count = l:count + len(l:val)
             endfor
-            if l:count > v:echospace
+            if l:count > EchoSpace()
                 let l:names = l:names[1:]
             else
                 let l:done = v:true
             endif
         endwhile
         redraw
-        echo join(l:names, '')[:v:echospace-1]
+        echo join(l:names, '')[:EchoSpace()-1]
 
     endfunction
     nmap <silent> <c-k> :bprev<cr>:call BufSwitchInfo()<cr>
