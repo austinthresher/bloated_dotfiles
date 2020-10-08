@@ -54,7 +54,7 @@ let g:show_buffer_names = v:true
 
 function! EchoSpace()
     if has('patch1913')
-        return EchoSpace()
+        return v:echospace
     endif
     return 80
 endfunction
