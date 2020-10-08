@@ -225,7 +225,7 @@ function update_ps1
     if [ ! -z "$VIRTUAL_ENV" ]; then
         PREFIX="[$(basename $VIRTUAL_ENV)] "
     fi
-    local JOBS=$(jobs | wc -l)
+    local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
     if [ "$JOBS" -gt 0 ]; then
         export PS1="$PREFIX\[$PROMPT_COLOR\] \u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
     else

@@ -13,7 +13,7 @@ set enable-bracketed-paste on
 set expand-tilde on
 set show-all-if-ambiguous on
 set visible-stats on
-#set show-all-if-unmodified on
 
 Control-]: menu-complete
 Control-[: menu-complete-backward
+"\C-q": "fg\n"
