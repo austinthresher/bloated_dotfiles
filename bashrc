@@ -224,7 +224,9 @@ function update_ps1
 {
     local PREFIX=
     if [ ! -z "$VIRTUAL_ENV" ]; then
-        PREFIX="[$(basename $VIRTUAL_ENV)] "
+        PREFIX="$(brightfg 0)[venv: $(basename $VIRTUAL_ENV)] "
+    elif [ ! -z "$CONDA_DEFAULT_ENV" ]; then
+        PREFIX="$(brightfg 0)[conda: $CONDA_DEFAULT_ENV] "
     fi
     local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
     if [ "$JOBS" -gt 0 ]; then
