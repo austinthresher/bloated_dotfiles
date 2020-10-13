@@ -1,27 +1,9 @@
+# The first part of this file runs both interactively and non-interactively
+# =========================================================================
+
 [ -e "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 unset -f command_not_found_handle
 export HISTCONTROL=ignoreboth:erasedups
-
-case $- in
-    *i*) # Interactive session
-        # Ignore legacy scroll lock on <C-S> and <C-Q>
-        stty -ixon
-        ;;
-    *) # Non interactive
-        ;;
-esac
-
-if [[ $OSTYPE == *darwin* ]]; then
-    alias ls='ls -F'
-    export BASH_SILENCE_DEPRECATION_WARNING=1
-else
-    alias ls='ls -F --color=auto'
-fi
-
-if command -v vim &> /dev/null; then
-    alias vi='vim -u ~/.virc'
-fi
-alias tmux='tmux -u'
 
 if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
     export WINDOWS=1
@@ -35,8 +17,35 @@ if command -v mdvl &> /dev/null; then
     alias md='mdvl'
 fi
 
+export EDITOR=vi
+export VISUAL=vi
+export PAGER=less
+export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
+
+# Configure homebrew paths if present
+if command -v brew 2>&1 > /dev/null; then
+    BREWPATH="$(brew --prefix)"
+else
+    BREWPATH="$HOME/homebrew"
+fi
+
+if [ -d "$BREWPATH/bin" ] ; then
+    PATH="$BREWPATH/bin:$PATH"
+fi
+
 export SCREENDIR="$HOME/.screen"
 [ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR" && chmod 700 "$SCREENDIR"
+
+# The rest of this file is skipped if not running interactively
+# =============================================================
+
+case $- in
+    *i*) ;; # Interactive session
+    *) return ;; # Non interactive
+esac
+
+# Ignore legacy scroll lock on <C-S> and <C-Q>
+stty -ixon
 
 function norm    { printf "\e[0m"; }
 function bold    { printf "\e[1m"; }
@@ -86,27 +95,18 @@ alias rgrep='grep -Iirn'
 alias more='less'
 alias gdb='gdb -q'
 alias preview='feh --scale -d . &'
-if [ ! -z "$WSL_DISTRO_NAME" ]; then
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=${DISPLAY:-:0.0} WSL_DISTRO_NAME=$WSL_DISTRO_NAME ST=1 $(which st) -e /bin/bash -l'
+
+if [[ $OSTYPE == *darwin* ]]; then
+    alias ls='ls -F'
+    export BASH_SILENCE_DEPRECATION_WARNING=1
 else
-    alias st='env -i LANG=$LANG HOME=$HOME DISPLAY=${DISPLAY:-:0.0} $(which st) -e /bin/bash -l'
+    alias ls='ls -F --color=auto'
 fi
 
-export EDITOR=vi
-export VISUAL=vi
-export PAGER=less
-export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
-
-# Configure homebrew paths if present
-if command -v brew 2>&1 > /dev/null; then
-    BREWPATH="$(brew --prefix)"
-else
-    BREWPATH="$HOME/homebrew"
+if command -v vim &> /dev/null; then
+    alias vi='vim -u ~/.virc'
 fi
-
-if [ -d "$BREWPATH/bin" ] ; then
-    PATH="$BREWPATH/bin:$PATH"
-fi
+alias tmux='tmux -u'
 
 # The rest of the file picks a "theme" color for
 # the shell and tmux based on the hostname
