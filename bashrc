@@ -20,18 +20,18 @@ fi
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
-export PATH="$HOME/.dotfiles/scripts:$HOME/go/bin:$PATH"
+export PATH="$PATH:$HOME/.dotfiles/scripts" #:$HOME/go/bin
 
 # Configure homebrew paths if present
-if command -v brew 2>&1 > /dev/null; then
-    BREWPATH="$(brew --prefix)"
-else
-    BREWPATH="$HOME/homebrew"
-fi
-
-if [ -d "$BREWPATH/bin" ] ; then
-    PATH="$BREWPATH/bin:$PATH"
-fi
+#if command -v brew 2>&1 > /dev/null; then
+#    BREWPATH="$(brew --prefix)"
+#else
+#    BREWPATH="$HOME/homebrew"
+#fi
+#
+#if [ -d "$BREWPATH/bin" ] ; then
+#    PATH="$BREWPATH/bin:$PATH"
+#fi
 
 export SCREENDIR="$HOME/.screen"
 [ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR" && chmod 700 "$SCREENDIR"
@@ -224,9 +224,9 @@ function update_ps1
 {
     local PREFIX=
     if [ ! -z "$VIRTUAL_ENV" ]; then
-        PREFIX="$(brightfg 0)[venv: $(basename $VIRTUAL_ENV)] "
+        PREFIX="$(brightfg 0)[$(basename $VIRTUAL_ENV)] "
     elif [ ! -z "$CONDA_DEFAULT_ENV" ]; then
-        PREFIX="$(brightfg 0)[conda: $CONDA_DEFAULT_ENV] "
+        PREFIX="$(brightfg 0)[$CONDA_DEFAULT_ENV] "
     fi
     local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
     if [ "$JOBS" -gt 0 ]; then

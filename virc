@@ -56,7 +56,7 @@ function! EchoSpace()
     if has('patch1913')
         return v:echospace
     endif
-    return 80
+    return 66
 endfunction
 
 if g:show_buffer_names

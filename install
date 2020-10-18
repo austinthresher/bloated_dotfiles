@@ -68,9 +68,9 @@ prompt_to_replace virc          "$HOME/.virc"
 for f in vim/*; do
     bf=$(basename $f)
     prompt_to_replace "$f" "$HOME/.vim/$bf"
-    prompt_to_replace "$f" "$HOME/.config/nvim/$bf"
+#    prompt_to_replace "$f" "$HOME/.config/nvim/$bf"
 done
-prompt_to_replace vim/vimrc "$HOME/.config/nvim/init.vim"
+#prompt_to_replace vim/vimrc "$HOME/.config/nvim/init.vim"
 
 if [ -d fonts ]; then
     echo "$PWD/fonts already exists. Skipping font extraction."

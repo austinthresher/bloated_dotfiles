@@ -8,7 +8,7 @@ function osx {
 }
 
 # Set PATH
-PREFIX=${PREFIX:-"$HOME/.local"}
+PREFIX=${PREFIX:-"$HOME/ide"}
 if [[ $PATH != *"$PREFIX/bin"* ]]; then
     export PATH="$PREFIX/bin:$PATH"
 fi
@@ -22,6 +22,9 @@ for x in "${REQUIRED[@]}"; do
         }
 done
 
+python3 -m venv "$PREFIX"
+source "$PREFIX/bin/activate"
+
 # package urls
 
 # Neovim
@@ -33,7 +36,7 @@ else
     NVIM_DIR=$NVIM
 fi
 NVIM_EXT=.tar.gz
-NVIM_URL="https://github.com/neovim/neovim/releases/download/v0.4.3/$NVIM$NVIM_EXT"
+NVIM_URL="https://github.com/neovim/neovim/releases/download/nightly/$NVIM$NVIM_EXT"
 
 # Clang + LLVM
 if osx; then
@@ -69,7 +72,7 @@ SHELLCHECK_EXT=.tar.xz
 SHELLCHECK_URL="https://storage.googleapis.com/shellcheck/$SHELLCHECK$SHELLCHECK_EXT"
 
 # Copy these folders from the packages above
-INSTALL_DIRS=(bin include lib libexec share)
+INSTALL_DIRS=(bin include lib libs libexec share)
 
 mkdir -p "$PREFIX"
 for d in "${INSTALL_DIRS[@]}"; do
@@ -145,4 +148,3 @@ if [ -d "$TMP" ]; then
 else
     echo "Failed to create temporary directory"
 fi
-

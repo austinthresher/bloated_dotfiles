@@ -1,7 +1,9 @@
 #!/bin/bash
 
+source "$HOME/ide/bin/activate"
+
 # Node.js
-curl -sL install-node.now.sh | /bin/bash -s -- --prefix="$HOME/.local" -y
+curl -sL install-node.now.sh | /bin/bash -s -- --prefix="$HOME/ide" -y
 npm i -g neovim
 npm i -g bash-language-server
 npm i -g dockerfile-language-server-nodejs

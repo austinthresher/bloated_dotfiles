@@ -157,6 +157,7 @@ function! g:Plugins()
         let g:indentguides_firstlevel = v:false
     endif " indentguides
 
+
     " TODO: try neoformat
 "    if helper#plug('chiel92/vim-autoformat')
 "        let g:formatterpath = [$HOME.'/.local/bin']
@@ -168,6 +169,11 @@ function! g:Plugins()
 "    endif " autoformat
 
     if g:ide
+        if helper#plug('sbdchd/neoformat')
+            noremap <leader>F :Neoformat<CR>
+            vnoremap <leader>F :Neoformat<CR>
+        endif
+
         if helper#plug('neoclide/coc.nvim')
             set hidden
             set nobackup nowritebackup
@@ -198,20 +204,6 @@ function! g:Plugins()
         endif
         call helper#plug('honza/vim-snippets')
         if helper#plug('neomake/neomake')
-            func! SetStatusLime()
-                let b:statuslime_right = neomake#statusline#get(bufnr('%'), {
-                            \ 'use_highlights_with_defaults': 0,
-                            \ 'format_running': '{{running_job_names}}',
-                            \ 'format_loclist_ok': '✓',
-                            \ 'format_loclist_issues': '%s',
-                            \ 'format_quickfix_ok': '',
-                            \ 'format_quickfix_issues': '%s',
-                            \ 'format_loclist_type_W': '{{count}} warning(s) ',
-                            \ 'format_loclist_type_E': '{{count}} error(s) ',
-                            \ 'format_loclist_type_I': '{{count}} message(s) ',
-                            \ })
-                let b:statuslime_left = coc#status()
-            endfunc
             " Don't report issues inside system headers
             function PostprocessClangTidy(entry)
                 try

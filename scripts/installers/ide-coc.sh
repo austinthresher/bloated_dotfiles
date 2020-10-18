@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "$HOME/ide/bin/activate"
+
 cd "$HOME/.config/nvim/repos/"
 if [ ! -d "coc.nvim" ]; then
     git clone https://github.com/neoclide/coc.nvim coc.nvim

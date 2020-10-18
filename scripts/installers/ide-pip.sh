@@ -1,17 +1,20 @@
 #!/bin/bash
 
-pip3 install --user wheel
-pip3 install --user pylama
-pip3 install --user jedi==0.15.0
-pip3 install --user neovim
-pip3 install --user python-language-server
-pip3 install --user pyls-isort
-pip3 install --user cmake_format
-pip3 install --user vim-vint
-pip3 install --user yapf
-pip3 install --user msgpack
+source "$HOME/ide/bin/activate"
 
-VINT="$HOME/.local/bin/vint"
+pip3 install wheel
+pip3 install pylama
+pip3 install pylint
+pip3 install jedi==0.17.2
+pip3 install neovim
+pip3 install python-language-server
+pip3 install pyls-isort
+pip3 install cmake_format
+pip3 install vim-vint
+pip3 install yapf
+pip3 install msgpack
+
+VINT="$HOME/ide/bin/vint"
 if [ ! -f "$VINT" ]; then
     echo -e "#!/usr/bin/env python3\nimport vint\nvint.main()" > "$VINT"
     chmod +x "$VINT"
