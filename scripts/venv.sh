@@ -1,0 +1,35 @@
+#!/bin/bash
+
+VENV_HOME="$HOME/.venv"
+
+__venv_repo() {
+    basename "$(git rev-parse --show-toplevel 2> /dev/null)"
+}
+
+__venv_setup() {
+    mkdir -p "$VENV_HOME"
+}
+
+venv() {
+    __venv_setup
+    if [ "$#" -lt 1 ]; then
+        \ls -1a "$VENV_HOME" | sed '1,2d'
+        return
+    fi
+    if [ ! -d "$VENV_HOME/$1" ]; then
+        echo "creating virtualenv in '$VENV_HOME/$1'"
+        python3 -m venv "$VENV_HOME/$1"
+    fi
+    source "$VENV_HOME/$1/bin/activate"
+}
+
+activate () {
+    if command -v deactivate &> /dev/null; then
+        deactivate
+    fi
+    if git branch &> /dev/null; then
+        venv "$(__venv_repo)"
+    else
+        echo "No project found"
+    fi
+}

@@ -44,6 +44,8 @@ case $- in
     *) return ;; # Non interactive
 esac
 
+source venv.sh &> /dev/null
+
 # Ignore legacy scroll lock on <C-S> and <C-Q>
 stty -ixon
 
