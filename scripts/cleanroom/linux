@@ -1,4 +1,0 @@
-export TERM=linux
-export OSTYPE=linux-gnu
-source "$HOME/.profile"
-export PS1="[linux] $PS1"

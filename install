@@ -45,6 +45,8 @@ function dl_if_missing {
     fi
 }
 
+git config --global core.excludesfile ~/.gitignore
+
 mkdir -p "$HOME/.vim"
 mkdir -p "$HOME/.config/i3"
 mkdir -p "$HOME/.config/nvim"
@@ -64,6 +66,7 @@ prompt_to_replace clang-format  "$HOME/.clang-format"
 prompt_to_replace kitty.conf    "$HOME/.config/kitty/kitty.conf"
 prompt_to_replace coc-settings.json    "$HOME/.config/nvim/coc-settings.json"
 prompt_to_replace virc          "$HOME/.virc"
+prompt_to_replace gitignore     "$HOME/.gitignore"
 
 for f in vim/*; do
     bf=$(basename $f)
