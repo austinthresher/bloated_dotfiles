@@ -19,8 +19,11 @@ venv() {
     if [ ! -d "$VENV_HOME/$1" ]; then
         echo "creating virtualenv in '$VENV_HOME/$1'"
         python3 -m venv "$VENV_HOME/$1"
+        source "$VENV_HOME/$1/bin/activate"
+        pip install --upgrade pip
+    else
+        source "$VENV_HOME/$1/bin/activate"
     fi
-    source "$VENV_HOME/$1/bin/activate"
 }
 
 activate () {
