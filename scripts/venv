@@ -30,6 +30,6 @@ activate () {
     if git branch &> /dev/null; then
         venv "$(__venv_repo)"
     else
-        echo "No project found"
+        echo "No project found, are you sure you are in a git repo?"
     fi
 }
