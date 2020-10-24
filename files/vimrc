@@ -1,0 +1,244 @@
+source ~/.virc
+function! g:Options()
+    " Allow folding in files
+    set foldenable
+    " Allow files to customize settings on open
+    set modeline
+    " Characters used when list=on
+    set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
+    " Character used to mark wrapped lines
+    set showbreak==>\
+    " Search as you're typing
+    set hlsearch
+    " Enable the mouse
+    set mouse=a
+    " Set US English for spellcheck
+    set spelllang=en_us
+    " Don't wrap lines by default
+    set nowrap
+    " Don't page output
+    set more
+    " Don't try to set the cursor
+    "set guicursor=
+    " CursorHold kicks in after 1/10 second
+    set updatetime=100
+    " Reduce screen artifacts by delaying redraw
+    set lazyredraw
+    " Show cmd in progress
+    set showcmd
+    " Scroll options
+    set sidescroll=1
+    set scrolloff=0
+    set sidescrolloff=1
+    " Allow windows to collapse completely
+    set winminwidth=1
+    set winminheight=1
+    set completeopt+=menuone,noinsert,preview,longest
+    " Use line drawing char for vsp, spaces for folds
+    if has('nvim')
+        set fillchars=vert:│,fold:\ ,eob:\ ,diff:-
+    endif
+endfunc
+call g:Options()
+
+function! g:Globals()
+    let g:cmake_build_dir = 'build'
+    let g:ide = has('nvim')
+    let g:nproc = 1
+    try | let g:nproc = str2nr(system('nproc')) | endtry
+    let g:python_highlight_all = v:true
+endfunction
+call g:Globals()
+
+function! g:Plugins()
+    call plug#begin()
+
+    Plug 'austinthresher/vim-lyra'
+    Plug 'austinthresher/vim-flip'
+    Plug 'MarcWeber/vim-addon-mw-utils'
+    Plug 'ekalinin/dockerfile.vim'
+    Plug 'google/vim-searchindex'
+    Plug 'guns/xterm-color-table.vim'
+    Plug 'junegunn/gv.vim'
+    Plug 'jvirtanen/vim-octave'
+    Plug 'machakann/vim-sandwich'
+    Plug 'michaeljsmith/vim-indent-object'
+    Plug 'peterrincker/vim-argumentative'
+    Plug 'romainl/vim-qf'
+    Plug 'roxma/vim-paste-easy'
+    Plug 'tbastos/vim-lua'
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'thinca/vim-ref'
+    Plug 'tomtom/tlib_vim'
+    Plug 'tpope/vim-abolish'
+    Plug 'tpope/vim-apathy'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-eunuch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-markdown'
+    Plug 'tpope/vim-sensible'
+    Plug 'tpope/vim-unimpaired'
+    Plug 'tpope/vim-git'
+    Plug 'tpope/vim-obsession'
+    Plug 'chrisbra/csv.vim'
+    Plug 'pboettch/vim-cmake-syntax'
+    Plug 'vim-scripts/std_c.zip'
+    Plug 'triglav/vim-visual-increment'
+    Plug 'jonhiggs/vim-readline'
+    Plug 'bfrg/vim-cpp-modern'
+
+    call plug#end()
+
+"    if helper#plug('pseewald/vim-anyfold')
+"        augroup Anyfold
+"            autocmd!
+"            autocmd Filetype * AnyFoldActivate
+"            autocmd Filetype * exec 'norm! zR'
+"            autocmd Filetype * set foldlevel=99
+"        augroup END
+"        let g:anyfold_fold_comments = v:true
+"    endif
+"
+"    if helper#plug('noahfrederick/vim-skeleton')
+"        if has('nvim')
+"            let g:skeleton_template_dir = $HOME.'/.config/nvim/templates'
+"        else
+"            let g:skeleton_template_dir = $HOME.'/.vim/templates'
+"        endif
+"
+"    endif
+"
+"    if helper#plug('junegunn/vim-easy-align')
+"        nmap ga <Plug>(EasyAlign)
+"        vmap <Enter> <Plug>(EasyAlign)
+"    endif " easy-align
+"
+"    if helper#plug('rhysd/conflict-marker.vim')
+"        let g:conflict_marker_enable_mappings = 0
+"        nmap <buffer>]x <Plug>(conflict-marker-next-hunk)
+"        nmap <buffer>[x <Plug>(conflict-marker-prev-hunk)
+"    endif " conflict-marker
+"
+"    if helper#plug('rhysd/git-messenger.vim')
+"        let g:git_messenger_no_default_mappings = v:true
+"        let g:git_messenger_include_diff = v:true
+"        let g:git_messenger_max_popup_height = 8
+"        noremap <silent><leader>g :GitMessenger<cr>
+"    endif " git-messenger
+"
+"    if helper#plug('mattboehm/vim-accordion')
+"        nnoremap <leader><pageup> :AccordionZoomOut<CR>
+"        nnoremap <leader><pagedown> :AccordionZoomIn<CR>
+"        nnoremap <c-w>2 :Accordion 2<CR>
+"        nnoremap <c-w>3 :Accordion 3<CR>
+"        nnoremap <c-w>4 :Accordion 4<CR>
+"        nnoremap <c-w>0 :AccordionStop<CR>
+"    endif " accordion
+"
+"    if helper#plug('thaerkh/vim-indentguides')
+"        if $WINDOWS ==# '1'
+"            let g:indentguides_spacechar = '|'
+"            let g:indentguides_tabchar = '>'
+"        else
+"            let g:indentguides_spacechar = '🮌'
+"            let g:indentguides_tabchar = '░'
+"        endif
+"        let g:indentguides_toggleListMode = v:false
+"        let g:indentguides_firstlevel = v:false
+"    endif " indentguides
+"    call helper#end()
+
+endfunction
+call g:Plugins()
+
+function! g:Functions()
+    " Useful for debugging syntax highlighting
+    func! HiAtCur()
+        let l:name = ''
+        for id in synstack(line('.'), col('.'))
+            let l:name = synIDattr(id, 'name')
+            echo l:name
+        endfor
+        if l:name isnot# ''
+            exec 'hi '.l:name
+        endif
+    endfunc
+
+    function! CMakeBuildDir()
+        return exists('b:cmake_build_dir') ?
+                    \ b:cmake_build_dir :
+                    \ (exists('g:cmake_build_dir') ?
+                        \ g:cmake_build_dir : 'build')
+    endfunction
+
+    function! RunCMakeAndMake(args)
+        if filereadable('CMakeLists.txt')
+            let l:build = CMakeBuildDir()
+            let l:cmd = '!cmake -B '.CMakeBuildDir().' -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -S $(pwd) '.a:args
+            silent exec l:cmd
+            silent exec 'make -j -C '.CMakeBuildDir()
+            redraw!
+            echom l:cmd
+        else
+            silent exec 'make -j'
+            redraw!
+            echom 'make -j'
+        endif
+    endfunction
+
+    function! RunMakeClean()
+        if filereadable('CMakeLists.txt')
+            let l:cmd = 'make -C '.CMakeBuildDir().' clean'
+        else
+            let l:cmd = 'make clean'
+        endif
+        silent exec l:cmd
+        redraw!
+        echom l:cmd
+    endfunction
+endfunction
+call g:Functions()
+
+function! g:Maps()
+
+    nmap <leader>l :copen<cr>
+    nmap <silent> <leader>C :call RunMakeClean()<cr>
+    nmap <silent> <leader>M :call RunCMakeAndMake('-DCMAKE_CXX_CLANG_TIDY=clang-tidy')<cr>
+    nmap <silent> <leader>m :call RunCMakeAndMake('-UCMAKE_CXX_CLANG_TIDY=')<cr>
+
+
+    " Quick reload of vimrc
+    nnoremap <leader>V :source $MYVIMRC<cr>
+    " Use ` as optional wincmd prefix
+    nnoremap ` <c-w>
+    nnoremap <c-w>` `
+    nmap <silent><leader>? <Plug>(helper-toggle)
+    " Ctrl+K to search for cursor text and show in quickfix
+    " why doesn't this work?
+    " nnoremap <c-k> :grep! \b<C-R><C-W>\b<CR>:cw<CR>
+    nnoremap <leader>h :call HiAtCur()<cr>
+
+endfunction
+call g:Maps()
+
+function! g:IDE()
+        call neomake#configure#automake({
+                    \ 'TextChanged': {},
+                    \ 'InsertLeave': {},
+                    \ 'BufWritePost': {'delay': 0},
+                    \ 'BufWinEnter': {},
+                    \}, 100)
+        call neomake#signs#RedefineErrorSign({ 'text': '╳', 'texthl': 'Error' })
+        call neomake#signs#RedefineWarningSign({ 'text': '✗', 'texthl': 'Error' })
+endfunction
+if g:ide | call g:IDE() | endif
+
+
+try
+    let g:lyra_string_bg = v:false
+    let g:lyra_use_system_colors = v:false
+    let g:lyra_transparent = v:false
+    let g:lyra_no_highlighting = v:false
+    colorscheme lyra
+catch
+endtry

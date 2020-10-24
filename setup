@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if ! command -v brew &> /dev/null; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+    # This only adds homebrew to PATH on linux
+    # TODO: add to path on OSX too
+    if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+        echo 'eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)' >> $HOME/.bashrc_local
+        eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+    elif [ -f $HOME/.linuxbrew/bin/brew ]; then
+        echo 'eval $($HOME/.linuxbrew/bin/brew shellenv)' >> $HOME/.bashrc_local
+        eval $($HOME/.linuxbrew/bin/brew shellenv)
+    fi
+
+    brew install python3
+fi
+
+if command -v pip3 &> /dev/null; then
+    pip3 config -q --user set global.use-feature 2020-resolver
+    pip3 install -q --user --upgrade pip pipx
+    pipx install --include-deps ansible
+    ansible-galaxy collection install community.general
+    ANSIBLE_LOCALHOST_WARNING=False ansible-playbook ansible.yml
+else
+    echo "pip3 couldn't be found, please fix and try again"
+fi

@@ -1,0 +1,203 @@
+set encoding=utf-8 | scriptencoding utf-8
+
+" Basic no-plugins config for lo-tech editing
+set nocompatible
+set noerrorbells
+set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
+set autoindent
+set showmatch
+set matchtime=1
+set backspace=indent,eol,start
+set hidden
+set equalalways
+set eadirection=both
+set path+=**
+set wildmenu
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set incsearch
+set ruler
+set splitbelow
+set ignorecase
+set smartcase
+filetype plugin indent on
+set fillchars=vert:│,fold:\ ,diff:-
+
+try
+    let g:lyra_use_system_colors = v:true
+    let g:lyra_transparent = v:true
+    let g:lyra_no_highlighting = v:true
+    colorscheme lyra
+    syntax on
+catch
+endtry
+
+" Use tab and shift-tab to indent lines
+nnoremap <tab> >>
+nnoremap <s-tab> <<
+xnoremap <tab> >
+xnoremap <s-tab> <
+
+" Show file format if it doesn't use Unix line endings
+function! ShowFileFormat()
+    if  &fileformat ==# 'dos'
+        return '[dos]'
+    elseif &fileformat ==# 'mac'
+        return '[mac]'
+    elseif &fileformat ==# 'unix'
+        return '[unix]'
+    endif
+    return 'unknown'
+endfunction
+
+set statusline=%<%F\ %h%m%r%=%{ShowFileFormat()}\ %-14.(%l,%c%V%)\ %P
+
+
+" Delete buffer while keeping window open
+nmap <leader>d :bp\|bd #<cr>
+
+" Clear search with <C-l>
+nnoremap <c-l> :noh<cr><c-l>
+" * Sets word under cursor to search term but doesn't go to the next match
+nnoremap * *N
+" List buffers with <leader>b
+nmap <leader>b :ls<cr>:b
+
+nnoremap <leader>V :source ~/.virc<cr>
+
+" Snap view to left if line length is <= win width
+function! ViewSnap()
+    let l:view = winsaveview()
+    let l:left = l:view['leftcol']
+    let l:col = l:view['col']
+    let l:linelen = strwidth(getline('.'))
+    let l:winlen = winwidth(0)
+    if l:left > 0 && l:linelen < l:winlen
+        let l:view['leftcol'] = 0
+        call winrestview(l:view)
+    endif
+endfunction
+augroup Snap
+    autocmd!
+    autocmd CursorMoved,CursorMovedI * call ViewSnap()
+augroup END
+
+
+" Navigate out of terminal mode more easily
+tnoremap <esc> <c-\><c-n>
+tnoremap <c-w>H <c-\><c-n><c-w>H
+tnoremap <c-w>J <c-\><c-n><c-w>J
+tnoremap <c-w>K <c-\><c-n><c-w>K
+tnoremap <c-w>L <c-\><c-n><c-w>L
+tnoremap <c-w>h <c-\><c-n><c-w>h
+tnoremap <c-w>j <c-\><c-n><c-w>j
+tnoremap <c-w>k <c-\><c-n><c-w>k
+tnoremap <c-w>l <c-\><c-n><c-w>l
+tnoremap <c-w>p <c-\><c-n><c-w>p
+
+" Automatically enter insert mode when selecting terminal window
+augroup Terminal
+    autocmd!
+    if has('nvim')
+        autocmd TermOpen * startinsert
+    else
+        autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
+    endif
+augroup END
+
+" Show and jump to quickfix, close quickfix when in the list
+function! ToggleQuickfix()
+    if &buftype ==# 'quickfix'
+        wincmd p
+        exec 'cclose'
+    else
+        exec 'copen 5'
+        silent! exec '/\<error\>'
+    endif
+endfunction
+nnoremap <silent> Q :call ToggleQuickfix()<cr>
+
+" clear current line and enter insert mode
+" actually, just use Di instead
+"nnoremap di 0d$i
+
+" insert before current word
+nnoremap <leader>i bi
+
+" append after current word
+nnoremap <leader>a ea
+
+" Automatically set syntax to vim for .virc
+augroup virc_syntax
+    autocmd!
+    autocmd BufEnter *virc set syntax=vim
+augroup END
+
+augroup filter_syntax
+    autocmd!
+    autocmd BufRead,BufNewFile *.filter setfiletype filter
+augroup END
+
+augroup yml_indent
+    autocmd!
+    autocmd BufRead,BufNewFile *.yml setlocal shiftwidth=2
+augroup END
+
+" Repeatedly join lines until doing so would pass the 80 column limit
+function! JoinTo80()
+    let l:limit = 80 "FIXME: don't hardcode this
+    " If the line is already too long, don't do
+    " anything, otherwise start our Join loop
+    while strwidth(getline('.')) < l:limit
+        " We can't join past the last line of the buffer
+        if line('.') == line('$')
+            return
+        endif
+        let l:lineno = line('.')
+        " Save state of this line and the next
+        let l:current_line = getline(l:lineno)
+        let l:next_line = getline(l:lineno+1)
+        " Do the join instead of calculating length manually
+        " because some filetypes will modify the line during
+        " the join (remove comment characters, whitespace, etc)
+        normal! J
+        if strwidth(getline(l:lineno)) >= l:limit
+            " We're too long, revert our change
+            call setline(l:lineno, l:current_line)
+            if strwidth(l:next_line) > 0
+                call append(l:lineno, l:next_line)
+            endif
+            return
+        endif
+    endwhile
+endfunction
+
+nnoremap <silent> <leader>j :call JoinTo80()<cr>
+
+" Find and highlight trailing whitespace, based on:
+" https://vim.fandom.com/wiki/Remove_unwanted_spaces
+
+function ShowSpaces(...)
+    let @/='\v(\s+$)|( +\ze\t)'
+    let oldhlsearch=&hlsearch
+    if !a:0
+        let &hlsearch=!&hlsearch
+    else
+        let &hlsearch=a:1
+    endif
+    return oldhlsearch
+endfunction
+
+function TrimSpaces() range
+    let oldhlsearch = ShowSpaces(1)
+    execute a:firstline.",".a:lastline."substitute ///gec"
+    let &hlsearch = oldhlsearch
+endfunction
+
+command -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
+command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+
+nnoremap <leader>s :ShowSpaces 1<cr>
+nnoremap <leader>S m`:TrimSpaces<cr>``
+vnoremap <leader>S :TrimSpaces<CR>

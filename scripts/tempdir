@@ -1,0 +1,7 @@
+#!/bin/bash
+
+tempdir() {
+    local tmpdir=$(mktemp -d)
+    trap "rm -rf $tmpdir" EXIT
+    echo $tmpdir
+}

@@ -1,0 +1,22 @@
+- hosts: localhost
+  tasks:
+
+  - name: copy dotfiles
+    copy: src={{ item }} dest=$HOME/.{{ item }}
+    with_items: [profile, bashrc, inputrc, tmux.conf, vimrc, virc, gitignore]
+
+  - name: configure gitignore
+    command: git config --global core.excludesfile $HOME/.gitignore
+
+  - name: download vim-plug
+    get_url:
+      url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      dest: $HOME/.vim/autoload/plug.vim
+
+  - name: install mdvl markdown viewer
+    command: pipx install mdvl  
+
+  - name: install homebrew packages
+    community.general.homebrew:
+      name: "{{ item }}"
+    with_items: [gcc, python3, vim, tmux, neovim]
