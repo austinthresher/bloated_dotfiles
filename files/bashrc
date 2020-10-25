@@ -48,10 +48,6 @@ else
     alias ls='ls -F --color=auto'
 fi
 
-if command -v vim &> /dev/null; then
-    alias vi='vim -u ~/.virc'
-fi
-
 alias tmux='tmux -u'
 alias d-c='docker-compose'
 alias d='docker'

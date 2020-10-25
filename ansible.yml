@@ -3,7 +3,7 @@
 
   - name: copy dotfiles
     copy: src={{ item }} dest=$HOME/.{{ item }}
-    with_items: [profile, bashrc, inputrc, tmux.conf, vimrc, virc, gitignore]
+    with_items: [profile, bashrc, inputrc, tmux.conf, vimrc, gitignore]
 
   - name: configure gitignore
     command: git config --global core.excludesfile $HOME/.gitignore
