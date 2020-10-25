@@ -52,7 +52,7 @@ filetype plugin indent on
 try
     let g:lyra_use_system_colors = v:true
     let g:lyra_transparent = v:true
-    let g:lyra_no_highlighting = v:true
+    let g:lyra_no_highlighting = v:false
     colorscheme lyra
     syntax on
 catch

@@ -23,10 +23,8 @@ fi
 EDITOR=vi;   	export EDITOR
 PAGER=less;  	export PAGER
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
+# Include user's bin directory
+PATH="$HOME/.local/bin:$PATH"
 
 if [ -d "$HOME/ide/bin" ] ; then
     PATH="$HOME/ide/bin:$PATH"
