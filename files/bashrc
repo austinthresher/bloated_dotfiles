@@ -49,7 +49,12 @@ else
 fi
 
 alias tmux='tmux -u'
-alias d-c='docker-compose'
+alias doco='docker-compose'
 alias d='docker'
+
+if command -v nvim &> /dev/null; then
+    alias vim=nvim
+fi
+
 source venv
 source promptcolor

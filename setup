@@ -45,3 +45,5 @@ fi
 
 export ANSIBLE_LOCALHOST_WARNING=False
 ansible-playbook ansible.yml
+
+nvim -c 'PlugInstall | qa!'

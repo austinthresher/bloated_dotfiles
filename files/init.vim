@@ -13,7 +13,6 @@ set incsearch
 set lazyredraw
 set listchars=eol:$,tab:>\ ,extends:>,precedes:<,nbsp:+,trail:_
 set matchtime=1
-set nocompatible
 set noerrorbells
 set path+=**
 set ruler
@@ -30,8 +29,16 @@ set splitbelow
 set wildmenu
 set winminheight=1
 set winminwidth=1
+set updatetime=100
 
-filetype plugin indent on
+let g:gitgutter_set_sign_backgrounds = v:false
+let g:gitgutter_sign_added = '++'
+let g:gitgutter_sign_modified = '~~'
+let g:gitgutter_sign_removed = '--'
+let g:gitgutter_sign_modified_removed = '**'
+let g:gitgutter_sign_removed_first_line = '^^'
+let g:gitgutter_sign_removed_above_and_below = '%%'
+let g:airline_theme = 'simple'
 
 " Plugins
 " =======
@@ -43,34 +50,22 @@ filetype plugin indent on
     Plug 'tpope/vim-unimpaired'
     Plug 'jonhiggs/vim-readline'
     Plug 'yggdroot/indentline'
-    Plug 'blueyed/vim-diminactive'
     Plug 'farmergreg/vim-lastplace'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
     call plug#end()
 
 " /Plugins
 
 try
-    let g:lyra_use_system_colors = v:true
-    let g:lyra_transparent = v:true
+    let g:lyra_use_system_colors = v:false
+    let g:lyra_transparent = v:false
     let g:lyra_no_highlighting = v:false
     colorscheme lyra
     syntax on
 catch
 endtry
-
-" Show file format if it doesn't use Unix line endings
-function! ShowFileFormat()
-    if  &fileformat ==# 'dos'
-        return '[dos]'
-    elseif &fileformat ==# 'mac'
-        return '[mac]'
-    elseif &fileformat ==# 'unix'
-        return '[unix]'
-    endif
-    return 'unknown'
-endfunction
-
-set statusline=%<%F\ %h%m%r%=%{ShowFileFormat()}\ %-14.(%l,%c%V%)\ %P
 
 " Use tab and shift-tab to indent lines
 nnoremap <tab> >>
@@ -79,7 +74,7 @@ xnoremap <tab> >
 xnoremap <s-tab> <
 
 " Delete buffer while keeping window open
-nmap <leader>d :bp\|bd #<cr>
+nmap <leader>bd :bp\|bd #<cr>
 
 " Clear search with <C-l>
 nnoremap <c-l> :noh<cr><c-l>
@@ -88,7 +83,7 @@ nnoremap * *N
 " List buffers with <leader>b
 nmap <leader>b :ls<cr>:b
 
-nnoremap <leader>V :source ~/.virc<cr>
+nnoremap <leader>V :source ~/.config/nvim/init.vim<cr>
 
 " Navigate out of terminal mode more easily
 tnoremap <esc> <c-\><c-n>
@@ -216,3 +211,5 @@ command -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
 nnoremap <leader>s :ShowSpaces 1<cr>
 nnoremap <leader>S m`:TrimSpaces<cr>``
 vnoremap <leader>S :TrimSpaces<CR>
+
+nnoremap <leader>gt :GitGutterToggle<cr>

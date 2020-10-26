@@ -2,16 +2,24 @@
   tasks:
 
   - name: copy dotfiles
-    copy: src={{ item }} dest=$HOME/.{{ item }}
-    with_items: [profile, bashrc, inputrc, tmux.conf, vimrc, gitignore]
+    copy: src="{{ item }}" dest="{{ lookup('env', 'HOME') }}/.{{ item }}"
+    with_items: [profile, bashrc, inputrc, tmux.conf, gitignore]
 
   - name: configure gitignore
-    command: git config --global core.excludesfile $HOME/.gitignore
+    command: git config --global core.excludesfile {{ lookup('env', 'HOME') }}/.gitignore
+
+  - name: create nvim directory
+    file:
+      path: "{{ lookup('env', 'HOME') }}/.config/nvim/autoload"
+      state: directory
+
+  - name: copy init.vim
+    copy: src=init.vim dest="{{ lookup('env', 'HOME') }}/.config/nvim/init.vim"
 
   - name: download vim-plug
     get_url:
       url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-      dest: $HOME/.vim/autoload/plug.vim
+      dest: "{{ lookup('env', 'HOME') }}/.config/nvim/autoload/plug.vim"
 
   - name: install mdvl markdown viewer
     command: pipx install mdvl  
@@ -19,4 +27,4 @@
   - name: install homebrew packages
     community.general.homebrew:
       name: "{{ item }}"
-    with_items: [gcc, python3, vim, tmux, neovim]
+    with_items: [gcc, python3, neovim, tmux]
