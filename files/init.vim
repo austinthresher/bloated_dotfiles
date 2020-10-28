@@ -60,6 +60,7 @@ let g:airline_theme = 'simple'
     Plug 'airblade/vim-gitgutter'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    Plug 'rhysd/conflict-marker.vim'
     call plug#end()
 
 " /Plugins

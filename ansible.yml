@@ -16,8 +16,11 @@
       path: "{{ lookup('env', 'HOME') }}/.config/nvim/autoload"
       state: directory
 
-  - name: copy init.vim
-    copy: src=init.vim dest="{{ lookup('env', 'HOME') }}/.config/nvim/init.vim"
+  - name: symlink init.vim
+    file:
+      src: "{{ lookup('env', 'HOME') }}/.dotfiles/files/init.vim"
+      path: "{{ lookup('env', 'HOME') }}/.config/nvim/init.vim"
+      state: link
 
   - name: download vim-plug
     get_url:
