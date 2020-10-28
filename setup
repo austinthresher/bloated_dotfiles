@@ -46,7 +46,7 @@ if ! pipx list | grep -q package\ ansible; then
     pipx install --include-deps ansible
 fi
 
-if ! ansible-galaxy collection list | grep -q community.general; then
+if ! [ -d "$HOME/.ansible/collections/ansible_collections/community/general" ]; then
     ansible-galaxy collection install community.general
 fi
 
