@@ -45,6 +45,12 @@ let g:gitgutter_sign_modified_removed = '**'
 let g:gitgutter_sign_removed_first_line = '^^'
 let g:gitgutter_sign_removed_above_and_below = '%%'
 let g:airline_theme = 'simple'
+let g:ale_sign_error = 'E:'
+let g:ale_sign_warning = 'W:'
+let g:ale_open_list = v:true
+let g:ale_list_window_size = 5
+let g:ale_virtualenv_dir_names = []
+let test#strategy = 'vimux'
 
 " Plugins
 " =======
@@ -61,6 +67,10 @@ let g:airline_theme = 'simple'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'rhysd/conflict-marker.vim'
+    Plug 'dense-analysis/ale'
+    Plug 'vim-test/vim-test'
+    Plug 'benmills/vimux'
+    Plug 'tpope/vim-dispatch'
     call plug#end()
 
 " /Plugins
@@ -220,3 +230,6 @@ nnoremap <leader>S m`:TrimSpaces<cr>``
 vnoremap <leader>S :TrimSpaces<CR>
 
 nnoremap <leader>gt :GitGutterToggle<cr>
+
+nnoremap <leader>t :TestNearest<cr>
+nnoremap <leader>T :TestFile<cr>

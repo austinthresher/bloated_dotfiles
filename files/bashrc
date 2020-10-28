@@ -58,3 +58,5 @@ fi
 
 source venv
 source promptcolor
+
+activate &> /dev/null
