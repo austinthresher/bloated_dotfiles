@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# If we can't find brew, then sourcing .bashrc_local might update $PATH
+if ! command -v brew &> /dev/null; then
+    [ -e "$HOME/.bashrc_local" ] && source $HOME/.bashrc_local
+fi
+
 if ! command -v brew &> /dev/null; then
     echo "Installing brew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
@@ -13,6 +18,8 @@ if ! command -v brew &> /dev/null; then
         echo 'eval $($HOME/.linuxbrew/bin/brew shellenv)' >> $HOME/.bashrc_local
         eval $($HOME/.linuxbrew/bin/brew shellenv)
     fi
+    echo "PATH after brew install:"
+    echo $PATH
 fi
 
 if ! command -v brew &> /dev/null; then
@@ -20,8 +27,8 @@ if ! command -v brew &> /dev/null; then
     exit 1
 fi
 
-if ! brew list | grep -q python.*3; then
-    echo "Installing python3..."
+if ! brew list --formula | grep -q python.*3; then
+    echo "Installing python3 from brew..."
     brew install -q python3
 fi
 
@@ -44,6 +51,6 @@ if ! ansible-galaxy collection list | grep -q community.general; then
 fi
 
 export ANSIBLE_LOCALHOST_WARNING=False
-ansible-playbook ansible.yml
+ansible-playbook -i /dev/null ansible.yml
 
-nvim -c 'PlugInstall | qa!'
+nvim -c 'try | PlugInstall | catch | endtry | qa!'

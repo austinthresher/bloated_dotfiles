@@ -31,6 +31,12 @@ set winminheight=1
 set winminwidth=1
 set updatetime=100
 
+" TODO: System clipboard configuration
+
+let g:loaded_python_provider = v:false
+let g:loaded_ruby_provider = v:false
+let g:loaded_node_provider = v:false
+
 let g:gitgutter_set_sign_backgrounds = v:false
 let g:gitgutter_sign_added = '++'
 let g:gitgutter_sign_modified = '~~'

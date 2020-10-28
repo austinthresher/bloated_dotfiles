@@ -1,8 +1,11 @@
 - hosts: localhost
   tasks:
 
-  - name: copy dotfiles
-    copy: src="{{ item }}" dest="{{ lookup('env', 'HOME') }}/.{{ item }}"
+  - name: symlink dotfiles
+    file:
+      src: "{{ lookup('env', 'HOME') }}/.dotfiles/files/{{ item }}"
+      path: "{{ lookup('env', 'HOME') }}/.{{ item }}"
+      state: link
     with_items: [profile, bashrc, inputrc, tmux.conf, gitignore]
 
   - name: configure gitignore
@@ -28,3 +31,8 @@
     community.general.homebrew:
       name: "{{ item }}"
     with_items: [gcc, python3, neovim, tmux]
+
+  - name: install neovim python3 module
+    pip:
+      extra_args: '--upgrade'
+      name: pynvim
