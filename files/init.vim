@@ -71,6 +71,7 @@ let test#strategy = 'vimux'
     Plug 'vim-test/vim-test'
     Plug 'benmills/vimux'
     Plug 'tpope/vim-dispatch'
+    Plug 'ekalinin/dockerfile.vim'
     call plug#end()
 
 " /Plugins

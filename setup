@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export PATH="$HOME/.local/bin:$PATH"
+
 # If we can't find brew, then sourcing .bashrc_local might update $PATH
 if ! command -v brew &> /dev/null; then
     [ -e "$HOME/.bashrc_local" ] && source $HOME/.bashrc_local
