@@ -59,4 +59,6 @@ fi
 source venv
 source promptcolor
 
-activate &> /dev/null
+if [ -f ".activate" ]; then
+    activate &> /dev/null
+fi
