@@ -26,6 +26,7 @@ case $(simple_hash $(hostname -f)) in
     "1105816367849791686") PROMPT_COLOR_IDX=6  ;; 
     "7435254907764971302") PROMPT_COLOR_IDX=3  ;;
     "3634829238533771921") PROMPT_COLOR_IDX=5  ;;
+    "12116202349837038")   PROMPT_COLOR_IDX=12 ;;
     *)
         # Randomize color based on hostname for all else
         PROMPT_COLOR_IDX=$(expr $(simple_hash $(hostname)) % 12 + 1)
