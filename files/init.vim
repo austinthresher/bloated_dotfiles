@@ -234,3 +234,9 @@ nnoremap <leader>gt :GitGutterToggle<cr>
 
 nnoremap <leader>t :TestNearest<cr>
 nnoremap <leader>T :TestFile<cr>
+
+" Install plugins if this looks like a fresh setup
+let s:checkfile = expand("~/.config/nvim/updated")
+if ! filereadable(s:checkfile)
+    execute 'PlugInstall | q | !touch ' . s:checkfile
+endif

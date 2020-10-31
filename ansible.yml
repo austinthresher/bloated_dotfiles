@@ -33,9 +33,18 @@
   - name: install homebrew packages
     community.general.homebrew:
       name: "{{ item }}"
-    with_items: [gcc, python3, neovim, tmux]
+    with_items: [gcc, python3, neovim, tmux, npm]
 
   - name: install neovim python3 module
     pip:
       extra_args: '--upgrade'
       name: pynvim
+
+  - name: install neovim npm package
+    community.general.npm:
+      global: yes
+      name: neovim
+
+  - name: install neovim ruby package
+    community.general.gem:
+      name: neovim
