@@ -48,3 +48,4 @@
   - name: install neovim ruby package
     community.general.gem:
       name: neovim
+    when: false

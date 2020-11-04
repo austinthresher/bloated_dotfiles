@@ -54,3 +54,6 @@ fi
 
 export ANSIBLE_LOCALHOST_WARNING=False
 ansible-playbook -i /dev/null ansible.yml
+
+# Make vim rescan / install plugins
+rm -f ~/.config/nvim/updated

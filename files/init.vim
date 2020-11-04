@@ -238,5 +238,5 @@ nnoremap <leader>T :TestFile<cr>
 " Install plugins if this looks like a fresh setup
 let s:checkfile = expand("~/.config/nvim/updated")
 if ! filereadable(s:checkfile)
-    execute 'PlugInstall | q | !touch ' . s:checkfile
+    execute 'PlugInstall | PlugUpdate | PlugClean! | q | !touch ' . s:checkfile
 endif
