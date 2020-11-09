@@ -1,2 +1,6 @@
 .*.*sw?
 .*.*~
+__pycache__/
+*.pyc
+.activate
+venv/

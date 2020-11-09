@@ -34,13 +34,6 @@ if ! brew list --formula | grep -q python.*3; then
     brew install -q python3
 fi
 
-PY3DIR=$(dirname $(which python3))
-PIPDIR=$(dirname $(which pip3))
-if [ "$PY3DIR" != "$PIPDIR" ]; then
-    echo "python3 ($PY3DIR) != pip3 ($PIPDIR), exiting"
-    exit 1
-fi
-
 pip3 config -q --user set global.use-feature 2020-resolver
 pip3 install -q --user --upgrade pip pipx
 
