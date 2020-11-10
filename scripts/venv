@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VENV_HOME="$HOME/.venv"
+PYTHON3="$(which python3.8)"
 
 __venv_repo() {
     basename "$(git rev-parse --show-toplevel 2> /dev/null)"
@@ -13,14 +14,14 @@ __venv_setup() {
 venv() {
     __venv_setup
     if [ "$#" -lt 1 ]; then
-        \ls -1a "$VENV_HOME" | sed '1,2d'
+        ls -1a "$VENV_HOME" | sed '1,2d'
         return
     fi
-    if [ ! -d "$VENV_HOME/$1" ]; then
+    if [ ! -d "$VENV_HOME/$1" -o ! -f "$VENV_HOME/$1/bin/activate" ]; then
         echo "creating virtualenv in '$VENV_HOME/$1'"
-        python3 -m venv "$VENV_HOME/$1"
+        $PYTHON3 -m venv "$VENV_HOME/$1"
         source "$VENV_HOME/$1/bin/activate"
-        pip install --upgrade pip
+        $PYTHON3 -m pip install --upgrade pip
     else
         source "$VENV_HOME/$1/bin/activate"
     fi
