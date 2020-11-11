@@ -104,9 +104,13 @@ esac
 update_ps1() {
     local PREFIX=
     if [ ! -z "$VIRTUAL_ENV" ]; then
-        PREFIX="$(brightfg 0)[$(basename $VIRTUAL_ENV)] "
-    elif [ ! -z "$CONDA_DEFAULT_ENV" ]; then
-        PREFIX="$(brightfg 0)[$CONDA_DEFAULT_ENV] "
+        PREFIX="$(brightfg 0)[$(basename $VIRTUAL_ENV)] $PREFIX"
+    fi
+    if [ ! -z "$CONDA_DEFAULT_ENV" ]; then
+        PREFIX="$(brightfg 0)[$CONDA_DEFAULT_ENV] $PREFIX"
+    fi
+    if [ ! -z "$SSH_AGENT_PID" ]; then
+        PREFIX="$(colorfg 7)[ssh] $PREFIX"
     fi
     local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
     if [ "$JOBS" -gt 0 ]; then
