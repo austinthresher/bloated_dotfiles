@@ -31,14 +31,22 @@ EOF
     else
         # Add the keys given as arguments
         for arg in "$@"; do
-            # FIXME: Too much repetition here
-            if [ -f ".ssh/${arg}" ]; then
-                echo "ssh-add .ssh/${arg}" >> $init_script
-            elif [ -f ".ssh/${arg}_ecdsa" ]; then
-                echo "ssh-add .ssh/${arg}_ecdsa" >> $init_script
-            elif [ -f ".ssh/${arg}_rsa" ]; then
-                echo "ssh-add .ssh/${arg}_rsa" >> $init_script
-            else
+            # Look for a key with the given name in common locations,
+            # add it to our init script if found
+            local keys=( \
+                "$HOME/.ssh/${arg}" \
+                "$HOME/.ssh/${arg}_ecdsa" \
+                "$HOME/.ssh/${arg}_rsa" \
+            )
+            local key_found=0
+            for k in "${keys[@]}"; do
+                if [ -e "$k" ]; then
+                    echo "ssh-add $k" >> $init_script
+                    key_found=1
+                    break
+                fi
+            done
+            if [ $key_found == 0 ]; then
                 echo "Couldn't find a key for '${arg}'"
             fi
         done

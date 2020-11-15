@@ -7,7 +7,7 @@ export HISTCONTROL=ignoreboth:erasedups
 
 if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
     export WINDOWS=1
-    # If we're on WSL, assume there's an X server running
+    # Assume there's an X server running. This won't work for WSL2
     if [ -z "$DISPLAY" ]; then
         export DISPLAY=0:0
     fi
