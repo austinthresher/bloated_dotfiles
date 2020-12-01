@@ -44,13 +44,20 @@ let g:gitgutter_sign_removed = '--'
 let g:gitgutter_sign_modified_removed = '**'
 let g:gitgutter_sign_removed_first_line = '^^'
 let g:gitgutter_sign_removed_above_and_below = '%%'
+
 let g:airline_theme = 'simple'
+
+let g:ale_enabled = v:false
 let g:ale_sign_error = 'E:'
 let g:ale_sign_warning = 'W:'
 let g:ale_open_list = v:true
 let g:ale_list_window_size = 5
 let g:ale_virtualenv_dir_names = []
+let g:airline#extensions#ale#enabled = v:true
+
 let test#strategy = 'vimux'
+
+let g:jedi#popup_on_dot = v:false
 
 " Plugins
 " =======
@@ -72,6 +79,8 @@ let test#strategy = 'vimux'
     Plug 'benmills/vimux'
     Plug 'tpope/vim-dispatch'
     Plug 'ekalinin/dockerfile.vim'
+    Plug 'davidhalter/jedi-vim'
+    Plug 'ervandew/supertab'
     call plug#end()
 
 " /Plugins
@@ -234,6 +243,33 @@ nnoremap <leader>gt :GitGutterToggle<cr>
 
 nnoremap <leader>t :TestNearest<cr>
 nnoremap <leader>T :TestFile<cr>
+
+function! GitRoot()
+    let root = system("git rev-parse --show-toplevel 2>&1 | tr -d '\\n'")
+    if root =~ 'fatal: not a git repository'
+        return v:false
+    endif
+    return root
+endfunction
+
+function! ConfigureNotesWindow()
+    resize 5
+    setlocal winfixheight
+endfunction
+
+function! ShowProjectNotes()
+    let root = GitRoot()
+    if root == v:false
+        echo "Could not find git root, aborting."
+        return
+    endif
+    " TODO: if notes window already exists, jump to it
+    exec 'bot sp ' . root . '/.notes'
+    call ConfigureNotesWindow()
+endfunction
+
+nnoremap <leader>n :call ShowProjectNotes()<cr>
+
 
 " Install plugins if this looks like a fresh setup
 let s:checkfile = expand("~/.config/nvim/updated")
