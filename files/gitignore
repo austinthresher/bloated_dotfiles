@@ -1,7 +1,13 @@
+# Swap files
 .*.*sw?
 .*.*~
+
+# Python caches
 __pycache__/
 *.pyc
-.activate
+
+# Local project configuration
 venv/
 .notes
+.activate
+.idea

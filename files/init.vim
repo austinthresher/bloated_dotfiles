@@ -268,7 +268,7 @@ function! ShowProjectNotes()
     call ConfigureNotesWindow()
 endfunction
 
-nnoremap <leader>n :call ShowProjectNotes()<cr>
+nnoremap <leader>N :call ShowProjectNotes()<cr>
 
 
 " Install plugins if this looks like a fresh setup
