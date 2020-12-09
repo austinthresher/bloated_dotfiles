@@ -216,6 +216,58 @@ endfunction
 
 nnoremap <silent> <leader>j :call JoinTo80()<cr>
 
+function! GetOuterParenContents(string)
+    let l:left = stridx(a:string, '(') + 1
+    if l:left <= 0 | return '' | endif
+    let l:right = strridx(a:string, ')')
+    if l:right < l:left | return '' | endif
+    let l:contents = strpart(a:string, l:left, l:right - l:left)
+    return l:contents
+endfunction
+
+function! SplitOuterParens()
+    let l:curline = getline('.')
+    let l:args = GetOuterParenContents(l:curline)
+    if empty(l:args) | return v:false | endif
+    let l:split_at_left = match(l:curline, l:args)
+    let l:split_at_right = l:split_at_left + len(l:args)
+    let l:failed = setline('.', l:curline[:l:split_at_left-1])
+    if l:failed | return v:false | endif
+    let l:failed = append('.', [ l:args, l:curline[l:split_at_right:] ])
+    if l:failed | return v:false | endif
+    return v:true
+endfunction
+
+function! ReIndent(line, indentation)
+    return repeat(' ', a:indentation) . trim(a:line)
+endfunction
+
+function! SplitSingleLineArgs(indentation)
+    let inner_indent = a:indentation + &softtabstop*2
+    let curline = getline('.')
+    let arglist = split(l:curline, ',')
+    call setline('.', ReIndent(arglist[0], inner_indent) . ',')
+    for line in arglist[1:]
+        call append('.', ReIndent(line, inner_indent) . ',')
+        norm! j
+    endfor
+    " Remove last comma and move to end of the added lines
+    norm! $xj$
+endfunction
+
+" Split a single-line Python-style function definition into multiple lines
+" FIXME: This breaks with nested calls
+function! SplitPyFunc()
+    let indentation = indent('.')
+    if SplitOuterParens()
+        norm! j
+        call SplitSingleLineArgs(indentation)
+        call setline('.', ReIndent(getline('.'), indentation + &softtabstop))
+    endif
+endfunction
+
+nnoremap <silent> <leader>p :call SplitPyFunc()<cr>
+
 " Find and highlight trailing whitespace, based on:
 " https://vim.fandom.com/wiki/Remove_unwanted_spaces
 function! ShowSpaces(...)
