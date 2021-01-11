@@ -30,7 +30,10 @@ set wildmenu
 set winminheight=1
 set winminwidth=1
 set updatetime=100
-
+"
+" Ignore pyc files when searching
+set wildignore+=*.pyc
+"
 " TODO: System clipboard configuration
 
 let g:loaded_python_provider = v:false
