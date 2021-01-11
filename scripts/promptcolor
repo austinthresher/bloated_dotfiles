@@ -110,7 +110,7 @@ update_ps1() {
         PREFIX="\[$(brightfg 0)\][$CONDA_DEFAULT_ENV] $PREFIX"
     fi
     if [ ! -z "$SSH_AGENT_PID" ]; then
-        PREFIX="\[$(colorfg 7)\][ssh] $PREFIX"
+        PREFIX="\[$(colorfg 7)\]ssh ($(ssh-add -L | wc -l)) $PREFIX"
     fi
     local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
     if [ "$JOBS" -gt 0 ]; then
