@@ -33,7 +33,7 @@ set updatetime=100
 "
 " Ignore pyc files when searching
 set wildignore+=*.pyc
-"
+
 " TODO: System clipboard configuration
 
 let g:loaded_python_provider = v:false
@@ -86,7 +86,7 @@ let g:jedi#popup_on_dot = v:false
     Plug 'tpope/vim-dispatch'
     Plug 'ekalinin/dockerfile.vim'
     Plug 'davidhalter/jedi-vim'
-    Plug 'ervandew/supertab'
+    "Plug 'ervandew/supertab'
     call plug#end()
 
 " /Plugins
