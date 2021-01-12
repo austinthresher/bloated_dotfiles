@@ -30,7 +30,8 @@ set wildmenu
 set winminheight=1
 set winminwidth=1
 set updatetime=100
-"
+set mouse=a
+
 " Ignore files when searching
 set wildignore+=*.pyc,*.egg-info/,*__pycache__/
 
@@ -292,6 +293,8 @@ endfunction
 
 command! -bar -nargs=? ShowSpaces call ShowSpaces(<args>)
 command! -bar -nargs=0 -range=% TrimSpaces <line1>,<line2>call TrimSpaces()
+
+command! -nargs=1 F :execute 'vimgrep /<args>/j **' | copen | wincmd J
 
 nnoremap <leader>s :ShowSpaces 1<cr>
 nnoremap <leader>S m`:TrimSpaces<cr>``
