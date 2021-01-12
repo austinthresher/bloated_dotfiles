@@ -31,8 +31,8 @@ set winminheight=1
 set winminwidth=1
 set updatetime=100
 "
-" Ignore pyc files when searching
-set wildignore+=*.pyc
+" Ignore files when searching
+set wildignore+=*.pyc,*.egg-info/,*__pycache__/
 
 " TODO: System clipboard configuration
 
