@@ -34,7 +34,6 @@ if ! brew list --formula | grep -q python.*3; then
     brew install -q python3
 fi
 
-pip3 config -q --user set global.use-feature 2020-resolver
 pip3 install -q --user --upgrade pip pipx
 
 if ! pipx list | grep -q package\ ansible; then
