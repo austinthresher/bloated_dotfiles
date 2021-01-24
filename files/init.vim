@@ -31,12 +31,9 @@ set winminheight=1
 set winminwidth=1
 set updatetime=100
 set mouse=a
-<<<<<<< Updated upstream
 
 " Ignore files when searching
 set wildignore+=*.pyc,*.egg-info/,*__pycache__/
-=======
->>>>>>> Stashed changes
 
 " TODO: System clipboard configuration
 

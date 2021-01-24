@@ -2,9 +2,10 @@
 .*.*sw?
 .*.*~
 
-# Python caches
+# Python related files
 __pycache__/
 *.pyc
+*.egg-info/
 
 # Local project configuration
 venv/
