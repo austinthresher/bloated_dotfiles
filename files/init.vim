@@ -330,7 +330,7 @@ function! ShowProjectNotes()
 endfunction
 
 nnoremap <leader>N :call ShowProjectNotes()<cr>
-
+nnoremap <leader>! :!!<cr>
 
 " Install plugins if this looks like a fresh setup
 let s:checkfile = expand("~/.config/nvim/updated")
