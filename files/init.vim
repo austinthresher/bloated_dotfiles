@@ -49,19 +49,19 @@ let g:gitgutter_sign_modified_removed = '**'
 let g:gitgutter_sign_removed_first_line = '^^'
 let g:gitgutter_sign_removed_above_and_below = '%%'
 
-let g:airline_theme = 'simple'
+"let g:airline_theme = 'simple'
 
-let g:ale_enabled = v:false
-let g:ale_sign_error = 'E:'
-let g:ale_sign_warning = 'W:'
-let g:ale_open_list = v:true
-let g:ale_list_window_size = 5
-let g:ale_virtualenv_dir_names = []
-let g:airline#extensions#ale#enabled = v:true
-
-let test#strategy = 'vimux'
-
-let g:jedi#popup_on_dot = v:false
+"let g:ale_enabled = v:false
+"let g:ale_sign_error = 'E:'
+"let g:ale_sign_warning = 'W:'
+"let g:ale_open_list = v:true
+"let g:ale_list_window_size = 5
+"let g:ale_virtualenv_dir_names = []
+"let g:airline#extensions#ale#enabled = v:true
+"
+"let test#strategy = 'vimux'
+"
+"let g:jedi#popup_on_dot = v:false
 
 " Plugins
 " =======
@@ -71,22 +71,22 @@ let g:jedi#popup_on_dot = v:false
     Plug 'austinthresher/vim-flip'
     Plug 'google/vim-searchindex'
     Plug 'tpope/vim-unimpaired'
-    Plug 'tpope/vim-fugitive'
+    "Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-vinegar'
     Plug 'tpope/vim-eunuch'
     Plug 'jonhiggs/vim-readline'
-    Plug 'yggdroot/indentline'
+    "Plug 'yggdroot/indentline'
     Plug 'farmergreg/vim-lastplace'
-    Plug 'airblade/vim-gitgutter'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'rhysd/conflict-marker.vim'
-    Plug 'dense-analysis/ale'
-    Plug 'vim-test/vim-test'
-    Plug 'benmills/vimux'
-    Plug 'tpope/vim-dispatch'
+    "Plug 'airblade/vim-gitgutter'
+"    Plug 'vim-airline/vim-airline'
+    "Plug 'vim-airline/vim-airline-themes'
+    "Plug 'rhysd/conflict-marker.vim'
+    "Plug 'dense-analysis/ale'
+    "Plug 'vim-test/vim-test'
+    "Plug 'benmills/vimux'
+    "Plug 'tpope/vim-dispatch'
     Plug 'ekalinin/dockerfile.vim'
-    Plug 'davidhalter/jedi-vim'
+    "Plug 'davidhalter/jedi-vim'
     Plug 'lbrayner/vim-rzip'
     call plug#end()
 
@@ -94,7 +94,7 @@ let g:jedi#popup_on_dot = v:false
 
 try
     let g:lyra_use_system_colors = v:false
-    let g:lyra_transparent = v:false
+    let g:lyra_transparent = v:true
     let g:lyra_no_highlighting = v:false
     colorscheme lyra
     syntax on

@@ -1,7 +1,0 @@
-#!/bin/bash
-
-if ! git "$@"; then
-    if [ -z "$HTTP_PROXY" ]; then
-        echo "HTTP_PROXY is not set, does it need to be?"
-    fi
-fi

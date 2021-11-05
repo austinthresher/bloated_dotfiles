@@ -48,7 +48,6 @@ else
     alias ls='ls -F --color=auto'
 fi
 
-alias git='git_helper'
 alias tmux='tmux -u'
 alias doco='docker-compose'
 alias d='docker'
