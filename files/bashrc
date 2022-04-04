@@ -51,6 +51,7 @@ fi
 alias tmux='tmux -u'
 alias doco='docker-compose'
 alias d='docker'
+alias ubuntu='lsb_release -d'
 
 if command -v nvim &> /dev/null; then
     alias vim=nvim
