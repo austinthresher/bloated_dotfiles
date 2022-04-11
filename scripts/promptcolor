@@ -112,11 +112,11 @@ update_ps1() {
     # For some reason this gives an incorrect answer if it's after the
     # ssh conditional
     local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
-    if [ ! -z "$SSH_AGENT_PID" ]; then
-        local IDS=0
-        if ssh-add -l &> /dev/null; then
-            IDS="$(ssh-add -l | wc -l)"
-        fi
+    local IDS=0
+    if ssh-add -l &> /dev/null; then
+        IDS="$(ssh-add -l | wc -l)"
+    fi
+    if [ "$IDS" -gt 0]; then
         PREFIX="\[$(colorfg 7)\]ssh ($IDS) $PREFIX"
     fi
     if [ "$JOBS" -gt 0 ]; then

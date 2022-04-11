@@ -31,6 +31,7 @@ set winminheight=1
 set winminwidth=1
 set updatetime=100
 set mouse=a
+set inccommand=nosplit
 
 " Ignore files when searching
 set wildignore+=*.pyc,*.egg-info/,*__pycache__/
@@ -41,28 +42,6 @@ let g:loaded_python_provider = v:false
 let g:loaded_ruby_provider = v:false
 let g:loaded_node_provider = v:false
 
-let g:gitgutter_set_sign_backgrounds = v:false
-let g:gitgutter_sign_added = '++'
-let g:gitgutter_sign_modified = '~~'
-let g:gitgutter_sign_removed = '--'
-let g:gitgutter_sign_modified_removed = '**'
-let g:gitgutter_sign_removed_first_line = '^^'
-let g:gitgutter_sign_removed_above_and_below = '%%'
-
-"let g:airline_theme = 'simple'
-
-"let g:ale_enabled = v:false
-"let g:ale_sign_error = 'E:'
-"let g:ale_sign_warning = 'W:'
-"let g:ale_open_list = v:true
-"let g:ale_list_window_size = 5
-"let g:ale_virtualenv_dir_names = []
-"let g:airline#extensions#ale#enabled = v:true
-"
-"let test#strategy = 'vimux'
-"
-"let g:jedi#popup_on_dot = v:false
-
 " Plugins
 " =======
 
@@ -71,22 +50,11 @@ let g:gitgutter_sign_removed_above_and_below = '%%'
     Plug 'austinthresher/vim-flip'
     Plug 'google/vim-searchindex'
     Plug 'tpope/vim-unimpaired'
-    "Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-vinegar'
     Plug 'tpope/vim-eunuch'
     Plug 'jonhiggs/vim-readline'
-    "Plug 'yggdroot/indentline'
     Plug 'farmergreg/vim-lastplace'
-    "Plug 'airblade/vim-gitgutter'
-"    Plug 'vim-airline/vim-airline'
-    "Plug 'vim-airline/vim-airline-themes'
-    "Plug 'rhysd/conflict-marker.vim'
-    "Plug 'dense-analysis/ale'
-    "Plug 'vim-test/vim-test'
-    "Plug 'benmills/vimux'
-    "Plug 'tpope/vim-dispatch'
     Plug 'ekalinin/dockerfile.vim'
-    "Plug 'davidhalter/jedi-vim'
     Plug 'lbrayner/vim-rzip'
     call plug#end()
 
@@ -114,10 +82,8 @@ nmap <leader>bd :bp\|bd #<cr>
 nnoremap <c-l> :noh<cr><c-l>
 " * Sets word under cursor to search term but doesn't go to the next match
 nnoremap * *N
-" List buffers with <leader>b
-nmap <leader>b :ls<cr>:b
 
-nnoremap <leader>V :source ~/.config/nvim/init.vim<cr>
+nnoremap <leader>R :source ~/.config/nvim/init.vim<cr>
 
 " Navigate out of terminal mode more easily
 tnoremap <esc> <c-\><c-n>
@@ -152,12 +118,6 @@ function! ToggleQuickfix()
     endif
 endfunction
 nnoremap <silent> Q :call ToggleQuickfix()<cr>
-
-" insert before current word
-nnoremap <leader>i bi
-
-" append after current word
-nnoremap <leader>a ea
 
 augroup filter_syntax
     autocmd!
@@ -305,31 +265,6 @@ nnoremap <leader>gt :GitGutterToggle<cr>
 nnoremap <leader>t :TestNearest<cr>
 nnoremap <leader>T :TestFile<cr>
 
-function! GitRoot()
-    let root = system("git rev-parse --show-toplevel 2>&1 | tr -d '\\n'")
-    if root =~ 'fatal: not a git repository'
-        return v:false
-    endif
-    return root
-endfunction
-
-function! ConfigureNotesWindow()
-    resize 5
-    setlocal winfixheight
-endfunction
-
-function! ShowProjectNotes()
-    let root = GitRoot()
-    if root == v:false
-        echo "Could not find git root, aborting."
-        return
-    endif
-    " TODO: if notes window already exists, jump to it
-    exec 'bot sp ' . root . '/.notes'
-    call ConfigureNotesWindow()
-endfunction
-
-nnoremap <leader>N :call ShowProjectNotes()<cr>
 nnoremap <leader>! :!!<cr>
 
 " Install plugins if this looks like a fresh setup
