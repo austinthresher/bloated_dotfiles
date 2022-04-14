@@ -116,7 +116,7 @@ update_ps1() {
     if ssh-add -l &> /dev/null; then
         IDS="$(ssh-add -l | wc -l)"
     fi
-    if [ "$IDS" -gt 0]; then
+    if [ "$IDS" -gt 0 ]; then
         PREFIX="\[$(colorfg 7)\]ssh ($IDS) $PREFIX"
     fi
     if [ "$JOBS" -gt 0 ]; then
