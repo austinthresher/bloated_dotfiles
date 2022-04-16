@@ -11,6 +11,8 @@ if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
     if [ -z "$DISPLAY" ]; then
         export DISPLAY=0:0
     fi
+    # Fix ugly dircolors because every Windows directory shows up as 777
+    export LS_COLORS='ow=01;36;40'
 fi
 
 if command -v mdvl &> /dev/null; then
@@ -45,7 +47,7 @@ if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
     export BASH_SILENCE_DEPRECATION_WARNING=1
 else
-    alias ls='ls -F --color=auto'
+    alias ls="ls -F --color=auto -I '*System Volume Information*' -I '*RECYCLE.BIN*'"
 fi
 
 alias tmux='tmux -u'
