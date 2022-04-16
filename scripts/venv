@@ -1,7 +1,15 @@
 #!/bin/bash
 
 VENV_HOME="$HOME/.venv"
-PYTHON3="$(which python3.8)"
+if command -v python3.8 &> /dev/null; then
+    PYTHON3="$(which python3.8)"
+elif command -v python3 &> /dev/null; then
+    PYTHON3="$(which python)"
+elif command -v python &> /dev/null; then
+    PYTHON3="$(which python)"
+else
+    exit 1
+fi
 
 __venv_repo() {
     basename "$(git rev-parse --show-toplevel 2> /dev/null)"

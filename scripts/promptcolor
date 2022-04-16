@@ -14,7 +14,7 @@ brightfg()  { printf "\e[9$1m";  }
 brightbg()  { printf "\e[10$1m"; }
 
 # Predefined colors for specific hosts
-case $(simple_hash $(hostname -f)) in
+case $(simple_hash $(hostname)) in
     # work
     "2000859944153293065") PROMPT_COLOR_IDX=10 ;;
     "4252336200651278864") PROMPT_COLOR_IDX=4  ;;

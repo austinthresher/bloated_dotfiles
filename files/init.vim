@@ -117,7 +117,7 @@ nnoremap * *N
 " List buffers with <leader>b
 nmap <leader>b :ls<cr>:b
 
-nnoremap <leader>V :source ~/.config/nvim/init.vim<cr>
+nnoremap <leader>R :source $MYVIMRC<cr>
 
 " Navigate out of terminal mode more easily
 tnoremap <esc> <c-\><c-n>
