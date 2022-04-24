@@ -29,13 +29,19 @@ venv() {
         ls -1a "$VENV_HOME" | sed '1,2d'
         return
     fi
-    if [ ! -d "$VENV_HOME/$1" -o ! -f "$VENV_HOME/$1/bin/activate" ]; then
+    # cygwin and msys have a different path, but not WSL
+    if [ -z "$WINDOWS" -o ! -z "$WSL_DISTRO_NAME" ]; then
+        ACTIVATE="$VENV_HOME/$1/bin/activate"
+    else
+        ACTIVATE="$VENV_HOME/$1/Scripts/activate"
+    fi
+    if [ ! -d "$VENV_HOME/$1" -o ! -f "$ACTIVATE" ]; then
         echo "creating venv in '$VENV_HOME/$1'"
         $PYTHON3 -m venv "$VENV_HOME/$1"
-        source "$VENV_HOME/$1/bin/activate"
+        source "$ACTIVATE"
         $PYTHON3 -m pip install --upgrade pip
     else
-        source "$VENV_HOME/$1/bin/activate"
+        source "$ACTIVATE"
     fi
 }
 
