@@ -13,11 +13,7 @@ colorbg()   { printf "\e[4$1m";  }
 brightfg()  { printf "\e[9$1m";  }
 brightbg()  { printf "\e[10$1m"; }
 
-if hostname -f 2>&1 > /dev/null; then
-    HOST=$(hostname -f)
-else
-    HOST=$(hostname)
-fi
+HOST=$(hostname -f 2>/dev/null || hostname)
 
 # Predefined colors for specific hosts
 case $(simple_hash $HOST) in
@@ -36,7 +32,7 @@ case $(simple_hash $HOST) in
     "11031555534") PROMPT_COLOR_IDX=2 ;;
     *)
         # Randomize color based on hostname for all else
-        PROMPT_COLOR_IDX=$(expr $(simple_hash $(hostname)) % 12 + 1)
+        PROMPT_COLOR_IDX=$(expr $(simple_hash $HOST) % 12 + 1)
         ;;
 esac
 
