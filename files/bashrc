@@ -1,13 +1,14 @@
+if [[ $- == *i* ]]; then echo "Running $(uname -s -r)"; fi
+
 # The first part of this file runs both interactively and non-interactively
 # =========================================================================
-
 [ -e "$HOME/.bashrc_local" ] && source "$HOME/.bashrc_local"
 unset -f command_not_found_handle
 export HISTCONTROL=ignoreboth:erasedups
 
-if [ ! -z "$WSL_DISTRO_NAME" -o "${OSTYPE}" == cygwin ]; then
+if [ ! -z "$WSL_DISTRO_NAME" -o "$OSTYPE" == cygwin -o "$OSTYPE" == msys ]; then
     export WINDOWS=1
-    # Assume there's an X server running. This won't work for WSL2
+    # Assume there's an X server running
     if [ -z "$DISPLAY" ]; then
         export DISPLAY=0:0
     fi
@@ -46,13 +47,13 @@ alias preview='feh --scale -d . &'
 if [[ $OSTYPE == *darwin* ]]; then
     alias ls='ls -F'
     export BASH_SILENCE_DEPRECATION_WARNING=1
-else
+elif [ -z "$WINDOWS" ]; then
     alias ls="ls -F --color=auto -I '*System Volume Information*' -I '*RECYCLE.BIN*'"
+else
+    alias ls="ls -F --color=auto"
 fi
 
 alias tmux='tmux -u'
-alias doco='docker-compose'
-alias d='docker'
 alias ubuntu='lsb_release -d'
 
 if command -v nvim &> /dev/null; then

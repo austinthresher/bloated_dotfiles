@@ -13,8 +13,14 @@ colorbg()   { printf "\e[4$1m";  }
 brightfg()  { printf "\e[9$1m";  }
 brightbg()  { printf "\e[10$1m"; }
 
+if hostname -f > /dev/null; then
+    HOST=$(hostname -f)
+else
+    HOST=$(hostname)
+fi
+
 # Predefined colors for specific hosts
-case $(simple_hash $(hostname)) in
+case $(simple_hash $HOST) in
     # work
     "2000859944153293065") PROMPT_COLOR_IDX=10 ;;
     "4252336200651278864") PROMPT_COLOR_IDX=4  ;;
@@ -27,6 +33,7 @@ case $(simple_hash $(hostname)) in
     "7435254907764971302") PROMPT_COLOR_IDX=3  ;;
     "3634829238533771921") PROMPT_COLOR_IDX=5  ;;
     "12116202349837038")   PROMPT_COLOR_IDX=12 ;;
+    "11031555534") PROMPT_COLOR_IDX=2 ;;
     *)
         # Randomize color based on hostname for all else
         PROMPT_COLOR_IDX=$(expr $(simple_hash $(hostname)) % 12 + 1)
@@ -109,12 +116,17 @@ update_ps1() {
     if [ ! -z "$CONDA_DEFAULT_ENV" ]; then
         PREFIX="\[$(brightfg 0)\][$CONDA_DEFAULT_ENV] $PREFIX"
     fi
-    # For some reason this gives an incorrect answer if it's after the
-    # ssh conditional
-    local JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
+    local JOBS=0
     local IDS=0
-    if ssh-add -l &> /dev/null; then
-        IDS="$(ssh-add -l | wc -l)"
+    if [ -z "$PROMPT_HIDE_JOBS" ]; then
+        # For some reason this gives an incorrect answer
+        # if it's after the ssh conditional
+        JOBS=$(jobs | wc -l | sed 's/[ \t]//g')
+    fi
+    if [ -z "$PROMPT_HIDE_SSH" ]; then
+        if ssh-add -l &> /dev/null; then
+            IDS="$(ssh-add -l | wc -l)"
+        fi
     fi
     if [ "$IDS" -gt 0 ]; then
         PREFIX="\[$(colorfg 7)\]ssh ($IDS) $PREFIX"
