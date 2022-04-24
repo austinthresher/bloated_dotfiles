@@ -13,7 +13,7 @@ colorbg()   { printf "\e[4$1m";  }
 brightfg()  { printf "\e[9$1m";  }
 brightbg()  { printf "\e[10$1m"; }
 
-if hostname -f > /dev/null; then
+if hostname -f 2>&1 > /dev/null; then
     HOST=$(hostname -f)
 else
     HOST=$(hostname)
