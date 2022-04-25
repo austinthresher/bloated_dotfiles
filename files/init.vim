@@ -31,12 +31,19 @@ set winminheight=1
 set winminwidth=1
 set updatetime=100
 set mouse=a
-set inccommand=nosplit
+set termguicolors
+if has('nvim')
+    set inccommand=nosplit
+endif
 
 " Ignore files when searching
 set wildignore+=*.pyc,*.egg-info/,*__pycache__/
 
 " TODO: System clipboard configuration
+
+" Disable netrw, dirvish is way nicer
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
 
 let g:loaded_python_provider = v:false
 let g:loaded_ruby_provider = v:false
@@ -50,23 +57,23 @@ let g:loaded_node_provider = v:false
     Plug 'austinthresher/vim-flip'
     Plug 'google/vim-searchindex'
     Plug 'tpope/vim-unimpaired'
-    Plug 'tpope/vim-vinegar'
     Plug 'tpope/vim-eunuch'
     Plug 'jonhiggs/vim-readline'
     Plug 'farmergreg/vim-lastplace'
     Plug 'ekalinin/dockerfile.vim'
     Plug 'lbrayner/vim-rzip'
+    Plug 'justinmk/vim-dirvish'
     call plug#end()
 
 " /Plugins
 
+syntax on
 try
     let g:lyra_use_system_colors = v:false
     let g:lyra_transparent = v:false
     let g:lyra_no_highlighting = v:false
     let g:lyra_dim_inactive = v:true
     colorscheme lyra
-    syntax on
 catch
 endtry
 
@@ -87,38 +94,39 @@ nnoremap * *N
 nnoremap <leader>R :source $MYVIMRC<cr>
 
 " Navigate out of terminal mode more easily
-tnoremap <esc> <c-\><c-n>
-tnoremap <c-w>H <c-\><c-n><c-w>H
-tnoremap <c-w>J <c-\><c-n><c-w>J
-tnoremap <c-w>K <c-\><c-n><c-w>K
-tnoremap <c-w>L <c-\><c-n><c-w>L
-tnoremap <c-w>h <c-\><c-n><c-w>h
-tnoremap <c-w>j <c-\><c-n><c-w>j
-tnoremap <c-w>k <c-\><c-n><c-w>k
-tnoremap <c-w>l <c-\><c-n><c-w>l
-tnoremap <c-w>p <c-\><c-n><c-w>p
+tnoremap <esc><esc> <c-\><c-n>
+set termwinkey=<ins>
+"TODO: Decide if these should stay for nvim
+"tnoremap <c-w>H <c-\><c-n><c-w>H
+"tnoremap <c-w>J <c-\><c-n><c-w>J
+"tnoremap <c-w>K <c-\><c-n><c-w>K
+"tnoremap <c-w>L <c-\><c-n><c-w>L
+"tnoremap <c-w>h <c-\><c-n><c-w>h
+"tnoremap <c-w>j <c-\><c-n><c-w>j
+"tnoremap <c-w>k <c-\><c-n><c-w>k
+"tnoremap <c-w>l <c-\><c-n><c-w>l
+"tnoremap <c-w>p <c-\><c-n><c-w>p
 
-" Terminal colorscheme (Konsolas)
-let s:term_foreground    = '#C8C1C1'
-let s:term_background    = '#060606'
-let s:term_black         = '#000000'
-let s:term_red           = '#AA1717'
-let s:term_green         = '#18B218'
-let s:term_yellow        = '#EBAE1F'
-let s:term_blue          = '#2323A5'
-let s:term_purple        = '#AD1EDC'
-let s:term_cyan          = '#42B0C8'
-let s:term_white         = '#C8C1C1'
-let s:term_bright_black  = '#7B716E'
-let s:term_bright_red    = '#FF4141'
-let s:term_bright_green  = '#5FFF5F'
-let s:term_bright_yellow = '#FFFF55'
-let s:term_bright_blue   = '#4B4BFF'
-let s:term_bright_purple = '#FF54FF'
-let s:term_bright_cyan   = '#69FFFF'
-let s:term_bright_white  = '#FFFFFF'
+" Terminal colorscheme (Gruvbox Dark)
+let s:term_fg        = '#ebdbb2'
+let s:term_bg        = '#1d2021'
+let s:term_black     = '#282828'
+let s:term_red       = '#cc241d'
+let s:term_green     = '#98971a'
+let s:term_yellow    = '#d79921'
+let s:term_blue      = '#458588'
+let s:term_purple    = '#b16286'
+let s:term_cyan      = '#689d6a'
+let s:term_white     = '#a89984'
+let s:term_br_black  = '#928374'
+let s:term_br_red    = '#fb4934'
+let s:term_br_green  = '#b8bb26'
+let s:term_br_yellow = '#fabd2f'
+let s:term_br_blue   = '#83a598'
+let s:term_br_purple = '#d3869b'
+let s:term_br_cyan   = '#8ec07c'
+let s:term_br_white  = '#fbf1c7'
 
-" TODO: Set normal vim terminal colors too
 if has('nvim')
     let g:terminal_color_0 = s:term_black
     let g:terminal_color_1 = s:term_red
@@ -128,34 +136,55 @@ if has('nvim')
     let g:terminal_color_5 = s:term_purple
     let g:terminal_color_6 = s:term_cyan
     let g:terminal_color_7 = s:term_white
-    let g:terminal_color_8 = s:term_bright_black
-    let g:terminal_color_9 = s:term_bright_red
-    let g:terminal_color_10 = s:term_bright_green
-    let g:terminal_color_11 = s:term_bright_yellow
-    let g:terminal_color_12 = s:term_bright_blue
-    let g:terminal_color_13 = s:term_bright_purple
-    let g:terminal_color_14 = s:term_bright_cyan
-    let g:terminal_color_15 = s:term_bright_white
+    let g:terminal_color_8 = s:term_br_black
+    let g:terminal_color_9 = s:term_br_red
+    let g:terminal_color_10 = s:term_br_green
+    let g:terminal_color_11 = s:term_br_yellow
+    let g:terminal_color_12 = s:term_br_blue
+    let g:terminal_color_13 = s:term_br_purple
+    let g:terminal_color_14 = s:term_br_cyan
+    let g:terminal_color_15 = s:term_br_white
+elseif has('terminal')
+    let g:terminal_ansi_colors = [
+            \ s:term_black,
+            \ s:term_red,
+            \ s:term_green,
+            \ s:term_yellow,
+            \ s:term_blue,
+            \ s:term_purple,
+            \ s:term_cyan,
+            \ s:term_white,
+            \ s:term_br_black,
+            \ s:term_br_red,
+            \ s:term_br_green,
+            \ s:term_br_yellow,
+            \ s:term_br_blue,
+            \ s:term_br_purple,
+            \ s:term_br_cyan,
+            \ s:term_br_white
+        \ ]
 endif
 
 function! NVimTermOpen()
     if has('nvim')
-        exec 'hi TermNormal guifg='.s:term_foreground.' guibg='.s:term_background
-        setlocal winhl=Normal:TermNormal
+        setlocal winhl=Normal:Terminal
         setlocal statusline=%{b:term_title}
-        startinsert
+        set nobuflisted
     endif
 endfunc
 
 " Automatically enter insert mode when selecting terminal window
 augroup Terminal
     autocmd!
+    autocmd ColorScheme * exec 'hi Terminal guifg='.s:term_fg.' guibg='.s:term_bg
+    autocmd BufEnter * if &buftype ==# 'terminal' | exec 'norm i' | endif
     if has('nvim')
         autocmd TermOpen * call NVimTermOpen()
     else
-        autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
+        autocmd TerminalOpen * set nobuflisted
     endif
 augroup END
+
 
 " Show and jump to quickfix, close quickfix when in the list
 function! ToggleQuickfix()
@@ -310,15 +339,15 @@ nnoremap <leader>s :ShowSpaces 1<cr>
 nnoremap <leader>S m`:TrimSpaces<cr>``
 vnoremap <leader>S :TrimSpaces<CR>
 
-nnoremap <leader>gt :GitGutterToggle<cr>
-
-nnoremap <leader>t :TestNearest<cr>
-nnoremap <leader>T :TestFile<cr>
-
 nnoremap <leader>! :!!<cr>
 
 " Install plugins if this looks like a fresh setup
-let s:checkfile = expand("~/.config/nvim/updated")
+if has('nvim')
+    let s:checkfile = expand("~/.config/nvim/updated")
+else
+    let s:checkfile = expand("~/.vim_updated")
+endif
+
 if ! filereadable(s:checkfile)
     execute 'PlugInstall | PlugUpdate | PlugClean! | q | !touch ' . s:checkfile
 endif
