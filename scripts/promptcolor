@@ -104,6 +104,15 @@ case "$PROMPT_COLOR_IDX" in
         ;;
 esac
 
+case $TERM in
+    xterm*)
+        export SET_TITLE="\[\033]0;\u@\h: \w\007\]"
+        ;;
+    *)
+        export SET_TITLE=
+        ;;
+esac
+
 update_ps1() {
     local PREFIX=
     if [ ! -z "$VIRTUAL_ENV" ]; then
@@ -128,9 +137,9 @@ update_ps1() {
         PREFIX="\[$(colorfg 7)\]ssh ($IDS) $PREFIX"
     fi
     if [ "$JOBS" -gt 0 ]; then
-        export PS1="$PREFIX\[$PROMPT_COLOR\] \u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
+        export PS1="${SET_TITLE}${PREFIX}\[$PROMPT_COLOR\] \u @ \h ($JOBS) \[$(reverse)\] \w \[$(norm)\] "
     else
-        export PS1="$PREFIX\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
+        export PS1="${SET_TITLE}${PREFIX}\[$PROMPT_COLOR\]\u @ \h \[$(reverse)\] \w \[$(norm)\] "
     fi
 }
 

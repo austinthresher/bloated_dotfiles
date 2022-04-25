@@ -62,8 +62,9 @@ let g:loaded_node_provider = v:false
 
 try
     let g:lyra_use_system_colors = v:false
-    let g:lyra_transparent = v:true
+    let g:lyra_transparent = v:false
     let g:lyra_no_highlighting = v:false
+    let g:lyra_dim_inactive = v:true
     colorscheme lyra
     syntax on
 catch
@@ -97,11 +98,60 @@ tnoremap <c-w>k <c-\><c-n><c-w>k
 tnoremap <c-w>l <c-\><c-n><c-w>l
 tnoremap <c-w>p <c-\><c-n><c-w>p
 
+" Terminal colorscheme (Konsolas)
+let s:term_foreground    = '#C8C1C1'
+let s:term_background    = '#060606'
+let s:term_black         = '#000000'
+let s:term_red           = '#AA1717'
+let s:term_green         = '#18B218'
+let s:term_yellow        = '#EBAE1F'
+let s:term_blue          = '#2323A5'
+let s:term_purple        = '#AD1EDC'
+let s:term_cyan          = '#42B0C8'
+let s:term_white         = '#C8C1C1'
+let s:term_bright_black  = '#7B716E'
+let s:term_bright_red    = '#FF4141'
+let s:term_bright_green  = '#5FFF5F'
+let s:term_bright_yellow = '#FFFF55'
+let s:term_bright_blue   = '#4B4BFF'
+let s:term_bright_purple = '#FF54FF'
+let s:term_bright_cyan   = '#69FFFF'
+let s:term_bright_white  = '#FFFFFF'
+
+" TODO: Set normal vim terminal colors too
+if has('nvim')
+    let g:terminal_color_0 = s:term_black
+    let g:terminal_color_1 = s:term_red
+    let g:terminal_color_2 = s:term_green
+    let g:terminal_color_3 = s:term_yellow
+    let g:terminal_color_4 = s:term_blue
+    let g:terminal_color_5 = s:term_purple
+    let g:terminal_color_6 = s:term_cyan
+    let g:terminal_color_7 = s:term_white
+    let g:terminal_color_8 = s:term_bright_black
+    let g:terminal_color_9 = s:term_bright_red
+    let g:terminal_color_10 = s:term_bright_green
+    let g:terminal_color_11 = s:term_bright_yellow
+    let g:terminal_color_12 = s:term_bright_blue
+    let g:terminal_color_13 = s:term_bright_purple
+    let g:terminal_color_14 = s:term_bright_cyan
+    let g:terminal_color_15 = s:term_bright_white
+endif
+
+function! NVimTermOpen()
+    if has('nvim')
+        exec 'hi TermNormal guifg='.s:term_foreground.' guibg='.s:term_background
+        setlocal winhl=Normal:TermNormal
+        setlocal statusline=%{b:term_title}
+        startinsert
+    endif
+endfunc
+
 " Automatically enter insert mode when selecting terminal window
 augroup Terminal
     autocmd!
     if has('nvim')
-        autocmd TermOpen * startinsert
+        autocmd TermOpen * call NVimTermOpen()
     else
         autocmd BufEnter * silent! if &buftype ==# 'terminal' | exec 'norm i' | endif
     endif
