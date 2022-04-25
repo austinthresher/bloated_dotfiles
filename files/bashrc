@@ -23,7 +23,7 @@ fi
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
-export PATH="$PATH:$HOME/.dotfiles/scripts"
+export PATH="$PATH:$HOME/.dotfiles/scripts:$HOME/.local/bin"
 export SCREENDIR="$HOME/.screen"
 [ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR" && chmod 700 "$SCREENDIR"
 
