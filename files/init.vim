@@ -63,6 +63,7 @@ let g:loaded_node_provider = v:false
     Plug 'ekalinin/dockerfile.vim'
     Plug 'lbrayner/vim-rzip'
     Plug 'justinmk/vim-dirvish'
+    Plug 'vim-scripts/cmdalias.vim'
     call plug#end()
 
 " /Plugins
@@ -95,17 +96,9 @@ nnoremap <leader>R :source $MYVIMRC<cr>
 
 " Navigate out of terminal mode more easily
 tnoremap <esc><esc> <c-\><c-n>
-set termwinkey=<ins>
-"TODO: Decide if these should stay for nvim
-"tnoremap <c-w>H <c-\><c-n><c-w>H
-"tnoremap <c-w>J <c-\><c-n><c-w>J
-"tnoremap <c-w>K <c-\><c-n><c-w>K
-"tnoremap <c-w>L <c-\><c-n><c-w>L
-"tnoremap <c-w>h <c-\><c-n><c-w>h
-"tnoremap <c-w>j <c-\><c-n><c-w>j
-"tnoremap <c-w>k <c-\><c-n><c-w>k
-"tnoremap <c-w>l <c-\><c-n><c-w>l
-"tnoremap <c-w>p <c-\><c-n><c-w>p
+if !has('nvim')
+    set termwinkey=<ins>
+endif
 
 " Terminal colorscheme (Gruvbox Dark)
 let s:term_fg        = '#ebdbb2'
@@ -165,21 +158,39 @@ elseif has('terminal')
         \ ]
 endif
 
-function! NVimTermOpen()
-    if has('nvim')
-        setlocal winhl=Normal:Terminal
-        setlocal statusline=%{b:term_title}
-        set nobuflisted
-    endif
+if has('nvim')
+    function! SaneTerm(args)
+        exec 'new | startinsert | terminal '.a:args
+        " Automatically close interactive terminals but not one-off commands
+        let b:autoclose = (len(trim(a:args)) == 0)
+    endfunc
+    command! -nargs=* -complete=file Terminal call SaneTerm('<args>')
+    function! RemapTerminal()
+        " This is so dumb but it effectively replaces the built-in command
+        for i in range(1, len('terminal'))
+            call CmdAlias('terminal'[:i], 'Terminal')
+        endfor
+    endfunc
+    augroup RemapTermOnStartup
+        autocmd!
+        autocmd VimEnter * call RemapTerminal()
+    augroup END
+endif
+
+function! NVimOnTermOpen()
+    setlocal winhl=Normal:Terminal
+    setlocal statusline=%{b:term_title}
+    set nobuflisted
 endfunc
 
 " Automatically enter insert mode when selecting terminal window
 augroup Terminal
     autocmd!
     autocmd ColorScheme * exec 'hi Terminal guifg='.s:term_fg.' guibg='.s:term_bg
-    autocmd BufEnter * if &buftype ==# 'terminal' | exec 'norm i' | endif
+    autocmd BufEnter * if &buftype ==# 'terminal' | exec 'norm i' | exec 'redraw!' | endif
     if has('nvim')
-        autocmd TermOpen * call NVimTermOpen()
+        autocmd TermOpen * call NVimOnTermOpen()
+        autocmd TermClose * if b:autoclose | exec 'bdelete! '..expand('<abuf>') | endif
     else
         autocmd TerminalOpen * set nobuflisted
     endif
