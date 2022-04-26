@@ -1,4 +1,0 @@
-#!/bin/bash
-
-# Matches the last '.' and removes trailing chars, so foo.tar.gz => foo.tar
-echo $1 | sed 's/\(.*\)\..*/\1/'
