@@ -58,6 +58,7 @@ call plug#begin()
     Plug 'lbrayner/vim-rzip'
     Plug 'justinmk/vim-dirvish'
     Plug 'vim-scripts/cmdalias.vim'
+    Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
 
 
