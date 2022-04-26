@@ -39,8 +39,6 @@ endif
 " Ignore files when searching
 set wildignore+=*.pyc,*.egg-info/,*__pycache__/
 
-" TODO: System clipboard configuration
-
 " Disable netrw, dirvish is way nicer
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
@@ -49,34 +47,19 @@ let g:loaded_python_provider = v:false
 let g:loaded_ruby_provider = v:false
 let g:loaded_node_provider = v:false
 
-" Plugins
-" =======
-
-    call plug#begin()
+call plug#begin()
     Plug 'austinthresher/vim-lyra'
     Plug 'austinthresher/vim-flip'
     Plug 'google/vim-searchindex'
     Plug 'tpope/vim-unimpaired'
     Plug 'tpope/vim-eunuch'
     Plug 'jonhiggs/vim-readline'
-    Plug 'farmergreg/vim-lastplace'
     Plug 'ekalinin/dockerfile.vim'
     Plug 'lbrayner/vim-rzip'
     Plug 'justinmk/vim-dirvish'
     Plug 'vim-scripts/cmdalias.vim'
-    call plug#end()
+call plug#end()
 
-" /Plugins
-
-syntax on
-try
-    let g:lyra_use_system_colors = v:false
-    let g:lyra_transparent = v:false
-    let g:lyra_no_highlighting = v:false
-    let g:lyra_dim_inactive = v:true
-    colorscheme lyra
-catch
-endtry
 
 " Use tab and shift-tab to indent lines
 nnoremap <tab> >>
@@ -160,6 +143,7 @@ endif
 
 if has('nvim')
     function! SaneTerm(args)
+        " Start terminals in a new split instead of taking over the window
         exec 'new | startinsert | terminal '.a:args
         " Automatically close interactive terminals but not one-off commands
         let b:autoclose = (len(trim(a:args)) == 0)
@@ -177,21 +161,29 @@ if has('nvim')
     augroup END
 endif
 
-function! NVimOnTermOpen()
-    setlocal winhl=Normal:Terminal
-    setlocal statusline=%{b:term_title}
-    set nobuflisted
-endfunc
-
-" Automatically enter insert mode when selecting terminal window
-augroup Terminal
+augroup TerminalAuto
     autocmd!
-    autocmd ColorScheme * exec 'hi Terminal guifg='.s:term_fg.' guibg='.s:term_bg
-    autocmd BufEnter * if &buftype ==# 'terminal' | exec 'norm i' | exec 'redraw!' | endif
+    " Terminal FG / BG are set separately from colors 0-15
+    autocmd ColorScheme *
+                \ exec 'hi Terminal guifg='.s:term_fg.' guibg='.s:term_bg
+    " Automatically enter insert mode when selecting terminal window
+    autocmd BufEnter *
+                \ if &buftype ==# 'terminal' |
+                \ exec 'norm i' | exec 'redraw!' |
+                \ endif
     if has('nvim')
-        autocmd TermOpen * call NVimOnTermOpen()
-        autocmd TermClose * if b:autoclose | exec 'bdelete! '..expand('<abuf>') | endif
+        autocmd TermOpen *
+                    \ setlocal 
+                    \ winhl=Normal:Terminal
+                    \ statusline=%{b:term_title}
+                    \ nobuflisted 
+        " Autoclose buffer if we set the flag above
+        autocmd TermClose * 
+                    \ try | if b:autoclose |
+                    \ sil exec 'bdelete! '.expand('<abuf>') |
+                    \ endif | catch | endtry
     else
+        " Unlist terminals so we don't hit them with bprev / bnext
         autocmd TerminalOpen * set nobuflisted
     endif
 augroup END
@@ -209,18 +201,10 @@ function! ToggleQuickfix()
 endfunction
 nnoremap <silent> Q :call ToggleQuickfix()<cr>
 
-augroup filter_syntax
-    autocmd!
-    autocmd BufRead,BufNewFile *.filter setfiletype filter
-augroup END
-
 augroup yml_indent
     autocmd!
     autocmd BufRead,BufNewFile *.yml,*.yaml setlocal shiftwidth=2
 augroup END
-
-" Custom functions
-" ================
 
 " Snap view to left if line length is <= win width
 function! ViewSnap()
@@ -238,89 +222,6 @@ augroup Snap
     autocmd!
     autocmd CursorMoved,CursorMovedI * call ViewSnap()
 augroup END
-
-" Repeatedly join lines until doing so would pass the 80 column limit
-function! JoinTo80()
-    let l:limit = 80 "FIXME: don't hardcode this
-    " If the line is already too long, don't do
-    " anything, otherwise start our Join loop
-    while strwidth(getline('.')) < l:limit
-        " We can't join past the last line of the buffer
-        if line('.') == line('$')
-            return
-        endif
-        let l:lineno = line('.')
-        " Save state of this line and the next
-        let l:current_line = getline(l:lineno)
-        let l:next_line = getline(l:lineno+1)
-        " Do the join instead of calculating length manually
-        " because some filetypes will modify the line during
-        " the join (remove comment characters, whitespace, etc)
-        normal! J
-        if strwidth(getline(l:lineno)) >= l:limit
-            " We're too long, revert our change
-            call setline(l:lineno, l:current_line)
-            if strwidth(l:next_line) > 0
-                call append(l:lineno, l:next_line)
-            endif
-            return
-        endif
-    endwhile
-endfunction
-
-nnoremap <silent> <leader>j :call JoinTo80()<cr>
-
-function! GetOuterParenContents(string)
-    let l:left = stridx(a:string, '(') + 1
-    if l:left <= 0 | return '' | endif
-    let l:right = strridx(a:string, ')')
-    if l:right < l:left | return '' | endif
-    let l:contents = strpart(a:string, l:left, l:right - l:left)
-    return l:contents
-endfunction
-
-function! SplitOuterParens()
-    let l:curline = getline('.')
-    let l:args = GetOuterParenContents(l:curline)
-    if empty(l:args) | return v:false | endif
-    let l:split_at_left = match(l:curline, l:args)
-    let l:split_at_right = l:split_at_left + len(l:args)
-    let l:failed = setline('.', l:curline[:l:split_at_left-1])
-    if l:failed | return v:false | endif
-    let l:failed = append('.', [ l:args, l:curline[l:split_at_right:] ])
-    if l:failed | return v:false | endif
-    return v:true
-endfunction
-
-function! ReIndent(line, indentation)
-    return repeat(' ', a:indentation) . trim(a:line)
-endfunction
-
-function! SplitSingleLineArgs(indentation)
-    let inner_indent = a:indentation + &softtabstop*2
-    let curline = getline('.')
-    let arglist = split(l:curline, ',')
-    call setline('.', ReIndent(arglist[0], inner_indent) . ',')
-    for line in arglist[1:]
-        call append('.', ReIndent(line, inner_indent) . ',')
-        norm! j
-    endfor
-    " Remove last comma and move to end of the added lines
-    norm! $xj$
-endfunction
-
-" Split a single-line Python-style function definition into multiple lines
-" FIXME: This breaks with nested calls
-function! SplitPyFunc()
-    let indentation = indent('.')
-    if SplitOuterParens()
-        norm! j
-        call SplitSingleLineArgs(indentation)
-        call setline('.', ReIndent(getline('.'), indentation + &softtabstop))
-    endif
-endfunction
-
-nnoremap <silent> <leader>p :call SplitPyFunc()<cr>
 
 " Find and highlight trailing whitespace, based on:
 " https://vim.fandom.com/wiki/Remove_unwanted_spaces
@@ -362,3 +263,14 @@ endif
 if ! filereadable(s:checkfile)
     execute 'PlugInstall | PlugUpdate | PlugClean! | q | !touch ' . s:checkfile
 endif
+
+syntax on
+try
+    let g:lyra_use_system_colors = v:false
+    let g:lyra_transparent = v:false
+    let g:lyra_no_highlighting = v:false
+    let g:lyra_dim_inactive = v:true
+    colorscheme lyra
+catch
+    colorscheme darkblue
+endtry
