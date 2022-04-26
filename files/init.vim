@@ -152,9 +152,11 @@ if has('nvim')
     command! -nargs=* -complete=file Terminal call SaneTerm('<args>')
     function! RemapTerminal()
         " This is so dumb but it effectively replaces the built-in command
-        for i in range(1, len('terminal'))
-            call CmdAlias('terminal'[:i], 'Terminal')
-        endfor
+        if exists("*CmdAlias")
+            for i in range(1, len('terminal'))
+                call CmdAlias('terminal'[:i], 'Terminal')
+            endfor
+        endif
     endfunc
     augroup RemapTermOnStartup
         autocmd!
