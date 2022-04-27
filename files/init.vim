@@ -47,6 +47,9 @@ let g:loaded_python_provider = v:false
 let g:loaded_ruby_provider = v:false
 let g:loaded_node_provider = v:false
 
+let g:flip_left_char = ' '
+let g:flip_right_char = ' '
+
 call plug#begin()
     Plug 'austinthresher/vim-lyra'
     Plug 'austinthresher/vim-flip'
