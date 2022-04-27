@@ -69,7 +69,7 @@ xnoremap <tab> >
 xnoremap <s-tab> <
 
 " Delete buffer while keeping window open
-nmap <leader>bd :bp\|bd #<cr>
+nmap <leader>bd :set nobuflisted\|bp\|bd #<cr>
 
 " Clear search with <C-l>
 nnoremap <c-l> :noh<cr><c-l>
@@ -272,7 +272,7 @@ try
     let g:lyra_use_system_colors = v:false
     let g:lyra_transparent = v:false
     let g:lyra_no_highlighting = v:false
-    let g:lyra_dim_inactive = v:true
+    let g:lyra_dim_inactive = v:false
     colorscheme lyra
 catch
     colorscheme darkblue
