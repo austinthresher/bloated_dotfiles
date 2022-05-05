@@ -32,6 +32,7 @@ set winminwidth=1
 set updatetime=100
 set mouse=a
 set termguicolors
+set foldmethod=marker
 if has('nvim')
     set inccommand=nosplit
 endif
@@ -56,6 +57,8 @@ call plug#begin()
     Plug 'google/vim-searchindex'
     Plug 'tpope/vim-unimpaired'
     Plug 'tpope/vim-eunuch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-surround'
     Plug 'jonhiggs/vim-readline'
     Plug 'ekalinin/dockerfile.vim'
     Plug 'lbrayner/vim-rzip'
@@ -63,7 +66,6 @@ call plug#begin()
     Plug 'vim-scripts/cmdalias.vim'
     Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
-
 
 " Use tab and shift-tab to indent lines
 nnoremap <tab> >>
@@ -79,11 +81,30 @@ nnoremap <c-l> :noh<cr><c-l>
 " * Sets word under cursor to search term but doesn't go to the next match
 nnoremap * *N
 
-nnoremap <leader>R :source $MYVIMRC<cr>
+" Automatically source $MYVIMRC after write.
+augroup AutoReloadRC
+    autocmd!
+    autocmd BufWritePost $MYVIMRC ++nested 
+                \ source <afile> | redraw | 
+                \ echo ':source '.expand('<afile>')
+augroup END
 
 " Navigate out of terminal mode more easily
 tnoremap <esc><esc> <c-\><c-n>
-if !has('nvim')
+if has('nvim')
+    tnoremap <A-h> <C-\><C-N><C-w>h
+    tnoremap <A-j> <C-\><C-N><C-w>j
+    tnoremap <A-k> <C-\><C-N><C-w>k
+    tnoremap <A-l> <C-\><C-N><C-w>l
+    inoremap <A-h> <C-\><C-N><C-w>h
+    inoremap <A-j> <C-\><C-N><C-w>j
+    inoremap <A-k> <C-\><C-N><C-w>k
+    inoremap <A-l> <C-\><C-N><C-w>l
+    nnoremap <A-h> <C-w>h
+    nnoremap <A-j> <C-w>j
+    nnoremap <A-k> <C-w>k
+    nnoremap <A-l> <C-w>l
+else
     set termwinkey=<ins>
 endif
 
@@ -178,6 +199,27 @@ augroup TerminalAuto
                 \ exec 'norm i' | exec 'redraw!' |
                 \ endif
     if has('nvim')
+        " Make terminal windows unclosable unless forced or job exits {{{
+        func! TermWinClosed()
+            let l:bn = winbufnr(expand('<afile>'))
+            if getbufvar(l:bn, '&buftype') ==# 'terminal'
+                exec "sb"..l:bn
+                if exists('g:hidden_term')
+                    unlet g:hidden_term
+                endif
+            endif
+        endfunc
+        func! ReopenHiddenTerm()
+            if exists('g:hidden_term') | try
+               exec "sb"..g:hidden_term
+               wincmd p
+               unlet g:hidden_term
+            catch | endtry | endif
+        endfunc
+        autocmd BufHidden term://* let g:hidden_term=expand('<abuf>')
+        autocmd WinClosed * call TermWinClosed()
+        autocmd BufEnter * call ReopenHiddenTerm()
+        " }}}
         autocmd TermOpen *
                     \ setlocal 
                     \ winhl=Normal:Terminal
@@ -258,6 +300,7 @@ nnoremap <leader>S m`:TrimSpaces<cr>``
 vnoremap <leader>S :TrimSpaces<CR>
 
 nnoremap <leader>! :!!<cr>
+
 
 " Install plugins if this looks like a fresh setup
 if has('nvim')

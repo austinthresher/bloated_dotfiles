@@ -23,7 +23,7 @@ fi
 export EDITOR=vi
 export VISUAL=vi
 export PAGER=less
-export PATH="$PATH:$HOME/.dotfiles/scripts:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.dotfiles/scripts"
 export SCREENDIR="$HOME/.screen"
 [ ! -d "$SCREENDIR" ] && mkdir "$SCREENDIR" && chmod 700 "$SCREENDIR"
 
@@ -58,6 +58,10 @@ alias ubuntu='lsb_release -d'
 
 if command -v nvim &> /dev/null; then
     alias vim=nvim
+    alias view='nvim -R'
+    alias vimdiff='nvim -d -R'
+    export EDITOR=nvim
+    export VISUAL=nvim
 fi
 
 source venv
